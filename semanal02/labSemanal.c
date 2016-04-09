@@ -202,22 +202,21 @@ int main() {
             if (diaAtual == diaNiver && mesAtual == mesNiver) {
                 qtdFestival++;
           
-               diaSeguido = diaAtual + 1;
+                diaSeguido = diaAtual + 1;
                 diaSemanaSeguido = diaSemana + 1;
 
                 // Há uma sexta feira treze no dia anterior ao dia do aniversário da cidade
                 // logo, precisamos desconsiderar esse dia pois será usada a mesma água
                 if (diaSeguido == 13 && diaSemanaSeguido % 7 == 0) {
                     qtdFestival--;
-                 }
-        
+                }
 
                 diaSeguido = diaAtual - 1;
                 diaSemanaSeguido = diaSemana - 1;
 
                 // Caso a sexta treze tenha sido um dia antes do Aniversário da Cidade, mesma água
                 if (diaSeguido == 13 && diaSemanaSeguido % 7 == 0) {
-                    qtdFestival -= 2;
+                    qtdFestival--;
                 }
 
             } else if (diaSemana % 7 == 0 && diaAtual == 13) {
