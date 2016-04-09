@@ -81,6 +81,19 @@ int main() {
             xMaiorBorda = xAnterior;
         }
 
+        // Para o caso da primeira coordena ser a mais perto da borda
+        if (xAnterior > xMaiorBorda)
+            xMaiorBorda = xAnterior;
+
+        if (xAnterior < xMenorBorda)
+            xMenorBorda = xAnterior;
+
+        if (yAnterior > yMaiorBorda)
+            yMaiorBorda = yAnterior;
+
+        if (yAnterior < yMenorBorda)
+            yMenorBorda = yAnterior;
+
         // Repetição para ler as coordenadas da Ilha atual
         for(areaAtual = 0.0;;) {
             scanf(" (%lf , %lf)", &xProximo, &yProximo);
