@@ -1,5 +1,6 @@
-// Nome : William Gonçalves da Cruz
-// RA   : 188671
+// Nome  : William Gonçalves da Cruz
+// RA    : 188671
+// Turma : W
 
 /*  Descrição do Problema : 
  *      Uma cidade realiza um evento sempre em seu aniversário e em toda sexta feira 13 onde enche uma 
@@ -36,9 +37,11 @@ int main() {
         qtdFestival,
         numFornecedores,
         capacidadeGalao,
-        qtdGaloes,
-        litros,
         i;
+    
+    unsigned 
+        int litrosInteiros,
+            qtdGaloes;
 
     double precoGalao,
            menorPreco,
@@ -56,6 +59,7 @@ int main() {
            areaIlha,
            areaAtual,
            areaAgua,
+           litros,
            volume;
 
     
@@ -118,7 +122,9 @@ int main() {
 
             if (yProximo < yMenorBorda)
                 yMenorBorda = yProximo;
-            
+           
+            // Caso tenha chego a ultima coordenada da linha, que é identica à primeira, deve
+            // parar o cálculo da área 
             if (xProximo == xPrimeiro && yProximo == yPrimeiro) 
                 break; 
 
@@ -156,9 +162,11 @@ int main() {
     mesAtual = 1;
     anoAtual = 2016;
     qtdDiasMes = 31;
-    diaSemana = 0;
     qtdFestival = 0;
-
+    
+    // Como o primeiro dia de 2016 é uma sexta, podemos começar a contagem de sextas com zero
+    diaSemana = 0;
+    
     // Começa a lógica de contar os dias de Festival
     scanf("%d/%d", &diaNiver, &mesNiver);
     
@@ -218,7 +226,7 @@ int main() {
                 diaSeguido = diaAtual + 1;
                 diaSemanaSeguido = diaSemana + 1;
 
-                // Há uma sexta feira treze no dia anterior ao dia do aniversário da cidade
+                // Há uma sexta feira treze no dia posterior ao dia do aniversário da cidade
                 // logo, precisamos desconsiderar esse dia pois será usada a mesma água
                 if (diaSeguido == 13 && diaSemanaSeguido % 7 == 0) {
                     qtdFestival--;
@@ -230,28 +238,32 @@ int main() {
                 // Caso a sexta treze tenha sido um dia antes do Aniversário da Cidade, mesma água
                 if (diaSeguido == 13 && diaSemanaSeguido % 7 == 0) {
                     qtdFestival--;
-                }
-
+                } 
+    
+                // Qualifica uma sexta feira treze na condição abaixo
             } else if (diaSemana % 7 == 0 && diaAtual == 13) {
                 qtdFestival++;
             }
-            // Acima qualifica sexta feira Treze, porem preve a possibilidade do aniversario da cidade
-            // Cair em uma sexta feira treze, não sendo preciso gastar mais água 
         } 
     }
    
     // Começa a lógica de encontrar o melhor preço dos galões de água  
     scanf("%d", &numFornecedores);
-
-    // Realiza o primeiro check fora do for para o menor preço começar como  o primeiro
-    scanf("%d $%lf", &capacidadeGalao, &precoGalao);
+    litrosInteiros = litros;
     
-    qtdGaloes = litros / capacidadeGalao;
+    // Realiza o primeiro check fora do for para o menor preço começar como o primeiro
+    scanf("%d $%lf", &capacidadeGalao, &precoGalao);
    
-    // Para o caso de todos os litros não terem sido suprimidos, é preciso comprar mais um galao 
-    if (litros % capacidadeGalao != 0) 
-        qtdGaloes++;
-  
+    if (litros - litrosInteiros == 0.0) {    
+        // Para o caso de todos os litros não terem sido suprimidos, é preciso comprar mais um galao 
+         if (litrosInteiros % capacidadeGalao != 0) 
+            qtdGaloes = (litrosInteiros / capacidadeGalao) + 1;
+         else
+             qtdGaloes = (litrosInteiros / capacidadeGalao);
+    } else {
+        qtdGaloes = (litrosInteiros / capacidadeGalao) + 1;
+    }
+
     // O preço é calculado a partir da quantidade de galoes, o preço unitario e o numero de festivais 
     precoAtual = qtdGaloes * precoGalao * qtdFestival;
     menorPreco = precoAtual;
@@ -260,13 +272,18 @@ int main() {
         
         scanf("%d $%lf", &capacidadeGalao, &precoGalao);
         
-        qtdGaloes = litros / capacidadeGalao;
-      
-        // Para o caso de todos os litros não ser exata, significa que faltará água a menos
-        // que mais um galão seja comprado, pois não são vendidos galões sem ser cheios 
-        if (litros % capacidadeGalao != 0) 
-            qtdGaloes++;
+        // Caso a quantidade de litros seja decimal por conta da área
+        if (litros - litrosInteiros == 0.0) {    
+            // Para o caso de todos os litros não terem sido suprimidos, é preciso comprar mais um galao 
+            if (litrosInteiros % capacidadeGalao != 0) 
+                qtdGaloes = (litrosInteiros / capacidadeGalao) + 1;
+            else
+                 qtdGaloes = (litrosInteiros / capacidadeGalao);
+        } else {
+            qtdGaloes = (litrosInteiros / capacidadeGalao) + 1;
+        }
 
+        // O preço é calculado a partir da quantidade de galoes, o preço unitario e o numero de festivais 
         precoAtual = qtdGaloes * precoGalao * qtdFestival;
 
         if (precoAtual < menorPreco)
@@ -274,7 +291,7 @@ int main() {
     }
 
     printf("A manutencao da maquete custara $%.2lf aos cofres publicos.\n", menorPreco);
-   
+
     return 0;
 }
 
