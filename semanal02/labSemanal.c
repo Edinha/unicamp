@@ -250,11 +250,21 @@ int main() {
 
     scanf("%u $%lf", &capacidadeGalao, &precoGalao);
 
-    qtdGaloes = (litros / capacidadeGalao);
+    // Para o caso da conversão não ter perdido precisão valores
+    if (litros - litrosInteiros == 0.0) {
+        // Caso seja divisível, número exato de galões sem sobra
+        if (litrosInteiros % capacidadeGalao == 0) {
+            qtdGaloes = litrosInteiros / capacidadeGalao;
+            
+        // Para o caso de todos os litros não terem sido suprimidos, é preciso comprar mais um galao 
+        } else {
+            qtdGaloes = (litros / capacidadeGalao) + 1;
+        }
 
-    // Para o caso de todos os litros não terem sido suprimidos, é preciso comprar mais um galao 
-    if (litrosInteiros % capacidadeGalao != 0)
-        qtdGaloes++;
+    } else {
+        // Para o caso de todos os litros não terem sido suprimidos, é preciso comprar mais um galao 
+        qtdGaloes = (litros / capacidadeGalao) + 1;
+    }
 
     // O preço é calculado a partir da quantidade de galoes, o preço unitario e o numero de festivais 
     precoAtual = qtdGaloes * precoGalao * qtdFestival;
@@ -266,12 +276,20 @@ int main() {
     for (i = 1; i < numFornecedores; i++) {
         
         scanf("%u $%lf", &capacidadeGalao, &precoGalao);
-        
-        qtdGaloes = (litros / capacidadeGalao);
-    
-        // Para o caso de todos os litros não terem sido suprimidos, é preciso comprar mais um galao 
-        if (litrosInteiros % capacidadeGalao != 0)
-            qtdGaloes++;
+       
+        // Para o caso da conversão não ter perdido precisão valores 
+        if (litros - litrosInteiros == 0.0) {
+            // Caso seja divisível, número exato de galões sem sobra
+            if (litrosInteiros % capacidadeGalao == 0) {
+                    qtdGaloes = litrosInteiros / capacidadeGalao;
+            } else {
+                // Para o caso de todos os litros não terem sido suprimidos, é preciso comprar mais um galao 
+                qtdGaloes = (litros / capacidadeGalao) + 1;
+            }           
+        } else {
+            // Para o caso de todos os litros não terem sido suprimidos, é preciso comprar mais um galao 
+            qtdGaloes = (litros / capacidadeGalao) + 1;
+        }            
 
         // O preço é calculado a partir da quantidade de galoes, o preço unitario e o numero de festivais 
         precoAtual = qtdGaloes * precoGalao * qtdFestival;
