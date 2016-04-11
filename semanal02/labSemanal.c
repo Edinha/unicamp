@@ -36,11 +36,11 @@ int main() {
         diaSemana,
         qtdFestival,
         numFornecedores,
-        capacidadeGalao,
         i;
     
     unsigned 
-        int litrosInteiros,
+        int capacidadeGalao,
+            litrosInteiros, 
             qtdGaloes;
 
     double precoGalao,
@@ -178,7 +178,7 @@ int main() {
 
         // O mês chegou ao final
         if (diaAtual > qtdDiasMes) {
-            diaAtual = 1;
+            diaAtual = 0;
             mesAtual++;
            
             // Caso o mes seja 0, completou um ano
@@ -194,15 +194,12 @@ int main() {
             switch (mesAtual) {
                 // Para o caso de ser Fevereiro
                 case 2:  
-                    if (anoAtual % 400 == 0) // Bissexto
+                    // Verificação ano bissexto
+                    if ( ( (anoAtual % 4 == 0) && !(anoAtual % 100 == 0) ) || (anoAtual % 400 == 0) )
                         qtdDiasMes = 29;
-                    else if (anoAtual % 100 == 0)  // Não Bissexto
+                    else
                         qtdDiasMes = 28;
-                    else if (anoAtual % 4 == 0) // Bissexto
-                        qtdDiasMes = 29;
-                    else // Não Bissexto
-                        qtdDiasMes = 28;
-                    
+
                     break;
 
                 case 1: // Números dos Meses com 31 dias naquele Mes
@@ -249,39 +246,32 @@ int main() {
    
     // Começa a lógica de encontrar o melhor preço dos galões de água  
     scanf("%d", &numFornecedores);
-    litrosInteiros = litros;
-    
-    // Realiza o primeiro check fora do for para o menor preço começar como o primeiro
-    scanf("%d $%lf", &capacidadeGalao, &precoGalao);
-   
-    if (litros - litrosInteiros == 0.0) {    
-        // Para o caso de todos os litros não terem sido suprimidos, é preciso comprar mais um galao 
-         if (litrosInteiros % capacidadeGalao != 0) 
-            qtdGaloes = (litrosInteiros / capacidadeGalao) + 1;
-         else
-             qtdGaloes = (litrosInteiros / capacidadeGalao);
-    } else {
-        qtdGaloes = (litrosInteiros / capacidadeGalao) + 1;
-    }
+    litrosInteiros = litros;    
+
+    scanf("%u $%lf", &capacidadeGalao, &precoGalao);
+
+    qtdGaloes = (litros / capacidadeGalao);
+
+    // Para o caso de todos os litros não terem sido suprimidos, é preciso comprar mais um galao 
+    if (litrosInteiros % capacidadeGalao != 0)
+        qtdGaloes++;
 
     // O preço é calculado a partir da quantidade de galoes, o preço unitario e o numero de festivais 
     precoAtual = qtdGaloes * precoGalao * qtdFestival;
+    
+    // O primeiro preco é o menor já encontrado na sequencia, depois porderá ser atualizado com o
+    // andamento da repetição
     menorPreco = precoAtual;
 
     for (i = 1; i < numFornecedores; i++) {
         
-        scanf("%d $%lf", &capacidadeGalao, &precoGalao);
+        scanf("%u $%lf", &capacidadeGalao, &precoGalao);
         
-        // Caso a quantidade de litros seja decimal por conta da área
-        if (litros - litrosInteiros == 0.0) {    
-            // Para o caso de todos os litros não terem sido suprimidos, é preciso comprar mais um galao 
-            if (litrosInteiros % capacidadeGalao != 0) 
-                qtdGaloes = (litrosInteiros / capacidadeGalao) + 1;
-            else
-                 qtdGaloes = (litrosInteiros / capacidadeGalao);
-        } else {
-            qtdGaloes = (litrosInteiros / capacidadeGalao) + 1;
-        }
+        qtdGaloes = (litros / capacidadeGalao);
+    
+        // Para o caso de todos os litros não terem sido suprimidos, é preciso comprar mais um galao 
+        if (litrosInteiros % capacidadeGalao != 0)
+            qtdGaloes++;
 
         // O preço é calculado a partir da quantidade de galoes, o preço unitario e o numero de festivais 
         precoAtual = qtdGaloes * precoGalao * qtdFestival;
