@@ -178,7 +178,7 @@ int main() {
 
         // O mês chegou ao final
         if (diaAtual > qtdDiasMes) {
-            diaAtual = 0;
+            diaAtual = 1; //diaAtual = 0;
             mesAtual++;
            
             // Caso o mes seja 0, completou um ano
@@ -214,34 +214,34 @@ int main() {
                 default: 
                     qtdDiasMes = 30;
             }
-        } else {
+        } //else {
             
-            // É o dia do aniversário da cidade
-            if (diaAtual == diaNiver && mesAtual == mesNiver) {
-                qtdFestival++;
+        // É o dia do aniversário da cidade
+        if (diaAtual == diaNiver && mesAtual == mesNiver) {
+            qtdFestival++;
           
-                diaSeguido = diaAtual + 1;
-                diaSemanaSeguido = diaSemana + 1;
+            diaSeguido = diaAtual + 1;
+            diaSemanaSeguido = diaSemana + 1;
 
-                // Há uma sexta feira treze no dia posterior ao dia do aniversário da cidade
-                // logo, precisamos desconsiderar esse dia pois será usada a mesma água
-                if (diaSeguido == 13 && diaSemanaSeguido % 7 == 0) {
-                    qtdFestival--;
-                }
-
-                diaSeguido = diaAtual - 1;
-                diaSemanaSeguido = diaSemana - 1;
-
-                // Caso a sexta treze tenha sido um dia antes do Aniversário da Cidade, mesma água
-                if (diaSeguido == 13 && diaSemanaSeguido % 7 == 0) {
-                    qtdFestival--;
-                } 
-    
-                // Qualifica uma sexta feira treze na condição abaixo
-            } else if (diaSemana % 7 == 0 && diaAtual == 13) {
-                qtdFestival++;
+            // Há uma sexta feira treze no dia posterior ao dia do aniversário da cidade
+            // logo, precisamos desconsiderar esse dia pois será usada a mesma água
+            if (diaSeguido == 13 && diaSemanaSeguido % 7 == 0) {
+                qtdFestival--;
             }
-        } 
+
+            diaSeguido = diaAtual - 1;
+            diaSemanaSeguido = diaSemana - 1;
+
+            // Caso a sexta treze tenha sido um dia antes do Aniversário da Cidade, mesma água
+        	if (diaSeguido == 13 && diaSemanaSeguido % 7 == 0) {
+            	qtdFestival--;
+        	}
+
+            // Qualifica uma sexta feira treze na condição abaixo
+        } else if (diaSemana % 7 == 0 && diaAtual == 13) {
+            qtdFestival++;
+        }
+        //} 
     }
    
     // Começa a lógica de encontrar o melhor preço dos galões de água  
