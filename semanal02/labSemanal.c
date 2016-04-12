@@ -124,7 +124,7 @@ int main() {
                 yMenorBorda = yProximo;
            
             // Caso tenha chego a ultima coordenada da linha, que é identica à primeira, deve
-            // parar o cálculo da área 
+            // parar o cálculo da área atual 
             if (xProximo == xPrimeiro && yProximo == yPrimeiro) 
                 break; 
 
@@ -145,7 +145,7 @@ int main() {
     xMaiorBorda += 0.5;
     yMaiorBorda += 0.5;
 
-    // Calculando a área do retagulo de margem  
+    // Calculando a área do retângulo de margem  
     areaAgua = (xMaiorBorda - xMenorBorda) * (yMaiorBorda - yMenorBorda);
 
     // Retirando os espaços das ilhas da area q será coberta com aǵua
@@ -178,10 +178,10 @@ int main() {
 
         // O mês chegou ao final
         if (diaAtual > qtdDiasMes) {
-            diaAtual = 1; //diaAtual = 0;
+            diaAtual = 1; 
             mesAtual++;
            
-            // Caso o mes seja 0, completou um ano
+            // Caso o mes passe de 12, completou um ano
             if (mesAtual > 12) {
                 mesAtual = 1;
                 anoAtual++;
@@ -214,7 +214,7 @@ int main() {
                 default: 
                     qtdDiasMes = 30;
             }
-        } //else {
+        } 
             
         // É o dia do aniversário da cidade
         if (diaAtual == diaNiver && mesAtual == mesNiver) {
@@ -241,11 +241,12 @@ int main() {
         } else if (diaSemana % 7 == 0 && diaAtual == 13) {
             qtdFestival++;
         }
-        //} 
     }
    
     // Começa a lógica de encontrar o melhor preço dos galões de água  
     scanf("%d", &numFornecedores);
+    
+    // Pega apenas a parte inteira do número de litros (um número real)
     litrosInteiros = litros;    
 
     scanf("%u $%lf", &capacidadeGalao, &precoGalao);
@@ -269,8 +270,8 @@ int main() {
     // O preço é calculado a partir da quantidade de galoes, o preço unitario e o numero de festivais 
     precoAtual = qtdGaloes * precoGalao * qtdFestival;
     
-    // O primeiro preco é o menor já encontrado na sequencia, depois porderá ser atualizado com o
-    // andamento da repetição
+    // O primeiro preco é o menor já encontrado na sequencia, sendo atualizado posteriormente se for 
+    // encontrado uim preço menor que o primeiro.
     menorPreco = precoAtual;
 
     for (i = 1; i < numFornecedores; i++) {
