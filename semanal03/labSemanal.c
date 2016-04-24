@@ -98,15 +98,16 @@ unsigned char posicaoConvolucao(int filtro[][MAX_TAM_FILTRO], unsigned char cinz
     
     unsigned char pixel;
 
-    short valorConvolucao = 0;
-
-    int intervalo,
+    int valorConvolucao,
+        intervalo,
         xComeco,
         yComeco,
         xFinal,
         yFinal,
         i, 
         j;
+
+    valorConvolucao = 0;
 
     // O intervalo que ocupa em ambos os lados e para cima e para baixo dada a ordem da matriz de filtro
     intervalo = dimensaoFiltro / 2; 
