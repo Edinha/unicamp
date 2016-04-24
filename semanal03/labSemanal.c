@@ -30,19 +30,6 @@
 // Tamanho máximo da matriz de filtro
 #define MAX_TAM_FILTRO 10
 
-void printc(unsigned char cinza[][MAX_TAM_RGB], int altura, int largura) {
-
-    int i, j;
-
-    for (i = 0; i < altura; i++) {
-        for (j = 0; j < largura; j++)
-            printf("%d ",  cinza[i][j]);
-        printf("\n");
-    }
-
-    printf("\n");
-}
-
 // Descompacta a entrada para cada cor específica dada a quantidade de elementos e largura e altura da matriz
 void descompactarCor(unsigned char cor[][MAX_TAM_RGB], int qtdMatriz, int largura, int altura) {
     
@@ -135,7 +122,7 @@ unsigned char posicaoConvolucao(short filtro[][MAX_TAM_FILTRO], unsigned char ci
     if (xComeco < 0 || yComeco < 0 || xFinal >= altura || yFinal >= largura)
         return cinza[x][y];
 
-    // Calcula o valor multiplicando o valor da posicao do filtro pela posicao da imagem cinza
+    // Calcula o valor multiplicando o valor da posicao do filtro pela posicao da imagem cinza e adicionando a uma somatória
     for (i = 0; i < dimensaoFiltro; i++)
         for (j = 0; j < dimensaoFiltro; j++) 
             valorConvolucao += filtro[i][j] * cinza[xComeco+i][yComeco+j];
@@ -153,7 +140,7 @@ unsigned char posicaoConvolucao(short filtro[][MAX_TAM_FILTRO], unsigned char ci
     return pixel;
 }
 
-// Essa função aplica a técnica de Convolução para cada elemento da imagem (matriz), salvando a imagem com filtro aplicado na variável resultado
+// Aplica a técnica de Convolução para cada elemento da imagem (matriz), salvando a imagem com filtro aplicado na variável resultado
 void aplicarFiltroMatrizCinza(unsigned char resultado[][MAX_TAM_RGB], short filtro[][MAX_TAM_FILTRO], unsigned char cinza[][MAX_TAM_RGB], int divisor, int altura, int largura, unsigned char dimensaoFiltro) {
 
     int i, j;
@@ -169,7 +156,7 @@ void aplicarFiltroMatrizCinza(unsigned char resultado[][MAX_TAM_RGB], short filt
         }
 }
 
-// Função que organiza a saida do programa na ordem
+// Executa a saída do programa no formato descrito pelo enunciado
 void imprimirResultado(unsigned char resultado[][MAX_TAM_RGB], int largura, int altura) {
 
     int i, j;
@@ -194,10 +181,10 @@ int main() {
         largura,
         altura;
 
-    short filtro[MAX_TAM_FILTRO][MAX_TAM_FILTRO];
-
     unsigned char dimensaoFiltro;
     
+    short filtro[MAX_TAM_FILTRO][MAX_TAM_FILTRO];
+
     unsigned char
           vermelho[MAX_TAM_RGB][MAX_TAM_RGB],
           azul[MAX_TAM_RGB][MAX_TAM_RGB],       
@@ -219,12 +206,7 @@ int main() {
     descompactarCor(azul    , qtdMatriz, largura, altura); 
 
     obterMatrizEscalaCinza(largura, altura, vermelho, verde, azul, cinza);
-
-    /*printc(cinza, altura, largura);    
-    printc(vermelho, altura, largura);
-    printc(verde   , altura, largura);
-    printc(azul    , altura, largura); */
-
+    
     aplicarFiltroMatrizCinza(resultado, filtro, cinza, divisor, altura, largura, dimensaoFiltro);
 
     imprimirResultado(resultado, largura, altura);
