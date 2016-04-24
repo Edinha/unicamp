@@ -96,16 +96,17 @@ void obterFiltro(int filtro[][MAX_TAM_FILTRO], unsigned char dimensaoFiltro) {
 // Calcula o valor do pixel daquela posicao x y da matriz de cinza a partir do filtro dado
 unsigned char posicaoConvolucao(int filtro[][MAX_TAM_FILTRO], unsigned char cinza[][MAX_TAM_RGB], int divisor, int x, int y, int altura, int largura, unsigned char dimensaoFiltro) {
     
-    unsigned char pixel;
+    unsigned char 
+        pixel,
+        i,
+        j;
 
     int valorConvolucao,
         intervalo,
         xComeco,
         yComeco,
         xFinal,
-        yFinal,
-        i, 
-        j;
+        yFinal;
 
     valorConvolucao = 0;
 
