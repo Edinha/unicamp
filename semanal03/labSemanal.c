@@ -6,7 +6,7 @@
  *
  *  O intuito desse programa é ler uma imagem que está compactada em seu formato rgb e aplicar um filtro para tal, 
  *  fazendo uma funcionalidade parecida com editores de imagem. Para tal, são usadas técnicas de convolução aplicadas
- *  a cada pixel da imagem a fim de "aplicar" o filtro desejado.
+ *  a cada pixel a fim de deixar a imagem com "filtro" representado por uma matriz e um número divisor.
  *
  *  Entrada:
  *      Um número inteiro representando o divisor a ser usado na convolução
@@ -14,6 +14,12 @@
  *      N linhas com N números inteiros representando a matriz de filtro
  *      Dois inteiros positivos representando altura e largura
  *      Pares de números representando quantas vezes eles repetem e seu valor
+ *  
+ *  Saida:
+ *      P2
+ *      (largura) (altura)
+ *      255 
+ *      A matriz representando a imagem com filtro aplicado
  */
 
 #include <stdio.h>
@@ -38,7 +44,7 @@ void printc(unsigned char cinza[][MAX_TAM_RGB], int altura, int largura) {
 }
 
 // Descompacta a entrada para cada cor específica dada a quantidade de elementos e largura e altura da matriz
-void descompactarParaCor(unsigned char cor[][MAX_TAM_RGB], int qtdMatriz, int largura, int altura) {
+void descompactarCor(unsigned char cor[][MAX_TAM_RGB], int qtdMatriz, int largura, int altura) {
     
     int cont,
         contRepeticao,
@@ -52,13 +58,13 @@ void descompactarParaCor(unsigned char cor[][MAX_TAM_RGB], int qtdMatriz, int la
         
         scanf("%hu %hhu", &repeticao, &valor);
         
-        // soma ao contador de pixels mais quantas vezes aquele valor compacto irá aparecer
+        // Soma ao contador de pixels a quantidade de valores repetidos atualmente lida
         cont += repeticao;
 
         for (contRepeticao = 0; contRepeticao < repeticao; contRepeticao++) {
             cor[i][j] = valor;
            
-            // faz a troca de valores dos índices i e j para mantê-los dentro do tamanho suposto da matriz
+            // Faz a troca de valores dos índices i e j para mantê-los dentro do tamanho suposto da matriz
             j++;
             if (j == largura) {
                 j = 0;
@@ -75,17 +81,16 @@ void obterMatrizEscalaCinza(int largura, int altura, unsigned char vermelho[][MA
 
     unsigned char valorCinza;
     
-    short valorParcial;
-
     for (i = 0; i < altura; i++) 
         for (j = 0; j < largura; j++) {
-        
-            valorParcial = (vermelho[i][j] + azul[i][j] + verde[i][j]) / 3;
+       
+            // É a média aritimética entre os pixels das cores da imagem 
+            valorCinza = (vermelho[i][j] + azul[i][j] + verde[i][j]) / 3;
 
-            if (valorParcial < 0)
-                valorParcial = -valorParcial;
+            // Caso seja menor que 0, inverte
+            if (valorCinza < 0)
+                valorCinza = -valorCinza;
 
-            valorCinza = valorParcial;
             cinza[i][j] = valorCinza;
         }
 }
@@ -209,9 +214,9 @@ int main() {
 
     qtdMatriz = largura * altura;
 
-    descompactarParaCor(vermelho, qtdMatriz, largura, altura);
-    descompactarParaCor(verde   , qtdMatriz, largura, altura);
-    descompactarParaCor(azul    , qtdMatriz, largura, altura); 
+    descompactarCor(vermelho, qtdMatriz, largura, altura);
+    descompactarCor(verde   , qtdMatriz, largura, altura);
+    descompactarCor(azul    , qtdMatriz, largura, altura); 
 
     obterMatrizEscalaCinza(largura, altura, vermelho, verde, azul, cinza);
 
