@@ -38,12 +38,12 @@ void descompactarCor(unsigned char cor[][MAX_TAM_RGB], int qtdMatriz, int largur
         i,
         j;
         
-    unsigned short repeticao;
+    unsigned int  repeticao;
     unsigned char valor;
 
     for (cont = 0, i = 0, j = 0; cont < qtdMatriz;) {
         
-        scanf("%hu %hhu", &repeticao, &valor);
+        scanf("%u %hhu", &repeticao, &valor);
         
         // Soma ao contador de pixels a quantidade de valores repetidos atualmente lida
         cont += repeticao;
@@ -83,18 +83,18 @@ void obterMatrizEscalaCinza(int largura, int altura, unsigned char vermelho[][MA
 }
 
 // Le da entrada a matriz de filtro a ser aplicada na imagem
-void obterFiltro(short filtro[][MAX_TAM_FILTRO], unsigned char dimensaoFiltro) {
+void obterFiltro(int filtro[][MAX_TAM_FILTRO], unsigned char dimensaoFiltro) {
 
     unsigned char i, j;
 
     for (i = 0; i < dimensaoFiltro; i++)
         for (j = 0; j < dimensaoFiltro; j++)
-            scanf("%hi ", &filtro[i][j]);
+            scanf("%d ", &filtro[i][j]);
 
 }
 
 // Calcula o valor do pixel daquela posicao x y da matriz de cinza a partir do filtro dado
-unsigned char posicaoConvolucao(short filtro[][MAX_TAM_FILTRO], unsigned char cinza[][MAX_TAM_RGB], int divisor, int x, int y, int altura, int largura, unsigned char dimensaoFiltro) {
+unsigned char posicaoConvolucao(int filtro[][MAX_TAM_FILTRO], unsigned char cinza[][MAX_TAM_RGB], int divisor, int x, int y, int altura, int largura, unsigned char dimensaoFiltro) {
     
     unsigned char pixel;
 
@@ -141,7 +141,7 @@ unsigned char posicaoConvolucao(short filtro[][MAX_TAM_FILTRO], unsigned char ci
 }
 
 // Aplica a técnica de Convolução para cada elemento da imagem (matriz), salvando a imagem com filtro aplicado na variável resultado
-void aplicarFiltroMatrizCinza(unsigned char resultado[][MAX_TAM_RGB], short filtro[][MAX_TAM_FILTRO], unsigned char cinza[][MAX_TAM_RGB], int divisor, int altura, int largura, unsigned char dimensaoFiltro) {
+void aplicarFiltroMatrizCinza(unsigned char resultado[][MAX_TAM_RGB], int filtro[][MAX_TAM_FILTRO], unsigned char cinza[][MAX_TAM_RGB], int divisor, int altura, int largura, unsigned char dimensaoFiltro) {
 
     int i, j;
 
@@ -183,7 +183,7 @@ int main() {
 
     unsigned char dimensaoFiltro;
     
-    short filtro[MAX_TAM_FILTRO][MAX_TAM_FILTRO];
+    int filtro[MAX_TAM_FILTRO][MAX_TAM_FILTRO];
 
     unsigned char
           vermelho[MAX_TAM_RGB][MAX_TAM_RGB],
