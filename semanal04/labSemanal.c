@@ -42,6 +42,15 @@
 #define SUCESSO 1
 #define FALHA -1
 
+#define INCLUIR 1
+#define EXCLUIR 2
+#define ALTERAR 3
+#define BUSCAR 4
+#define LISTAR_PESSOAL 5
+#define LISTAR_PROFISSIONAL 6
+#define LISTAR_TODOS 7
+#define SAIR 0
+
 typedef char string[60];
 
 void lerString(string s) {
@@ -60,6 +69,14 @@ int lerOpcao() {
     return opcao;    
 }
 
+int tipoDeContatoParaListagem (int opcaoDeListagem) {
+    if (opcaoDeListagem == LISTAR_PESSOAL) {
+        return PESSOAL;
+    }
+
+    return PROFISSIONAL;
+}
+
 void contatoInexistente (string nome) {
     printf("Desculpe, o contato %s nao existe!\n", nome);
 } 
@@ -76,7 +93,7 @@ void excluirDadosDosVetores(int posicao, string nomes[], unsigned long cpfs[], s
     }
 } 
 
-void alterarDadosDosVetores(int posicao, string nomes[], unsigned long cpfs[], string enderecos[], unsigned long telefones[], unsigned long celulares[], int qtdContatos) {
+void alterarDadosDosVetores(int posicao, string nomes[], unsigned long cpfs[], string enderecos[], unsigned long telefones[], unsigned long celulares[]) {
 
     string endereco;
 
@@ -94,6 +111,44 @@ void alterarDadosDosVetores(int posicao, string nomes[], unsigned long cpfs[], s
     telefones[posicao] = telefone;
     cpfs[posicao] = cpf;
     celulares[posicao] = celular;
+}
+
+void listarDadosDosVetoresNaPosicao (int posicao, string nomes[], unsigned long cpfs[], string enderecos[], unsigned long telefones[], unsigned long celulares[]) {
+    printf("%s\n", nomes[posicao]);
+    printf("%lu\n", cpfs[posicao]);
+    printf("%s\n", enderecos[posicao]);
+    printf("%lu\n", telefones[posicao]);
+    printf("%lu\n", celulares[posicao]);
+}
+
+int validarFuncionalidadeComChave (int funcionalidade, string chave, string nomes[], unsigned long cpfs[], string enderecos[], unsigned long telefones[], unsigned long celulares[], int qtdContatos) {
+
+    lerString(chave);
+
+    if (qtdContatos == 0) {
+        return FALHA;
+    }
+
+    for (int i = 0; i < qtdContatos; i++) {
+        if (strcmp(chave, nomes[i]) == 0) {
+
+            switch (funcionalidade) {
+                case EXCLUIR :    
+                    excluirDadosDosVetores(i, nomes, cpfs, enderecos, telefones, celulares, qtdContatos);
+                    break;
+                case ALTERAR : 
+                    alterarDadosDosVetores(i, nomes, cpfs, enderecos, telefones, celulares);
+                    break;
+                case BUSCAR : 
+                    listarDadosDosVetoresNaPosicao(i, nomes, cpfs, enderecos, telefones, celulares);
+                    break;
+            }
+            
+            return SUCESSO;
+        }
+    }
+
+    return FALHA;
 }
 
 // Lê os contatos e insere nos vetores, retornando negativo caso agenda esteja cheia e positivo caso tenha sido inserido com sucesso
@@ -140,7 +195,7 @@ int respostaInserir(int resposta, int qtdContatos) {
 
 int excluir (string chave, string nomes[], unsigned long cpfs[], string enderecos[], unsigned long telefones[], unsigned long celulares[], int qtdContatos) {
     
-    lerString(chave);
+    /* lerString(chave);
 
     if (qtdContatos == 0) {
         return FALHA;
@@ -153,7 +208,9 @@ int excluir (string chave, string nomes[], unsigned long cpfs[], string endereco
         }
     }
 
-    return FALHA;
+    return FALHA; */
+
+    return validarFuncionalidadeComChave (EXCLUIR, chave, nomes, cpfs, enderecos, telefones, celulares, qtdContatos); 
 }
 
 int respostaExcluir (int resposta, int qtdContatos, string chave) {
@@ -169,26 +226,25 @@ int respostaExcluir (int resposta, int qtdContatos, string chave) {
 
 int alterar (string chave, string nomes[], unsigned long cpfs[], string enderecos[], unsigned long telefones[], unsigned long celulares[], int qtdContatos) {
     
-    lerString(chave);
-
-    if (qtdContatos == 0) {
-        return FALHA;
-    }
-
-    for (int i = 0; i < qtdContatos; i++) {
-        if (strcmp(chave, nomes[i]) == 0) {
-            alterarDadosDosVetores(i, nomes, cpfs, enderecos, telefones, celulares, qtdContatos);
-            return SUCESSO;
-        }
-    }
-
-    return FALHA;
-
+    return validarFuncionalidadeComChave (ALTERAR, chave, nomes, cpfs, enderecos, telefones, celulares, qtdContatos); 
 }
 
 void respostaAlterar(int resposta, string chave) {
     if (resposta == SUCESSO) {
         printf("Alterado com sucesso!\n");
+    } else {
+        contatoInexistente(chave);
+    }
+}
+
+int buscar(string chave, string nomes[], unsigned long cpfs[], string enderecos[], unsigned long telefones[], unsigned long celulares[], int qtdContatos) {
+    
+    return validarFuncionalidadeComChave (BUSCAR, chave, nomes, cpfs, enderecos, telefones, celulares, qtdContatos); 
+}
+
+void respostaBuscar(int resposta, string chave) {
+    if (resposta == SUCESSO) {
+        printf("Buscado com sucesso!\n");
     } else {
         contatoInexistente(chave);
     }
@@ -200,16 +256,22 @@ int funcionalidadesParaTipoContato(int opcao, string nomes[], unsigned long cpfs
     string chave;
 
     switch (opcao) {
-        case 1: 
+        case INCLUIR: 
             resposta = inserir(nomes, cpfs, enderecos, telefones, celulares, qtdContatos);
             qtdContatos = respostaInserir(resposta, qtdContatos);
             break;
-        case 2:
+        case EXCLUIR:
             resposta = excluir(chave, nomes, cpfs, enderecos, telefones, celulares, qtdContatos);
             qtdContatos = respostaExcluir(resposta, qtdContatos, chave);
-        case 3:
+            break;
+        case ALTERAR:
             resposta = alterar(chave, nomes, cpfs, enderecos, telefones, celulares, qtdContatos);
             respostaAlterar(resposta, chave);
+            break;
+        case BUSCAR: 
+            resposta = buscar(chave, nomes, cpfs, enderecos, telefones, celulares, qtdContatos);
+            respostaBuscar(resposta, chave);
+            break;
         default:
             break; 
     }
@@ -240,7 +302,11 @@ int main() {
 
     while (opcao != 0) {
 
-        tipoContato = lerOpcao();
+        if (opcao < LISTAR_PESSOAL) {        
+            tipoContato = lerOpcao();
+        } else {
+            tipoContato = tipoDeContatoParaListagem(opcao);
+        }
 
         if (tipoContato == PESSOAL) {
             qtdContatosPessoal = funcionalidadesParaTipoContato(opcao, 
@@ -258,9 +324,27 @@ int main() {
                                                                      telefoneProfissional, 
                                                                      celularProfissional, 
                                                                      qtdContatosProfissional); 
+        } else {
+            funcionalidadesParaTipoContato(opcao, 
+                                           nomePessoal, 
+                                           cpfPessoal, 
+                                           enderecoPessoal,
+                                           telefonePessoal, 
+                                           celularPessoal, 
+                                           qtdContatosPessoal); 
+            
+            funcionalidadesParaTipoContato(opcao, 
+                                           nomeProfissional, 
+                                           cpfProfissional, 
+                                           enderecoProfissional, 
+                                           telefoneProfissional, 
+                                           celularProfissional, 
+                                           qtdContatosProfissional); 
+
         }
         
-        // TODO explodir isso aqui
+        // TODO explodir isso aqui, 
+        // opcao = lerOpcao();
         opcao = 0;
     } 
 
