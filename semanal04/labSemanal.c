@@ -195,21 +195,6 @@ int respostaInserir(int resposta, int qtdContatos) {
 
 int excluir (string chave, string nomes[], unsigned long cpfs[], string enderecos[], unsigned long telefones[], unsigned long celulares[], int qtdContatos) {
     
-    /* lerString(chave);
-
-    if (qtdContatos == 0) {
-        return FALHA;
-    }
-
-    for (int i = 0; i < qtdContatos; i++) {
-        if (strcmp(chave, nomes[i]) == 0) {
-            excluirDadosDosVetores(i, nomes, cpfs, enderecos, telefones, celulares, qtdContatos);
-            return SUCESSO;
-        }
-    }
-
-    return FALHA; */
-
     return validarFuncionalidadeComChave (EXCLUIR, chave, nomes, cpfs, enderecos, telefones, celulares, qtdContatos); 
 }
 
@@ -300,7 +285,7 @@ int main() {
 
     opcao = lerOpcao();
 
-    while (opcao != 0) {
+    while (opcao != SAIR) {
 
         if (opcao < LISTAR_PESSOAL) {        
             tipoContato = lerOpcao();
