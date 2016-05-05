@@ -37,6 +37,7 @@
 
 #define PESSOAL 1
 #define PROFISSIONAL 2
+#define AMBOS 3
 #define TAMANHO_AGENDA 10
 
 #define SUCESSO 1
@@ -74,7 +75,11 @@ int tipoDeContatoParaListagem (int opcaoDeListagem) {
         return PESSOAL;
     }
 
-    return PROFISSIONAL;
+    if (opcaoDeListagem == LISTAR_PROFISSIONAL) {
+        return PROFISSIONAL;
+    }
+
+    return AMBOS;
 }
 
 void contatoInexistente (string nome) {
@@ -310,7 +315,7 @@ int main() {
                                                                      celularProfissional, 
                                                                      qtdContatosProfissional); 
         } else {
-            funcionalidadesParaTipoContato(opcao, 
+            funcionalidadesParaTipoContato(LISTAR_PESSOAL, 
                                            nomePessoal, 
                                            cpfPessoal, 
                                            enderecoPessoal,
@@ -318,7 +323,7 @@ int main() {
                                            celularPessoal, 
                                            qtdContatosPessoal); 
             
-            funcionalidadesParaTipoContato(opcao, 
+            funcionalidadesParaTipoContato(LISTAR_PROFISSIONAL, 
                                            nomeProfissional, 
                                            cpfProfissional, 
                                            enderecoProfissional, 
