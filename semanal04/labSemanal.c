@@ -95,6 +95,7 @@ void contatoInexistente (string nome) {
 void excluirDadosDosVetores(int posicao, string nomes[], long long cpfs[], string enderecos[], long long telefones[], long long celulares[], int qtdContatos) {
     int proximo;
 
+    // Desloca as informações que estão a frente da posição desejada para exclusão para trás, a fim de sobreescrever os dados a serem excluidos
     for (int i = posicao; i < qtdContatos - 1; i++) {
         proximo = i+1;
 
@@ -121,6 +122,7 @@ void alterarDadosDosVetores(int posicao, string nomes[], long long cpfs[], strin
     telefone = lerLong();
     celular = lerLong();
     
+    // Copia o valor das variaveis lidas para o vetor na posição
     strcpy(enderecos[posicao] ,endereco);
     
     telefones[posicao] = telefone;
@@ -171,7 +173,7 @@ int inserir (string nomes[], long long cpfs[], string enderecos[], long long tel
         return FALHA;
     }
 
-    // Copia o valor das variaveis lidas para o vetor
+    // Copia o valor das variaveis lidas para o vetor na posição
     strcpy(nomes[qtdContatos], nome);
     strcpy(enderecos[qtdContatos] ,endereco);
     
@@ -221,7 +223,6 @@ int respostaExcluir (int resposta, int qtdContatos, string chave) {
 
 // Função de alterar dados do vetor com retorno de sucesso ou falha para impressao da mensagem
 int alterar (string chave, string nomes[], long long cpfs[], string enderecos[], long long telefones[], long long celulares[], int qtdContatos) { 
-    //return validarFuncionalidadeComChave (ALTERAR, chave, nomes, cpfs, enderecos, telefones, celulares, qtdContatos); 
     int posicao = validarPosicaoDaChaveNoVetor (chave, nomes, qtdContatos);
 
     if (posicao == FALHA) {
@@ -244,7 +245,6 @@ void respostaAlterar(int resposta, string chave) {
 
 // Função de buscar dados do vetor a partir de uma chave (nome do contato) com retorno de sucesso ou falha para impressao da mensagem
 int buscar(string chave, string nomes[], long long cpfs[], string enderecos[], long long telefones[], long long celulares[], int qtdContatos) {
-    //return validarFuncionalidadeComChave (BUSCAR, chave, nomes, cpfs, enderecos, telefones, celulares, qtdContatos); 
     int posicao = validarPosicaoDaChaveNoVetor (chave, nomes, qtdContatos);
 
     if (posicao == FALHA) {
