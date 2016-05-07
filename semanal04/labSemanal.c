@@ -58,9 +58,9 @@ void lerString(string s) {
     scanf(" %[^\n]s", s);
 }
 
-unsigned long lerLong() {
-    unsigned long l;
-    scanf("%lu", &l);
+long long lerLong() {
+    long long l;
+    scanf("%lli", &l);
     return l;
 }
 
@@ -83,26 +83,29 @@ int tipoDeContatoParaListagem (int opcaoDeListagem) {
 }
 
 void contatoInexistente (string nome) {
-    printf("Desculpe, o contato %s nao existe!\n", nome);
+    printf("Desculpe, contato %s nao existe!\n", nome);
 } 
 
-void excluirDadosDosVetores(int posicao, string nomes[], unsigned long cpfs[], string enderecos[], unsigned long telefones[], unsigned long celulares[], int qtdContatos) {
-    
-    for (int i = posicao; i < qtdContatos - 2; i++) {
-        strcpy(nomes[i], nomes[i+1]);
-        strcpy(enderecos[i] ,enderecos[i+1]);
+void excluirDadosDosVetores(int posicao, string nomes[], long long cpfs[], string enderecos[], long long telefones[], long long celulares[], int qtdContatos) {
+    int proximo;
 
-        telefones[i] = telefones[i+1];
-        cpfs[i] = cpfs[i+1];
-        celulares[i] = celulares[i+1];
+    for (int i = posicao; i < qtdContatos - 1; i++) {
+        proximo = i+1;
+
+        strcpy(nomes[i], nomes[proximo]);
+        strcpy(enderecos[i] ,enderecos[proximo]);
+
+        telefones[i] = telefones[proximo];
+        cpfs[i] = cpfs[proximo];
+        celulares[i] = celulares[proximo];
     }
 } 
 
-void alterarDadosDosVetores(int posicao, string nomes[], unsigned long cpfs[], string enderecos[], unsigned long telefones[], unsigned long celulares[]) {
+void alterarDadosDosVetores(int posicao, string nomes[], long long cpfs[], string enderecos[], long long telefones[], long long celulares[]) {
 
     string endereco;
 
-    unsigned long telefone,
+    long long telefone,
                   cpf,
                   celular;
 
@@ -118,15 +121,15 @@ void alterarDadosDosVetores(int posicao, string nomes[], unsigned long cpfs[], s
     celulares[posicao] = celular;
 }
 
-void listarDadosDosVetoresNaPosicao (int posicao, string nomes[], unsigned long cpfs[], string enderecos[], unsigned long telefones[], unsigned long celulares[]) {
+void listarDadosDosVetoresNaPosicao (int posicao, string nomes[], long long cpfs[], string enderecos[], long long telefones[], long long celulares[]) {
     printf("%s\n", nomes[posicao]);
-    printf("%lu\n", cpfs[posicao]);
+    printf("%lli\n", cpfs[posicao]);
     printf("%s\n", enderecos[posicao]);
-    printf("%lu\n", telefones[posicao]);
-    printf("%lu\n", celulares[posicao]);
+    printf("%lli\n", telefones[posicao]);
+    printf("%lli\n", celulares[posicao]);
 }
 
-int validarFuncionalidadeComChave (int funcionalidade, string chave, string nomes[], unsigned long cpfs[], string enderecos[], unsigned long telefones[], unsigned long celulares[], int qtdContatos) {
+int validarFuncionalidadeComChave (int funcionalidade, string chave, string nomes[], long long cpfs[], string enderecos[], long long telefones[], long long celulares[], int qtdContatos) {
 
     lerString(chave);
 
@@ -136,7 +139,6 @@ int validarFuncionalidadeComChave (int funcionalidade, string chave, string nome
 
     for (int i = 0; i < qtdContatos; i++) {
         if (strcmp(chave, nomes[i]) == 0) {
-
             switch (funcionalidade) {
                 case EXCLUIR :    
                     excluirDadosDosVetores(i, nomes, cpfs, enderecos, telefones, celulares, qtdContatos);
@@ -157,7 +159,7 @@ int validarFuncionalidadeComChave (int funcionalidade, string chave, string nome
 }
 
 // Lê os contatos e insere nos vetores, retornando negativo caso agenda esteja cheia e positivo caso tenha sido inserido com sucesso
-int inserir (string nomes[], unsigned long cpfs[], string enderecos[], unsigned long telefones[], unsigned long celulares[], int qtdContatos) {
+int inserir (string nomes[], long long cpfs[], string enderecos[], long long telefones[], long long celulares[], int qtdContatos) {
     if (qtdContatos == TAMANHO_AGENDA) {
         return FALHA;
     }
@@ -165,9 +167,9 @@ int inserir (string nomes[], unsigned long cpfs[], string enderecos[], unsigned 
     string nome,
            endereco;
 
-    unsigned long telefone,
-                  cpf,
-                  celular;
+    long long telefone,
+              cpf,
+              celular;
 
     lerString(nome);   
     cpf = lerLong();
@@ -198,8 +200,7 @@ int respostaInserir(int resposta, int qtdContatos) {
     return qtdContatos;
 }
 
-int excluir (string chave, string nomes[], unsigned long cpfs[], string enderecos[], unsigned long telefones[], unsigned long celulares[], int qtdContatos) {
-    
+int excluir (string chave, string nomes[], long long cpfs[], string enderecos[], long long telefones[], long long celulares[], int qtdContatos) {
     return validarFuncionalidadeComChave (EXCLUIR, chave, nomes, cpfs, enderecos, telefones, celulares, qtdContatos); 
 }
 
@@ -214,8 +215,7 @@ int respostaExcluir (int resposta, int qtdContatos, string chave) {
     return qtdContatos;
 }
 
-int alterar (string chave, string nomes[], unsigned long cpfs[], string enderecos[], unsigned long telefones[], unsigned long celulares[], int qtdContatos) {
-    
+int alterar (string chave, string nomes[], long long cpfs[], string enderecos[], long long telefones[], long long celulares[], int qtdContatos) { 
     return validarFuncionalidadeComChave (ALTERAR, chave, nomes, cpfs, enderecos, telefones, celulares, qtdContatos); 
 }
 
@@ -227,8 +227,7 @@ void respostaAlterar(int resposta, string chave) {
     }
 }
 
-int buscar(string chave, string nomes[], unsigned long cpfs[], string enderecos[], unsigned long telefones[], unsigned long celulares[], int qtdContatos) {
-    
+int buscar(string chave, string nomes[], long long cpfs[], string enderecos[], long long telefones[], long long celulares[], int qtdContatos) {
     return validarFuncionalidadeComChave (BUSCAR, chave, nomes, cpfs, enderecos, telefones, celulares, qtdContatos); 
 }
 
@@ -240,7 +239,28 @@ void respostaBuscar(int resposta, string chave) {
     }
 }
 
-int funcionalidadesParaTipoContato(int opcao, string nomes[], unsigned long cpfs[], string enderecos[], unsigned long telefones[], unsigned long celulares[], int qtdContatos) {
+int listar(string nomes[], long long cpfs[], string enderecos[], long long telefones[], long long celulares[], int qtdContatos) {
+
+    if (qtdContatos == 0) {
+        return FALHA;
+    }
+
+    for(int i = 0; i < qtdContatos; i++) {
+        listarDadosDosVetoresNaPosicao (i, nomes, cpfs, enderecos, telefones, celulares);
+    }
+
+    return SUCESSO;
+}
+
+void respostaListagem(int resposta) {
+    if (resposta == FALHA) {
+        printf("Desculpe, agenda vazia!\n");
+    } else {
+        printf("Listado com sucesso!\n");
+    }
+}
+
+int funcionalidadesParaTipoContato(int opcao, string nomes[], long long cpfs[], string enderecos[], long long telefones[], long long celulares[], int qtdContatos) {
 
     int resposta;
     string chave;
@@ -262,6 +282,11 @@ int funcionalidadesParaTipoContato(int opcao, string nomes[], unsigned long cpfs
             resposta = buscar(chave, nomes, cpfs, enderecos, telefones, celulares, qtdContatos);
             respostaBuscar(resposta, chave);
             break;
+        case LISTAR_PESSOAL:
+        case LISTAR_PROFISSIONAL:
+            resposta = listar(nomes, cpfs, enderecos, telefones, celulares, qtdContatos);            
+            respostaListagem(resposta);
+            break;
         default:
             break; 
     }
@@ -276,12 +301,12 @@ int main() {
            enderecoPessoal[TAMANHO_AGENDA],
            enderecoProfissional[TAMANHO_AGENDA];
            
-   unsigned long telefonePessoal[TAMANHO_AGENDA],
-                 telefoneProfissional[TAMANHO_AGENDA],
-                 celularPessoal[TAMANHO_AGENDA],
-                 celularProfissional[TAMANHO_AGENDA],
-                 cpfPessoal[TAMANHO_AGENDA],
-                 cpfProfissional[TAMANHO_AGENDA];
+    long long telefonePessoal[TAMANHO_AGENDA],
+              telefoneProfissional[TAMANHO_AGENDA],
+              celularPessoal[TAMANHO_AGENDA],
+              celularProfissional[TAMANHO_AGENDA],
+              cpfPessoal[TAMANHO_AGENDA],
+              cpfProfissional[TAMANHO_AGENDA];
     
    int qtdContatosPessoal = 0,
        qtdContatosProfissional = 0,
@@ -333,21 +358,9 @@ int main() {
 
         }
         
-        // TODO explodir isso aqui, 
-        // opcao = lerOpcao();
-        opcao = 0;
+        opcao = lerOpcao();
     } 
 
     printf("Obrigado!\n");
     return 0;
-}
-
-void printL(unsigned long vet[], int qtd) {
-    for (int i = 0; i < qtd; i++)
-        printf("%lu\n", vet[i]);
-}
-
-void printS(string vet[], int qtd) {
-    for (int i = 0; i < qtd; i++)
-        printf("%s\n", vet[i]);
 }
