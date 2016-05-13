@@ -11,6 +11,7 @@
 // Por último, há o cálculo de da sintonia entre pessoas por numerologia, afim de encontrar o "par perfeito"
 
 #include <stdio.h>
+#include <math.h>
 
 #define TAMANHO_NOME 200
 #define QUANTIDADE_MAXIMA_ALUNOS 40
@@ -93,15 +94,16 @@ Genero lerGenero() {
     return decideGeneroPorCaracter(caracter);
 }
 
+// Compara duas posições passadas por parâmetro, retornando verdadeiro se forem a mesma
 int mesmaPosicaoDaPessoa (int posicaoAtual, int posicaoPessoa) {
     return (posicaoAtual == posicaoPessoa);
 } 
 
 // A partir de um vetor de afinidades para a pessoa passado, lê a entrada e armazena no vetor
-void popularAfinidadesDaPessoa (unsigned char afinidades[], int tamanho, int posicao) {
-    for (int i = 0; i < tamanho; i++) {
+void popularAfinidadesDaPessoa (unsigned char afinidades[], unsigned char quantidade, int posicao) {
+    for (int i = 0; i < quantidade; i++) {
         // caso seja a posição da própria pela ela não avalia sua afinidade com ela mesma, então é pulada
-        if (posicao == i) {
+        if (mesmaPosicaoDaPessoa (posicao, i) ) {
             continue;
         }
 
@@ -109,7 +111,64 @@ void popularAfinidadesDaPessoa (unsigned char afinidades[], int tamanho, int pos
     }
 } 
 
+// Lê os campos para uma pessoa exceto suas afinidades
+void lerPessoa (Pessoa * pessoa) {
+
+    lerString( (*pessoa).nome);
+    
+    (*pessoa).nascimento = lerData();
+    (*pessoa).pessoal = lerGenero();
+    (*pessoa).preferencia = lerGenero();
+} 
+
+char getChar (Genero g) {
+    if (g == Masculino)
+        return 'M';
+
+    return 'F';
+}
+
+void printarPessoa (Pessoa pessoa) {
+    printf("%s\n", pessoa.nome);
+    printf("%d/%d/%d\n", pessoa.nascimento.dia, pessoa.nascimento.mes, pessoa.nascimento.ano);
+    printf("%c %c\n", getChar(pessoa.pessoal), getChar(pessoa.preferencia));
+    
+    for (int i = 0; i < QUANTIDADE_MAXIMA_ALUNOS; i++)
+        printf("%d ", pessoa.afinidades[i]);
+
+    printf("\n");
+}    
+
+// Dado um vetor de pessoas, lê toda a entrada do programa
+void lerPessoas (Pessoa pessoas[], unsigned char quantidade) {
+    for (int i = 0; i < quantidade; i++) {
+        lerPessoa (&pessoas[i]);
+        popularAfinidadesDaPessoa(pessoas[i].afinidades, quantidade, i);
+        printarPessoa(pessoas[i]);
+    }
+}
+
+// Média geométrica entre dois valores é a raiz quadrada da multiplicação entre eles 
+double mediaGeometrica (int valor, int fator) {
+    double media = sqrt (valor * fator);
+    return media;
+} 
+
 int main() {
+    Data preenchimento;
+
+    Pessoa pessoas[QUANTIDADE_MAXIMA_ALUNOS];
+
+    unsigned char quantidade;
+
+    preenchimento = lerData();
+
+    lerNumero (&quantidade);
+
+    lerPessoas(pessoas, quantidade);
+
+    // TODO explodir isso aqui
+    printf("%d", preenchimento.dia);
 
     return 0;
 }
