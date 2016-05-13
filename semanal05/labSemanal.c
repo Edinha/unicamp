@@ -77,6 +77,7 @@ Data lerData() {
     return data;   
 }
 
+// A partir dos carácteres 'F' ou 'M' decide o  gênero a ser devolvido
 Genero decideGeneroPorCaracter (char caracter) {
     if (caracter == 'F') {
         return Feminino;
@@ -85,11 +86,28 @@ Genero decideGeneroPorCaracter (char caracter) {
     return Masculino;
 }
 
+// Lê um gênero de entrada
 Genero lerGenero() {
     char caracter;
     scanf("%c ", &caracter);
     return decideGeneroPorCaracter(caracter);
 }
+
+int mesmaPosicaoDaPessoa (int posicaoAtual, int posicaoPessoa) {
+    return (posicaoAtual == posicaoPessoa);
+} 
+
+// A partir de um vetor de afinidades para a pessoa passado, lê a entrada e armazena no vetor
+void popularAfinidadesDaPessoa (unsigned char afinidades[], int tamanho, int posicao) {
+    for (int i = 0; i < tamanho; i++) {
+        // caso seja a posição da própria pela ela não avalia sua afinidade com ela mesma, então é pulada
+        if (posicao == i) {
+            continue;
+        }
+
+        lerNumero (&afinidades[i]);
+    }
+} 
 
 int main() {
 
