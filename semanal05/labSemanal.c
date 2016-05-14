@@ -13,6 +13,10 @@
 #include <stdio.h>
 #include <math.h>
 
+#define SUCESSO 1
+#define FALHA 0
+#define MEDIA_MINIMA_AFINIDADE 5
+
 #define TAMANHO_NOME 200
 #define QUANTIDADE_MAXIMA_ALUNOS 40
 
@@ -71,11 +75,9 @@ void lerInteiro(int * inteiro) {
 }
 
 // Lê uma entrada no formato da estrutura de data
-Data lerData() {
-    Data data;
-    scanf("%hhu/%hhu/%hhu ", &data.dia, &data.mes, &data.ano);
-    //scanf("%d/%d/%d", &data.dia, &data.mes, &data.ano);
-    return data;   
+void lerData(Data * data) {
+    scanf("%hhu/%hhu/%hhu ", &data->dia, &data->mes, &data->ano);
+    //scanf("%d/%d/%d", &data.dia, &data.mes, &data.ano);   
 }
 
 // A partir dos carácteres 'F' ou 'M' decide o  gênero a ser devolvido
@@ -114,11 +116,11 @@ void popularAfinidadesDaPessoa (unsigned char afinidades[], unsigned char quanti
 // Lê os campos para uma pessoa exceto suas afinidades
 void lerPessoa (Pessoa * pessoa) {
 
-    lerString( (*pessoa).nome);
+    lerString(pessoa->nome);
     
-    (*pessoa).nascimento = lerData();
-    (*pessoa).pessoal = lerGenero();
-    (*pessoa).preferencia = lerGenero();
+    lerData(&pessoa->nascimento);
+    pessoa->pessoal = lerGenero();
+    pessoa->preferencia = lerGenero();
 } 
 
 char getChar (Genero g) {
@@ -149,9 +151,84 @@ void lerPessoas (Pessoa pessoas[], unsigned char quantidade) {
 }
 
 // Média geométrica entre dois valores é a raiz quadrada da multiplicação entre eles 
-double mediaGeometrica (int valor, int fator) {
-    double media = sqrt (valor * fator);
-    return media;
+double mediaGeometrica (unsigned char valor, unsigned char fator) {
+    return sqrt ( valor * fator);
+} 
+
+int ponteirosParaPessoasIguaisNaAresta (Pessoa * a, Pessoa * b, Aresta aresta) {
+    if (aresta.parceiro == a && aresta.companheiro == b) {
+        return SUCESSO;
+    }
+
+    return FALHA;
+} 
+
+int jaExisteArestaEntrePessoasNaPosicao (Pessoa * parceiro, Pessoa * companheiro, Aresta arestas[], int posicao) {
+    
+    if ( ponteirosParaPessoasIguaisNaAresta (parceiro, companheiro, arestas[posicao]) ) {
+        return SUCESSO;
+    }
+
+    if ( ponteirosParaPessoasIguaisNaAresta (companheiro, parceiro, arestas[posicao])  ) {
+        return SUCESSO;
+    }
+
+    return FALHA;
+}
+
+double existeArestaEntrePessoas (Pessoa * parceiro, int posicaoParceiro, Pessoa * companheiro, int posicaoCompanheiro, Aresta arestas[]) {
+
+    double mediaNotas = mediaGeometrica ( parceiro->afinidades[posicaoCompanheiro] , companheiro->afinidades[posicaoParceiro]);
+
+    if (mediaNotas < MEDIA_MINIMA_AFINIDADE) {
+        return FALHA;
+    }
+
+    for (int i = 0; i < NUMERO_ARESTAS; i++) {
+        if (jaExisteArestaEntrePessoasNaPosicao (parceiro, companheiro, arestas, i) ) {
+            return FALHA;
+        }
+    }
+
+    return mediaNotas;
+} 
+
+int montarGrafo (Grafo * grafo, Pessoa pessoas[], unsigned char quantidade) {
+
+    int posAresta = 0;
+
+    for (int i = 0; i < quantidade; i++) {
+        
+        for (int pos = 0; pos < quantidade; pos++) {
+            if (mesmaPosicaoDaPessoa(i, pos)) {
+                continue;
+            }
+
+            double afinidade = existeArestaEntrePessoas (&pessoas[i], i, &pessoas[pos], pos, grafo->arestas);
+
+            // Se existe afinidade entre as pessoas possível para formar aresta
+            if ( afinidade ) {
+                
+                grafo->arestas[posAresta].parceiro = &pessoas[i];
+                grafo->arestas[posAresta].companheiro = &pessoas[pos];
+                grafo->arestas[posAresta].afinidade = afinidade; 
+
+                posAresta++;   
+            }
+        }
+
+    }
+
+    return posAresta;
+}
+
+void imprimirArestas (Aresta arestas[], int qtd) {
+
+    for (int i = 0; i < qtd; i++) {
+        printf ("Nome : %s\n", arestas[i].parceiro->nome);
+        printf ("Nome : %s\n", arestas[i].companheiro->nome);
+        printf ("Afin : %f\n\n", arestas[i].afinidade);
+    }
 } 
 
 int main() {
@@ -159,13 +236,21 @@ int main() {
 
     Pessoa pessoas[QUANTIDADE_MAXIMA_ALUNOS];
 
+    Grafo grafo;
+
     unsigned char quantidade;
 
-    preenchimento = lerData();
+    int tamanhoGrafo;
+
+    lerData(&preenchimento);
 
     lerNumero (&quantidade);
 
     lerPessoas(pessoas, quantidade);
+
+    tamanhoGrafo = montarGrafo ( &grafo, pessoas, quantidade);
+
+    imprimirArestas (grafo.arestas, tamanhoGrafo);
 
     // TODO explodir isso aqui
     printf("%d", preenchimento.dia);
