@@ -129,16 +129,6 @@ void lerPessoa (Pessoa * pessoa) {
     pessoa->preferencia = lerGenero();
 } 
 
-
-/* TODO descomentar
- * Pega o char a partir do gênero da pessoa
-char getChar (Genero g) {
-    if (g == Masculino)
-        return 'M';
-
-    return 'F';
-} */
-
 // Dado um vetor de pessoas, lê toda a entrada do programa
 void lerPessoas (Pessoa pessoas[], unsigned char quantidade) {
     for (int i = 0; i < quantidade; i++) {
@@ -186,11 +176,10 @@ unsigned char montarArestas (Aresta arestas[], int i, Pessoa pessoas[], unsigned
     return qtdArestas;
 }
 
-// Monta a estrutura do grafo 
+// Monta a estrutura do grafo, colocando em cada vértice uma pessoa da entrada centralizada e suas ligações 
 void montarGrafo (Grafo * grafo, Pessoa pessoas[], unsigned char quantidade) {
     for (int i = 0; i < quantidade; i++) {
         grafo->vertices[i].pessoa = &pessoas[i];
-
         grafo->vertices[i].ligacoes = montarArestas( grafo->vertices[i].amizades, i, pessoas, quantidade);    
     }
 }
@@ -318,7 +307,7 @@ double similaridade (codinome prim, codinome seg) {
         if (prim[i] == seg[i])
             qtd++;
 
-    return qtd / 4.0;
+    return (double) qtd / TAMANHO_CODINOME;
 }
 
 // Retorna a similaridade entre dois números por seus dígitos
@@ -334,7 +323,7 @@ double similaridadeNumerica (int prim, int seg) {
         seg  = seg / 10;
     }
 
-    return qtd / 3.0;   
+    return (double) qtd / (TAMANHO_CODINOME - 1);   
 }
 
 // Calcula a numerologia a partir de uma data
@@ -390,19 +379,27 @@ Par encontrarParPerfeito (Vertice * vertice, Data * hoje) {
            * outra,
            * parPerfeito;
 
+    Genero generoPreferenciaPopular = popular->preferencia,
+           generoPessoalOutra;
+
     double maiorSintonia = 0.0,
            atualSintonia,
            afinidade;
 
     for (int i = 0; i < vertice->ligacoes; i++) {
-        outra     = vertice->amizades[i].parceiro;
-        afinidade = vertice->amizades[i].afinidade;
+        generoPessoalOutra = vertice->amizades[i].parceiro->pessoal;
 
-        atualSintonia = sintonia (popular, outra, hoje, afinidade);
+        // Caso o gênero da outra pessoa seja o da preferência do popular
+        if (generoPreferenciaPopular == generoPessoalOutra) {
+            outra     = vertice->amizades[i].parceiro;
+            afinidade = vertice->amizades[i].afinidade;
 
-        if (atualSintonia > maiorSintonia) {
-            maiorSintonia = atualSintonia;
-            parPerfeito = outra;
+            atualSintonia = sintonia (popular, outra, hoje, afinidade);
+
+            if (atualSintonia > maiorSintonia) {
+                maiorSintonia = atualSintonia;
+                parPerfeito = outra;
+            }
         }
     } 
 
