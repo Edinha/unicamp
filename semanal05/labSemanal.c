@@ -200,6 +200,7 @@ Vertice* pessoaMaisPopular (Grafo * grafo, unsigned char quantidade) {
 }
 
 // TODO melhorar se possível
+// Não sei jeito melhor
 unsigned char numeroPelaConsoante (char c) {
     if (c == 'g' || c == 'j')
         return 1;
@@ -329,20 +330,24 @@ int numerologia (Data * data) {
         numero,
         final;
 
+    // Soma dígitos do ano
     for (contAno = 0; ano != 0; ano /= 10) 
         contAno += ano % 10;
 
     diaMes += contAno;
 
+    // Soma dígitos da primeira soma
     for (numero = 0; diaMes != 0; diaMes /= 10) 
         numero += diaMes % 10;
 
+    // Soma dígitos da segunda soma
     for (final = 0; numero != 0; numero /= 10) 
         final += numero % 10;
 
     return final;
 }
 
+// Altera a idade do parâmetro para ter apenas dois dígitos
 void idadeComDoisDigitos (int * idade) {
     if (*idade < 10)
         *idade *= 10;
@@ -370,16 +375,13 @@ double sintonia (Pessoa * popular, Pessoa * parceiro, Data * hoje, double afinid
     gerarCodinome (pop, popular->nome);
     gerarCodinome (parc, parceiro->nome);
 
+    // Aplica a fórmula para cada fator
+    // Primeiro -> 3   * similaridade entre os códigos de nomes
+    // Segundo  -> 2   * similaridade entre os códigos de datas
+    // Terceiro -> 1/5 * afinidade entre as pessoas 
     double primFator = 3 * similaridade (pop, parc),
            segFator = 5 * similaridadeNumerica (codNascPop, codNascParc),
            tercFator = 2 * (afinidade / 10);
-
-    /*printf ("Nome : %s\n", parceiro->nome);
-    printf ("   Prim fator : %.2f\n", primFator);
-    printf ("   Seg fator  : %.2f\n", segFator);
-    printf ("   Terc fator : %.2f\n", tercFator); 
-    printf ("   Sintonia   : %.2f\n", (primFator + segFator + tercFator) / 10.0);
-    */
 
     return (primFator + segFator + tercFator) / 10.0;
 }
@@ -409,6 +411,7 @@ Par encontrarParPerfeito (Vertice * vertice, Data * hoje) {
 
             atualSintonia = sintonia (popular, outra, hoje, afinidade);
 
+            // Se a sintonia atual for maior que a maior, achamos um novo par mais perfeito :P
             if (atualSintonia > maiorSintonia) {
                 maiorSintonia = atualSintonia;
                 parPerfeito = outra;
