@@ -231,9 +231,10 @@ unsigned char numeroPelaConsoante (char c) {
     return 0;
 } 
 
-int naoVogal (char letra) {
+int letraConsiderada (char letra) {
     if (letra == 'a' || letra == 'e' || letra == 'i' ||
-        letra == 'o' || letra == 'u') {
+        letra == 'o' || letra == 'u' || letra == 'h' ||
+        letra == 'y' || letra == 'w') {
             return FALHA;
     }
     
@@ -261,7 +262,7 @@ void gerarCodinome (codinome codigo, string nome) {
         if (letra == ' ')
             break;
 
-        if (naoVogal(letra)) {
+        if (letraConsiderada(letra)) {
             atual = numeroPelaConsoante (letra); 
            
             // Condições para se adicionar um número ao codinome 
@@ -334,7 +335,7 @@ int numerologia (Data * data) {
         numero,
         final;
 
-    for (contAno = 0; ano != 0; ano = ano / 10) 
+    for (contAno = 0; ano != 0; ano /= 10) 
         contAno += ano % 10;
 
     diaMes += contAno;
@@ -343,9 +344,17 @@ int numerologia (Data * data) {
         numero += diaMes % 10;
 
     for (final = 0; numero != 0; numero /= 10) 
-        final += numero;
-    
+        final += numero % 10;
+
     return final;
+}
+
+void idadeComDoisDigitos (int * idade) {
+    if (*idade < 10)
+        *idade *= 10;
+
+    while (*idade > 100) 
+        *idade /= 10;
 }
 
 // Calcula a sintonia entra duas pessoas
@@ -353,10 +362,13 @@ double sintonia (Pessoa * popular, Pessoa * parceiro, Data * hoje, double afinid
     int idadePopular  = idade (&popular->nascimento, hoje),
         idadeParceiro = idade (&parceiro->nascimento, hoje),
         numPopular = numerologia (&popular->nascimento),
-        numParceiro = numerologia (&parceiro->nascimento),
+        numParceiro = numerologia (&parceiro->nascimento);
 
-        // Multiplicar po 100 para deslocar duas casas para esquerda
-        codNascPop = numPopular * 100 + idadePopular,
+    idadeComDoisDigitos (&idadePopular);
+    idadeComDoisDigitos (&idadeParceiro);
+
+    // Multiplicar po 100 para deslocar duas casas para esquerda
+    int codNascPop = numPopular * 100 + idadePopular,
         codNascParc = numParceiro * 100 + idadeParceiro;
 
     codinome pop, parc;
@@ -367,6 +379,13 @@ double sintonia (Pessoa * popular, Pessoa * parceiro, Data * hoje, double afinid
     double primFator = 3 * similaridade (pop, parc),
            segFator = 5 * similaridadeNumerica (codNascPop, codNascParc),
            tercFator = 2 * (afinidade / 10);
+
+    /*printf ("Nome : %s\n", parceiro->nome);
+    printf ("   Prim fator : %.2f\n", primFator);
+    printf ("   Seg fator  : %.2f\n", segFator);
+    printf ("   Terc fator : %.2f\n", tercFator); 
+    printf ("   Sintonia   : %.2f\n", (primFator + segFator + tercFator) / 10.0);
+    */
 
     return (primFator + segFator + tercFator) / 10.0;
 }
