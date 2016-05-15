@@ -17,15 +17,13 @@
 #define FALHA 0
 #define MEDIA_MINIMA_AFINIDADE 5
 
+#define TAMANHO_CODINOME 4
 #define TAMANHO_NOME 200
 #define QUANTIDADE_MAXIMA_ALUNOS 40
 
-// O número máximo de arestas é definido a partir de um número n de vértices pela fórmula :
-//     n * (n - 1) / 2
-#define NUMERO_ARESTAS QUANTIDADE_MAXIMA_ALUNOS * (QUANTIDADE_MAXIMA_ALUNOS - 1) / 2
-
 // Definindo as estruturas utilizáveis pelo programa
 typedef char string[TAMANHO_NOME]; 
+typedef char codinome[TAMANHO_CODINOME];
 
 typedef
     enum {
@@ -163,21 +161,6 @@ double existeAfinidadeEntrePessoas (Pessoa * parceiro, int posicaoParceiro, Pess
     return mediaNotas;
 } 
 
-void imprimirGrafo (Grafo * grafo, unsigned char qtd) {
-    int a;
-    for (int i = 0; i < qtd; i++) {
-        printf ("Pessoa Vértice : %s\n", grafo->vertices[i].pessoa->nome);
-        printf ("Ligacoes : %d\n", grafo->vertices[i].ligacoes);    
-
-        a = grafo->vertices[i].ligacoes;
-        for (int j = 0; j < a; j++) {
-            Aresta ar = grafo->vertices[i].amizades[j];
-            printf ("   Pessoa %s   Afinidade : %f\n", ar.parceiro->nome, ar.afinidade);
-        }
-            
-        printf("\n"); 
-    } 
-}
 
 // A partir das pessoas, monta as arestas daquele vértice e retorna o número de arestas
 unsigned char montarArestas (Aresta arestas[], int i, Pessoa pessoas[], unsigned char quantidade) {
@@ -211,8 +194,110 @@ void montarGrafo (Grafo * grafo, Pessoa pessoas[], unsigned char quantidade) {
     }
 }
 
+Pessoa* pessoaMaisPopular (Grafo * grafo, unsigned char quantidade) {
+
+    unsigned char maiorNumeroLigacoes = 0;
+    Pessoa* maisPopular;
+
+    for (int i = 0; i < quantidade; i++) {
+        if (grafo->vertices[i].ligacoes > maiorNumeroLigacoes) {
+            maiorNumeroLigacoes = grafo->vertices[i].ligacoes;
+            maisPopular = grafo->vertices[i].pessoa;
+        }
+    }
+
+    return maisPopular;
+}
+
+// TODO melhorar se possível
+unsigned char numeroPelaConsoante (char c) {
+    if (c == 'g' || c == 'j')
+        return 1;
+    
+    if (c == 's' || c == 'z' || c == 'x')
+        return 2;
+    
+    if (c == 'c' || c == 'k' || c == 'q')
+        return 3;
+
+    if (c == 'b' || c == 'p')
+        return 4;
+
+    if (c == 'm' || c == 'n')
+        return 5;
+
+    if (c == 'd' || c == 't')
+        return 6;
+
+    if (c == 'f' || c == 'v')
+        return 7;
+
+    if (c == 'l')
+        return 8;
+
+    if (c == 'r')
+        return 9;
+
+    return 0;
+} 
+
+int naoVogal (char letra) {
+
+    if (letra == 'a' || letra == 'e' || letra == 'i' ||
+        letra == 'o' || letra == 'u') {
+            return FALHA;
+    }
+    
+    return SUCESSO;
+}
+
+// Transforma o número passado por parâmetro no seu respectivo caracter ASCII
+char charPeloNumero (unsigned char numero) {
+    char c = (char) (numero + 48);
+    return c;
+}
+
+void gerarCodinome (codinome codigo, string nome) {
+
+    unsigned char numeros[TAMANHO_CODINOME - 1],
+                  atual, i,
+                  contador = 0;
+
+    // Atribue a primeira letra ao codinome
+    codigo[0] = nome[0];
+
+    for (i = 1; ; i++) {
+        char letra = nome[i];
+             
+        // Codifica apenas o primero nome, quando chega ao caracter espaço, chegou ao fim do primero fim
+        if (letra == ' ')
+            break;
+
+        if (naoVogal(letra)) {
+            atual = numeroPelaConsoante (letra); 
+           
+            // Condições para se adicionar um número ao codinome 
+            if ( (contador == 0) || (contador > 0 && numeros[contador - 1] != atual) ) {
+                numeros[contador] = atual;
+                codigo[i] = charPeloNumero (atual);
+                contador++;
+            } 
+
+            // Caso já tenha contabilizado o codinome completo
+            if (contador >= TAMANHO_CODINOME - 1) 
+                break;
+        }
+    }
+
+    for (i = contador; i < TAMANHO_CODINOME - 1; i++)
+       codigo[i] = '0';
+
+}
+
 int main() {
     Data preenchimento;
+
+    Pessoa * popular;
 
     Pessoa pessoas[QUANTIDADE_MAXIMA_ALUNOS];
 
@@ -228,7 +313,12 @@ int main() {
 
     montarGrafo ( &grafo, pessoas, quantidade);
 
-    imprimirGrafo ( &grafo, quantidade);
+    popular = pessoaMaisPopular (&grafo, quantidade);
+
+    codinome codigo;
+    gerarCodinome(codigo, popular->nome);
+    printf ("Codigo : %s\n", codigo);
+    //imprimirGrafo ( &grafo, quantidade);
     //imprimirArestas (grafo.arestas, tamanhoGrafo);
 
     // TODO explodir isso aqui
@@ -236,3 +326,20 @@ int main() {
 
     return 0;
 }
+
+// TODO EXPLODE THIS
+/*void imprimirGrafo (Grafo * grafo, unsigned char qtd) {
+    int a;
+    for (int i = 0; i < qtd; i++) {
+        printf ("Pessoa Vértice : %s\n", grafo->vertices[i].pessoa->nome);
+        printf ("Ligacoes : %d\n", grafo->vertices[i].ligacoes);    
+
+        a = grafo->vertices[i].ligacoes;
+        for (int j = 0; j < a; j++) {
+            Aresta ar = grafo->vertices[i].amizades[j];
+            printf ("   Pessoa %s   Afinidade : %f\n", ar.parceiro->nome, ar.afinidade);
+        }
+            
+        printf("\n"); 
+    } 
+} */
