@@ -46,6 +46,12 @@ typedef
 
 typedef
     struct {
+        Pessoa * sintonizado;
+        double sintonia;
+    } Par;
+
+typedef
+    struct {
         Pessoa * parceiro;
         double afinidade;
     } Aresta;
@@ -189,14 +195,15 @@ void montarGrafo (Grafo * grafo, Pessoa pessoas[], unsigned char quantidade) {
     }
 }
 
-Pessoa* pessoaMaisPopular (Grafo * grafo, unsigned char quantidade) {
+// Retorna o vértice onde está a pessoa mais popular
+Vertice* pessoaMaisPopular (Grafo * grafo, unsigned char quantidade) {
     unsigned char maiorNumeroLigacoes = 0;
-    Pessoa* maisPopular;
+    Vertice* maisPopular;
 
     for (int i = 0; i < quantidade; i++) {
         if (grafo->vertices[i].ligacoes > maiorNumeroLigacoes) {
             maiorNumeroLigacoes = grafo->vertices[i].ligacoes;
-            maisPopular = grafo->vertices[i].pessoa;
+            maisPopular = &grafo->vertices[i];
         }
     }
 
@@ -352,30 +359,76 @@ int numerologia (Data * data) {
     return final;
 }
 
-/*int sintonia (Pessoa * popular, Pessoa * parceiro, Data * hoje) {
+// Calcula a sintonia entra duas pessoas
+double sintonia (Pessoa * popular, Pessoa * parceiro, Data * hoje, double afinidade) {
+    int idadePopular  = idade (&popular->nascimento, hoje),
+        idadeParceiro = idade (&parceiro->nascimento, hoje),
+        numPopular = numerologia (&popular->nascimento),
+        numParceiro = numerologia (&parceiro->nascimento),
 
-    Data * pop = &(popular->nascimento),
-           parc = &(parceiro->nascimento);
+        // Multiplicar po 100 para deslocar duas casas para esquerda
+        codNascPop = numPopular * 100 + idadePopular,
+        codNascParc = numParceiro * 100 + idadeParceiro;
 
-    int idadePopular  = idade (pop, hoje),
-        idadeParceiro = idade (parc, hoje),
-        numPopular = numerologia (pop),
-        numParceiro = numerologia (parc);
+    codinome pop, parc;
 
+    gerarCodinome (pop, popular->nome);
+    gerarCodinome (parc, parceiro->nome);
 
-    return 0;
-} */
+    double primFator = 3 * similaridade (pop, parc),
+           segFator = 5 * similaridadeNumerica (codNascPop, codNascParc),
+           tercFator = 2 * (afinidade / 10);
+
+    return (primFator + segFator + tercFator) / 10.0;
+}
+
+// Encontra o par perfeito a partir do vertice da pessoa mais popular
+Par encontrarParPerfeito (Vertice * vertice, Data * hoje) {
+    Par par;
+    
+    Pessoa * popular = vertice->pessoa,
+           * outra,
+           * parPerfeito;
+
+    double maiorSintonia = 0.0,
+           atualSintonia,
+           afinidade;
+
+    for (int i = 0; i < vertice->ligacoes; i++) {
+        outra     = vertice->amizades[i].parceiro;
+        afinidade = vertice->amizades[i].afinidade;
+
+        atualSintonia = sintonia (popular, outra, hoje, afinidade);
+
+        if (atualSintonia > maiorSintonia) {
+            maiorSintonia = atualSintonia;
+            parPerfeito = outra;
+        }
+    } 
+
+    par.sintonia = maiorSintonia;
+    par.sintonizado = parPerfeito;
+
+    return par;
+}
+
+// imprime a saida do programa a partir da estrutura Par com o par perfeiro para a pessoa mais popular
+void saida (Par * par, Pessoa * popular) {
+    printf ("%s combina com %s com %.2f de sintonia s2\n", popular->nome, par->sintonizado->nome, par->sintonia);
+}
 
 int main() {
     Data preenchimento;
 
-    Pessoa * popular;
+    Vertice * popular;
 
     Pessoa pessoas[QUANTIDADE_MAXIMA_ALUNOS];
 
     Grafo grafo;
 
     unsigned char quantidade;
+
+    Par par;
 
     lerData(&preenchimento);
 
@@ -387,15 +440,18 @@ int main() {
 
     popular = pessoaMaisPopular (&grafo, quantidade);
 
-    codinome codigo;
-    gerarCodinome(codigo, popular->nome);
-    printf ("Codigo : %s\n", codigo);
+    par = encontrarParPerfeito (popular, &preenchimento);
+
+    saida (&par, popular->pessoa);
+
+    //codinome codigo;
+    //gerarCodinome(codigo, popular->pessoa->nome);
+    //printf ("Nome ; %s Codigo : %s\n", popular->pessoa->nome, codigo);
     //imprimirGrafo ( &grafo, quantidade);
     //imprimirArestas (grafo.arestas, tamanhoGrafo);
-
     // TODO explodir isso aqui
-    printf("%d", preenchimento.dia);
-
+    //printf("%d", preenchimento.dia);
+    
     return 0;
 }
 
