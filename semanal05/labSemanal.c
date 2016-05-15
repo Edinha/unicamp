@@ -49,13 +49,19 @@ typedef
 typedef
     struct {
         Pessoa * parceiro;
-        Pessoa * companheiro;
         double afinidade;
     } Aresta;
 
+typedef
+    struct {
+        Pessoa * pessoa;
+        Aresta  amizades[QUANTIDADE_MAXIMA_ALUNOS - 1];
+        unsigned char ligacoes;
+    } Vertice;
+
 typedef 
     struct {
-        Aresta arestas[NUMERO_ARESTAS];     
+        Vertice vertices[QUANTIDADE_MAXIMA_ALUNOS];
     } Grafo;
 
 // Lê uma string e armazena no parâmetro string s
@@ -63,7 +69,6 @@ void lerString(string s) {
     scanf(" %[^\n]s", s);
 }
 
-// TODO caso exploda com int
 // Lê uma entrada numérica do programa
 void lerNumero (unsigned char * numero) {
     scanf("%hhu", numero);
@@ -77,7 +82,6 @@ void lerInteiro(int * inteiro) {
 // Lê uma entrada no formato da estrutura de data
 void lerData(Data * data) {
     scanf("%hhu/%hhu/%hhu ", &data->dia, &data->mes, &data->ano);
-    //scanf("%d/%d/%d", &data.dia, &data.mes, &data.ano);   
 }
 
 // A partir dos carácteres 'F' ou 'M' decide o  gênero a ser devolvido
@@ -123,30 +127,21 @@ void lerPessoa (Pessoa * pessoa) {
     pessoa->preferencia = lerGenero();
 } 
 
+
+/* TODO descomentar
+ * Pega o char a partir do gênero da pessoa
 char getChar (Genero g) {
     if (g == Masculino)
         return 'M';
 
     return 'F';
-}
-
-void printarPessoa (Pessoa pessoa) {
-    printf("%s\n", pessoa.nome);
-    printf("%d/%d/%d\n", pessoa.nascimento.dia, pessoa.nascimento.mes, pessoa.nascimento.ano);
-    printf("%c %c\n", getChar(pessoa.pessoal), getChar(pessoa.preferencia));
-    
-    for (int i = 0; i < QUANTIDADE_MAXIMA_ALUNOS; i++)
-        printf("%d ", pessoa.afinidades[i]);
-
-    printf("\n");
-}    
+} */
 
 // Dado um vetor de pessoas, lê toda a entrada do programa
 void lerPessoas (Pessoa pessoas[], unsigned char quantidade) {
     for (int i = 0; i < quantidade; i++) {
         lerPessoa (&pessoas[i]);
         popularAfinidadesDaPessoa(pessoas[i].afinidades, quantidade, i);
-        printarPessoa(pessoas[i]);
     }
 }
 
@@ -155,81 +150,66 @@ double mediaGeometrica (unsigned char valor, unsigned char fator) {
     return sqrt ( valor * fator);
 } 
 
-int ponteirosParaPessoasIguaisNaAresta (Pessoa * a, Pessoa * b, Aresta aresta) {
-    if (aresta.parceiro == a && aresta.companheiro == b) {
-        return SUCESSO;
-    }
-
-    return FALHA;
-} 
-
-int jaExisteArestaEntrePessoasNaPosicao (Pessoa * parceiro, Pessoa * companheiro, Aresta arestas[], int posicao) {
-    
-    if ( ponteirosParaPessoasIguaisNaAresta (parceiro, companheiro, arestas[posicao]) ) {
-        return SUCESSO;
-    }
-
-    if ( ponteirosParaPessoasIguaisNaAresta (companheiro, parceiro, arestas[posicao])  ) {
-        return SUCESSO;
-    }
-
-    return FALHA;
-}
-
-double existeArestaEntrePessoas (Pessoa * parceiro, int posicaoParceiro, Pessoa * companheiro, int posicaoCompanheiro, Aresta arestas[]) {
+// Retorna o valor da afinidade entre as pessoas caso ela exista e ainda não tenho sido inserida na estrutura do grafo (arestas)
+double existeAfinidadeEntrePessoas (Pessoa * parceiro, int posicaoParceiro, Pessoa * companheiro, int posicaoCompanheiro) {
 
     double mediaNotas = mediaGeometrica ( parceiro->afinidades[posicaoCompanheiro] , companheiro->afinidades[posicaoParceiro]);
 
+    // Caso seja menor que 5 não há aresta entre as pessoas
     if (mediaNotas < MEDIA_MINIMA_AFINIDADE) {
         return FALHA;
-    }
-
-    for (int i = 0; i < NUMERO_ARESTAS; i++) {
-        if (jaExisteArestaEntrePessoasNaPosicao (parceiro, companheiro, arestas, i) ) {
-            return FALHA;
-        }
     }
 
     return mediaNotas;
 } 
 
-int montarGrafo (Grafo * grafo, Pessoa pessoas[], unsigned char quantidade) {
+void imprimirGrafo (Grafo * grafo, unsigned char qtd) {
+    int a;
+    for (int i = 0; i < qtd; i++) {
+        printf ("Pessoa Vértice : %s\n", grafo->vertices[i].pessoa->nome);
+        printf ("Ligacoes : %d\n", grafo->vertices[i].ligacoes);    
 
-    int posAresta = 0;
-
-    for (int i = 0; i < quantidade; i++) {
-        
-        for (int pos = 0; pos < quantidade; pos++) {
-            if (mesmaPosicaoDaPessoa(i, pos)) {
-                continue;
-            }
-
-            double afinidade = existeArestaEntrePessoas (&pessoas[i], i, &pessoas[pos], pos, grafo->arestas);
-
-            // Se existe afinidade entre as pessoas possível para formar aresta
-            if ( afinidade ) {
-                
-                grafo->arestas[posAresta].parceiro = &pessoas[i];
-                grafo->arestas[posAresta].companheiro = &pessoas[pos];
-                grafo->arestas[posAresta].afinidade = afinidade; 
-
-                posAresta++;   
-            }
+        a = grafo->vertices[i].ligacoes;
+        for (int j = 0; j < a; j++) {
+            Aresta ar = grafo->vertices[i].amizades[j];
+            printf ("   Pessoa %s   Afinidade : %f\n", ar.parceiro->nome, ar.afinidade);
         }
-
-    }
-
-    return posAresta;
+            
+        printf("\n"); 
+    } 
 }
 
-void imprimirArestas (Aresta arestas[], int qtd) {
+// A partir das pessoas, monta as arestas daquele vértice e retorna o número de arestas
+unsigned char montarArestas (Aresta arestas[], int i, Pessoa pessoas[], unsigned char quantidade) {
 
-    for (int i = 0; i < qtd; i++) {
-        printf ("Nome : %s\n", arestas[i].parceiro->nome);
-        printf ("Nome : %s\n", arestas[i].companheiro->nome);
-        printf ("Afin : %f\n\n", arestas[i].afinidade);
+    unsigned char qtdArestas = 0;
+
+    for (int pos = 0; pos < quantidade; pos++) {
+        if (mesmaPosicaoDaPessoa(i, pos)) {
+            continue;
+        }
+
+        double afinidade = existeAfinidadeEntrePessoas (&pessoas[i], i, &pessoas[pos], pos);
+    
+        if ( afinidade ) {
+            arestas[qtdArestas].parceiro = &pessoas[pos];
+            arestas[qtdArestas].afinidade = afinidade;
+            qtdArestas++;
+        } 
     }
-} 
+
+    return qtdArestas;
+}
+
+// Monta a estrutura do grafo 
+void montarGrafo (Grafo * grafo, Pessoa pessoas[], unsigned char quantidade) {
+
+    for (int i = 0; i < quantidade; i++) {
+        grafo->vertices[i].pessoa = &pessoas[i];
+
+        grafo->vertices[i].ligacoes = montarArestas( grafo->vertices[i].amizades, i, pessoas, quantidade);    
+    }
+}
 
 int main() {
     Data preenchimento;
@@ -240,17 +220,16 @@ int main() {
 
     unsigned char quantidade;
 
-    int tamanhoGrafo;
-
     lerData(&preenchimento);
 
     lerNumero (&quantidade);
 
     lerPessoas(pessoas, quantidade);
 
-    tamanhoGrafo = montarGrafo ( &grafo, pessoas, quantidade);
+    montarGrafo ( &grafo, pessoas, quantidade);
 
-    imprimirArestas (grafo.arestas, tamanhoGrafo);
+    imprimirGrafo ( &grafo, quantidade);
+    //imprimirArestas (grafo.arestas, tamanhoGrafo);
 
     // TODO explodir isso aqui
     printf("%d", preenchimento.dia);
