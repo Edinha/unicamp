@@ -231,16 +231,6 @@ unsigned char numeroPelaConsoante (char c) {
     return 0;
 } 
 
-int letraConsiderada (char letra) {
-    if (letra == 'a' || letra == 'e' || letra == 'i' ||
-        letra == 'o' || letra == 'u' || letra == 'h' ||
-        letra == 'y' || letra == 'w') {
-            return FALHA;
-    }
-    
-    return SUCESSO;
-}
-
 // Transforma o número passado por parâmetro no seu respectivo caracter ASCII
 char charPeloNumero (unsigned char numero) {
     char c = (char) (numero + 48);
@@ -262,20 +252,20 @@ void gerarCodinome (codinome codigo, string nome) {
         if (letra == ' ')
             break;
 
-        if (letraConsiderada(letra)) {
-            atual = numeroPelaConsoante (letra); 
-           
-            // Condições para se adicionar um número ao codinome 
-            if ( (contador == 0) || (contador > 0 && numeros[contador - 1] != atual) ) {
-                numeros[contador] = atual;
-                codigo[i] = charPeloNumero (atual);
-                contador++;
-            } 
+        atual = numeroPelaConsoante (letra);        
+        if (atual == 0)
+            continue;
 
-            // Caso já tenha contabilizado o codinome completo
-            if (contador >= TAMANHO_CODINOME - 1) 
-                break;
-        }
+        // Condições para se adicionar um número ao codinome 
+        if ( (contador == 0) || (contador > 0 && numeros[contador - 1] != atual) ) {
+            numeros[contador] = atual;
+            codigo[contador] = charPeloNumero (atual);
+            contador++;
+        } 
+
+        // Caso já tenha contabilizado o codinome completo
+        if (contador >= TAMANHO_CODINOME - 1) 
+            break;
     }
 
     for (i = contador; i < TAMANHO_CODINOME - 1; i++)
