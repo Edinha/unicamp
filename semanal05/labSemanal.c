@@ -117,9 +117,7 @@ void popularAfinidadesDaPessoa (unsigned char afinidades[], unsigned char quanti
 
 // Lê os campos para uma pessoa exceto suas afinidades
 void lerPessoa (Pessoa * pessoa) {
-
     lerString(pessoa->nome);
-    
     lerData(&pessoa->nascimento);
     pessoa->pessoal = lerGenero();
     pessoa->preferencia = lerGenero();
@@ -150,7 +148,6 @@ double mediaGeometrica (unsigned char valor, unsigned char fator) {
 
 // Retorna o valor da afinidade entre as pessoas caso ela exista e ainda não tenho sido inserida na estrutura do grafo (arestas)
 double existeAfinidadeEntrePessoas (Pessoa * parceiro, int posicaoParceiro, Pessoa * companheiro, int posicaoCompanheiro) {
-
     double mediaNotas = mediaGeometrica ( parceiro->afinidades[posicaoCompanheiro] , companheiro->afinidades[posicaoParceiro]);
 
     // Caso seja menor que 5 não há aresta entre as pessoas
@@ -164,7 +161,6 @@ double existeAfinidadeEntrePessoas (Pessoa * parceiro, int posicaoParceiro, Pess
 
 // A partir das pessoas, monta as arestas daquele vértice e retorna o número de arestas
 unsigned char montarArestas (Aresta arestas[], int i, Pessoa pessoas[], unsigned char quantidade) {
-
     unsigned char qtdArestas = 0;
 
     for (int pos = 0; pos < quantidade; pos++) {
@@ -186,7 +182,6 @@ unsigned char montarArestas (Aresta arestas[], int i, Pessoa pessoas[], unsigned
 
 // Monta a estrutura do grafo 
 void montarGrafo (Grafo * grafo, Pessoa pessoas[], unsigned char quantidade) {
-
     for (int i = 0; i < quantidade; i++) {
         grafo->vertices[i].pessoa = &pessoas[i];
 
@@ -195,7 +190,6 @@ void montarGrafo (Grafo * grafo, Pessoa pessoas[], unsigned char quantidade) {
 }
 
 Pessoa* pessoaMaisPopular (Grafo * grafo, unsigned char quantidade) {
-
     unsigned char maiorNumeroLigacoes = 0;
     Pessoa* maisPopular;
 
@@ -242,7 +236,6 @@ unsigned char numeroPelaConsoante (char c) {
 } 
 
 int naoVogal (char letra) {
-
     if (letra == 'a' || letra == 'e' || letra == 'i' ||
         letra == 'o' || letra == 'u') {
             return FALHA;
@@ -258,7 +251,6 @@ char charPeloNumero (unsigned char numero) {
 }
 
 void gerarCodinome (codinome codigo, string nome) {
-
     unsigned char numeros[TAMANHO_CODINOME - 1],
                   atual, i,
                   contador = 0;
@@ -293,6 +285,86 @@ void gerarCodinome (codinome codigo, string nome) {
        codigo[i] = '0';
 
 }
+
+// Dada uma data dd/mm/yyyy retorna um número no formato yyyymmdd
+int formatarData (Data * data) {
+    int num = data->ano;
+    num = num * 100 + data->mes;
+    num = num * 100 + data->dia;
+    return num;
+}
+
+// Calcula a idade a partir da formatação de duas datas
+// Logo após, subtrai os resultados e elimina os 4 ultimos dígitos para conseguir a idade
+int idade (Data * nascimento, Data * atual) {
+    int nasc = formatarData (nascimento),
+        hoje = formatarData (atual);
+
+    return (hoje - nasc) / 10000;
+}
+
+// retorna a similaridade entre 2 codinomes pelos seus caracteres
+double similaridade (codinome prim, codinome seg) {
+    unsigned char i, qtd = 0;
+
+    for (i = 0; i < TAMANHO_CODINOME; i++)
+        if (prim[i] == seg[i])
+            qtd++;
+
+    return qtd / 4.0;
+}
+
+// Retorna a similaridade entre dois números por seus dígitos
+double similaridadeNumerica (int prim, int seg) {
+    unsigned char i, qtd = 0;
+ 
+    for (i = 0; i < TAMANHO_CODINOME - 1; i++) {
+        // Quando o ultimo digito é igual
+        if ( prim % 10 == seg % 10 ) 
+            qtd++;
+
+        prim = prim / 10;
+        seg  = seg / 10;
+    }
+
+    return qtd / 4.0;   
+}
+
+// Calcula a numerologia a partir de uma data
+int numerologia (Data * data) {
+    int diaMes = data->dia + data->mes,
+        ano = data->ano,
+        contAno,
+        numero,
+        final;
+
+    for (contAno = 0; ano != 0; ano = ano / 10) 
+        contAno += ano % 10;
+
+    diaMes += contAno;
+
+    for (numero = 0; diaMes != 0; diaMes /= 10) 
+        numero += diaMes % 10;
+
+    for (final = 0; numero != 0; numero /= 10) 
+        final += numero;
+    
+    return final;
+}
+
+/*int sintonia (Pessoa * popular, Pessoa * parceiro, Data * hoje) {
+
+    Data * pop = &(popular->nascimento),
+           parc = &(parceiro->nascimento);
+
+    int idadePopular  = idade (pop, hoje),
+        idadeParceiro = idade (parc, hoje),
+        numPopular = numerologia (pop),
+        numParceiro = numerologia (parc);
+
+
+    return 0;
+} */
 
 int main() {
     Data preenchimento;
