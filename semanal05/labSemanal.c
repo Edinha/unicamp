@@ -240,26 +240,26 @@ char charPeloNumero (unsigned char numero) {
 void gerarCodinome (codinome codigo, string nome) {
     unsigned char numeros[TAMANHO_CODINOME - 1],
                   atual, i,
-                  contador = 1;
+                  contador = 0;
 
     // Atribue a primeira letra ao codinome
     codigo[0] = nome[0];
 
     for (i = 1; ; i++) {
         char letra = nome[i];
-             
+        atual = numeroPelaConsoante (letra);        
+        
         // Codifica apenas o primero nome, quando chega ao caracter espaço, chegou ao fim do primero fim
         if (letra == ' ')
             break;
 
-        atual = numeroPelaConsoante (letra);        
+        // Caso a letra seja desconsiderada pelo algoritmo
         if (atual == 0)
             continue;
 
         // Condições para se adicionar um número ao codinome 
         if ( (contador == 0) || (contador > 0 && numeros[contador - 1] != atual) ) {
             numeros[contador] = atual;
-            codigo[contador] = charPeloNumero (atual);
             contador++;
         } 
 
@@ -268,12 +268,13 @@ void gerarCodinome (codinome codigo, string nome) {
             break;
     }
 
-    if (contador == 0)
-        contador++;
-
+    // Completa os números do codinome da pessoa com zero caso necessário
     for (i = contador; i < TAMANHO_CODINOME - 1; i++)
-       codigo[i] = '0';
+        numeros[i] = 0;
 
+    // Coloca os números no código
+    for (i = 0; i < TAMANHO_CODINOME; i++)
+       codigo[i+1] = charPeloNumero(numeros[i]);
 }
 
 // Dada uma data dd/mm/yyyy retorna um número no formato yyyymmdd
