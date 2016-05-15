@@ -334,7 +334,7 @@ double similaridadeNumerica (int prim, int seg) {
         seg  = seg / 10;
     }
 
-    return qtd / 4.0;   
+    return qtd / 3.0;   
 }
 
 // Calcula a numerologia a partir de uma data
@@ -444,30 +444,5 @@ int main() {
 
     saida (&par, popular->pessoa);
 
-    //codinome codigo;
-    //gerarCodinome(codigo, popular->pessoa->nome);
-    //printf ("Nome ; %s Codigo : %s\n", popular->pessoa->nome, codigo);
-    //imprimirGrafo ( &grafo, quantidade);
-    //imprimirArestas (grafo.arestas, tamanhoGrafo);
-    // TODO explodir isso aqui
-    //printf("%d", preenchimento.dia);
-    
     return 0;
 }
-
-// TODO EXPLODE THIS
-/*void imprimirGrafo (Grafo * grafo, unsigned char qtd) {
-    int a;
-    for (int i = 0; i < qtd; i++) {
-        printf ("Pessoa Vértice : %s\n", grafo->vertices[i].pessoa->nome);
-        printf ("Ligacoes : %d\n", grafo->vertices[i].ligacoes);    
-
-        a = grafo->vertices[i].ligacoes;
-        for (int j = 0; j < a; j++) {
-            Aresta ar = grafo->vertices[i].amizades[j];
-            printf ("   Pessoa %s   Afinidade : %f\n", ar.parceiro->nome, ar.afinidade);
-        }
-            
-        printf("\n"); 
-    } 
-} */
