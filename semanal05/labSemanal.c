@@ -240,7 +240,7 @@ char charPeloNumero (unsigned char numero) {
 void gerarCodinome (codinome codigo, string nome) {
     unsigned char numeros[TAMANHO_CODINOME - 1],
                   atual, i,
-                  contador = 0;
+                  contador = 1;
 
     // Atribue a primeira letra ao codinome
     codigo[0] = nome[0];
@@ -267,6 +267,9 @@ void gerarCodinome (codinome codigo, string nome) {
         if (contador >= TAMANHO_CODINOME - 1) 
             break;
     }
+
+    if (contador == 0)
+        contador++;
 
     for (i = contador; i < TAMANHO_CODINOME - 1; i++)
        codigo[i] = '0';
