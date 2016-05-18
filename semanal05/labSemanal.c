@@ -278,7 +278,7 @@ void gerarCodinome (codinome codigo, string nome) {
 
     // Coloca os números no código
     for (i = 0; i < TAMANHO_CODINOME; i++)
-       codigo[i+1] = charPeloNumero(numeros[i]);
+        codigo[i+1] = charPeloNumero(numeros[i]);
 }
 
 // Dada uma data dd/mm/yyyy retorna um número no formato yyyymmdd
