@@ -27,7 +27,8 @@ typedef char codinome[TAMANHO_CODINOME];
 
 typedef
     enum {
-        Masculino, Feminino
+        Masculino = 'M', 
+        Feminino  = 'F'
     } Genero;
 
 typedef
@@ -88,20 +89,19 @@ void lerData(Data * data) {
     scanf("%hhu/%hhu/%hhu ", &data->dia, &data->mes, &data->ano);
 }
 
-// A partir dos carácteres 'F' ou 'M' decide o  gênero a ser devolvido
+/* A partir dos carácteres 'F' ou 'M' decide o  gênero a ser devolvido
 Genero decideGeneroPorCaracter (char caracter) {
     if (caracter == 'F') {
         return Feminino;
     }
-
     return Masculino;
-}
+} */
 
 // Lê um gênero de entrada
 Genero lerGenero() {
     char caracter;
     scanf("%c ", &caracter);
-    return decideGeneroPorCaracter(caracter);
+    return caracter; //decideGeneroPorCaracter(caracter);
 }
 
 // Compara duas posições passadas por parâmetro, retornando verdadeiro se forem a mesma
@@ -155,7 +155,7 @@ double existeAfinidadeEntrePessoas (Pessoa * parceiro, int posicaoParceiro, Pess
 } 
 
 
-// A partir das pessoas, monta as arestas daquele vértice e retorna o número de arestas
+// A partir das pessoas, monta as arestas daquele vértice e retorna a quantidade para aquele vértice
 unsigned char montarArestas (Aresta arestas[], int i, Pessoa pessoas[], unsigned char quantidade) {
     unsigned char qtdArestas = 0;
 
@@ -165,7 +165,8 @@ unsigned char montarArestas (Aresta arestas[], int i, Pessoa pessoas[], unsigned
         }
 
         double afinidade = existeAfinidadeEntrePessoas (&pessoas[i], i, &pessoas[pos], pos);
-    
+   
+        // Caso haja afinidade entre as pessoas para formar uma aresta, a mesma é contabilizada 
         if ( afinidade ) {
             arestas[qtdArestas].parceiro = &pessoas[pos];
             arestas[qtdArestas].afinidade = afinidade;
@@ -184,7 +185,8 @@ void montarGrafo (Grafo * grafo, Pessoa pessoas[], unsigned char quantidade) {
     }
 }
 
-// Retorna o vértice onde está a pessoa mais popular
+// Retorna o vértice onde está a pessoa mais popular, a partir da comparação entre o número de arestas
+// de cada um dos vértices
 Vertice* pessoaMaisPopular (Grafo * grafo, unsigned char quantidade) {
     unsigned char maiorNumeroLigacoes = 0;
     Vertice* maisPopular;
@@ -199,8 +201,8 @@ Vertice* pessoaMaisPopular (Grafo * grafo, unsigned char quantidade) {
     return maisPopular;
 }
 
-// TODO melhorar se possível
-// Não sei jeito melhor
+// Retorna o número referente a letra para o algortimo do Soundex, que tranforma o nome de uma
+// pessoa em um código de 4 caractéres
 unsigned char numeroPelaConsoante (char c) {
     if (c == 'g' || c == 'j')
         return 1;
@@ -238,6 +240,8 @@ char charPeloNumero (unsigned char numero) {
     return c;
 }
 
+// Gera o código de uma pessoa a partir de seu primeiro com o seguinte formato
+// Xnnn -> X a primeira letra de seu nome, nnn uma sequência de 3 números
 void gerarCodinome (codinome codigo, string nome) {
     unsigned char numeros[TAMANHO_CODINOME - 1],
                   atual, i,
@@ -366,7 +370,7 @@ double sintonia (Pessoa * popular, Pessoa * parceiro, Data * hoje, double afinid
     idadeComDoisDigitos (&idadePopular);
     idadeComDoisDigitos (&idadeParceiro);
 
-    // Multiplicar po 100 para deslocar duas casas para esquerda
+    // Multiplicar por 100 para deslocar duas casas para esquerda
     int codNascPop = numPopular * 100 + idadePopular,
         codNascParc = numParceiro * 100 + idadeParceiro;
 
@@ -419,6 +423,7 @@ Par encontrarParPerfeito (Vertice * vertice, Data * hoje) {
         }
     } 
 
+    // Atualiza a estrutura com os dados do par perfeito para impressão
     par.sintonia = maiorSintonia;
     par.sintonizado = parPerfeito;
 
