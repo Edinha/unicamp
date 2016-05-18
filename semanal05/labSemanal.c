@@ -239,6 +239,11 @@ char charPeloNumero (unsigned char numero) {
     return c;
 }
 
+// Pega a letra minúscula referente ao char
+char letraMinuscula (char c) {
+    return c + 32;
+}
+
 // Gera o código de uma pessoa a partir de seu primeiro com o seguinte formato
 // Xnnn -> X a primeira letra de seu nome, nnn uma sequência de 3 números
 void gerarCodinome (codinome codigo, string nome) {
@@ -246,11 +251,14 @@ void gerarCodinome (codinome codigo, string nome) {
                   atual, i,
                   contador = 0;
 
+    char letra, 
+         primeiraLetra = letraMinuscula(nome[0]);
+
     // Atribue a primeira letra ao codinome
     codigo[0] = nome[0];
 
     for (i = 1; ; i++) {
-        char letra = nome[i];
+        letra = nome[i];
         atual = numeroPelaConsoante (letra);        
         
         // Codifica apenas o primero nome, quando chega ao caracter espaço, chegou ao fim do primero fim
@@ -262,7 +270,9 @@ void gerarCodinome (codinome codigo, string nome) {
             continue;
 
         // Condições para se adicionar um número ao codinome 
-        if ( (contador == 0) || (contador > 0 && numeros[contador - 1] != atual) ) {
+        if ( (contador == 0 && letra != primeiraLetra ) || 
+             (contador > 0 && numeros[contador - 1] != atual) ) {
+            
             numeros[contador] = atual;
             contador++;
         } 
