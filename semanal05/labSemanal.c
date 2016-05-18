@@ -13,7 +13,6 @@
 #include <stdio.h>
 #include <math.h>
 
-#define SUCESSO 1
 #define FALHA 0
 #define MEDIA_MINIMA_AFINIDADE 5
 
@@ -231,7 +230,7 @@ unsigned char numeroPelaConsoante (char c) {
     if (c == 'r')
         return 9;
 
-    return 0;
+    return FALHA;
 } 
 
 // Transforma o número passado por parâmetro no seu respectivo caracter ASCII
