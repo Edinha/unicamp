@@ -293,7 +293,9 @@ double salario (Funcionario * atual, double * totalGasto, Funcionario funcionari
 }
 
 // Cálcula o indice de qualidade para um funcionário
-double indiceQualidade (Funcionario * atual, double * totalGasto, long fator, Funcionario funcionarios[], unsigned char qtd) {
+double indiceQualidade (Funcionario * atual, double * totalGasto, long fator, 
+                        Funcionario funcionarios[], unsigned char qtd) {
+
     double indice,
            logAst, 
            nivelAtual,
@@ -317,8 +319,9 @@ double indiceQualidade (Funcionario * atual, double * totalGasto, long fator, Fu
     return indice;
 }
 
-// A partir de todos os registros de funcionários, itera sobre eles e encontra o que possui o maior indice de
-// qualidade dada a fórmula do enunciado
+/* A partir de todos os registros de funcionários, itera sobre eles e encontra o que possui o maior indice de
+ * qualidade dada a fórmula do enunciado, retornando no formato da struct de Premiado, com um ponteiro de 
+ * funcionário e um indice, o melhor encontrado */
 Premiado encontrarMelhorIndice (double * totalGasto, long fator, Funcionario funcionarios[], unsigned char qtd) {
     Premiado premiado;
     Funcionario * atual;
@@ -379,15 +382,12 @@ int main() {
     Funcionario funcionarios[MAX_FUNCIONARIOS];
 
     lerReal(&totalGasto);
-    
     lerFator(&fator);
-    
     lerNumero(&qtdFuncionarios);
-
     lerFuncionarios(funcionarios, qtdFuncionarios);
 
     montarHierarquia (funcionarios, qtdFuncionarios);
-
+    
     melhorFuncionario = encontrarMelhorIndice (&totalGasto, fator, funcionarios, qtdFuncionarios);
 
     //print(funcionarios, qtdFuncionarios);
