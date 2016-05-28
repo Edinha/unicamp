@@ -51,32 +51,26 @@ typedef
 
 // Lê uma string e armazena no parâmetro string s
 void lerString (string s) {
-    /*char c;
-    for (int i = 0;;i++) {
-        scanf("%c", &c);
-
-        if (c == ' ')
-            break;
-
-        s[i] = c;
-    } */
-
     scanf("%s", s);
 }
 
+// Lê a entrada real do programa (Total gasto com salário)
 void lerReal (double * d) {
     scanf("%lf ", d);
 }
 
+// Lê o fator de entrada (Segunda linha da entrada)
 void lerFator (long * fator) {
     scanf("%li ", fator);
 }
 
-// Ler o número de funcionários e a produtividade absoluta
+// Lê as entradas que possuem números de 0 até 100 (número de funcionários e a produtividade absoluta)
 void lerNumero (unsigned char * n) {
     scanf("%hhu ", n);
 }
 
+// Função que a partir de um funcionário, inicializa os campos que mantém a relação
+// de chefia e subordinação daquele funcionário para uso posterior
 void inicializarHierarquiaParaFuncionario (Funcionario * funcionario) {
 
     funcionario->qtdSubordinados = ZERAR;
@@ -87,11 +81,13 @@ void inicializarHierarquiaParaFuncionario (Funcionario * funcionario) {
     }
 }
 
+// Lê uma entrada de funcionário (nome e produtividade absoluta)
 void lerFuncionario (Funcionario * funcionario) {
     lerString(funcionario->nome);
     lerNumero(&funcionario->produtividade);
 }
 
+// Lê todos os funcionários da entrada
 void lerFuncionarios (Funcionario funcionarios[], unsigned char qtd) {
     Funcionario * atual;
     
@@ -104,22 +100,7 @@ void lerFuncionarios (Funcionario funcionarios[], unsigned char qtd) {
     }
 }
 
-void print (Funcionario funcionarios[], unsigned char qtd) {
-    for (int i = 0; i < qtd; i++) {
-        Funcionario f = funcionarios[i];
-        printf("%s ", f.nome);
-        printf("%d\n", f.produtividade);
-    
-        printf("Subordinados: \n    ");
-
-        for (int j = 0; j < f.qtdSubordinados; j++) {
-            printf("%s ", funcionarios[f.subordinados[j]].nome);
-        }
-
-        printf("\n\n");
-    }
-}
-
+// Compara duas strings e retorna verdadeiro (diferente 0) se são iguais, falso (0) se são diferentes
 unsigned char nomesIguais (string prim, string seg) {
     unsigned char comparacao;
 
@@ -128,6 +109,7 @@ unsigned char nomesIguais (string prim, string seg) {
     return (comparacao == 0);
 } 
 
+// Retorna a posição que o funcionário ocupa no vetor de registros a partir de seu nome
 unsigned char posicaoFuncionarioPeloNome (string nome, Funcionario funcionarios[], unsigned char qtd) {
 
     for (unsigned char i = 0; i < qtd; i++) {
@@ -140,6 +122,8 @@ unsigned char posicaoFuncionarioPeloNome (string nome, Funcionario funcionarios[
     return SEM_VALOR;
 }
 
+// Atualiza o registro daquele funcionário para guardar a posição de seu mais novo subordinado 
+// direto em seu vetor de posições dos subordinados
 void adicionaSubordinadoAoChefe (Funcionario * chefe, unsigned char posSubordinado) {
     unsigned char indice = chefe->qtdSubordinados;
 
@@ -147,10 +131,12 @@ void adicionaSubordinadoAoChefe (Funcionario * chefe, unsigned char posSubordina
     chefe->qtdSubordinados++;
 }
 
+// Atualiza o registro do funcionário para armazenar a posição no vetor de registro de seu chefe direto
 void adicionaChefeAoSubordinado (Funcionario * subordinado, unsigned char posChefe) {
     subordinado->posChefe = posChefe;
 }
 
+// Atualiza o vetor de registros com uma nova relação de subordinação lida pela entrada
 void montarRelacaoChefeSubordinado (Funcionario funcionarios[], unsigned char posChefe, unsigned char posSubordinado) {
     
     Funcionario * chefe = &funcionarios[posChefe];
@@ -160,6 +146,7 @@ void montarRelacaoChefeSubordinado (Funcionario funcionarios[], unsigned char po
     adicionaChefeAoSubordinado (subordinado, posChefe);
 }
 
+// Monta a hierarquia da empresa a partir da entrada
 void montarHierarquia (Funcionario funcionarios[], unsigned int qtd) {
 
     string nomeChefe;
@@ -169,58 +156,74 @@ void montarHierarquia (Funcionario funcionarios[], unsigned int qtd) {
                   posSubordinado;
 
     for (unsigned char i = 0; i < qtd - 1; i++) {
-    
+   
+        // Lê os nomes da relação atual 
         lerString(nomeSubordinado);
         lerString(nomeChefe);
 
+        // Pega a posição de cada uma deles pela função
         posChefe = posicaoFuncionarioPeloNome (nomeChefe, funcionarios, qtd);
         posSubordinado = posicaoFuncionarioPeloNome (nomeSubordinado, funcionarios, qtd);
 
+        // Guarda os dados da relação para o cálculo das fórmulas posteriores
         montarRelacaoChefeSubordinado (funcionarios, posChefe, posSubordinado);    
     }
 }
 
+// Comparação para saber se um funcionário possue subordinados
 unsigned char semSubordinados (Funcionario * f) {
     return (f->qtdSubordinados == 0);
 }
 
+// Calcula parte da fórmula de produtividade abosula, um sobre o conjunto do funcionário
 double calculoConjunto (unsigned char qtd) {
     double c = 1 / qtd;
     return c;
 }
 
+// Função que calcula a produtividade relativa de um funcionário atual
 double produtividadeRelativa (Funcionario funcionarios[], Funcionario * atual) {
-
     unsigned 
         char i,
              posSubordinado,
              produtividade = atual->produtividade;
 
+    Funcionario * subordinado;
+    double somatoria = 0.0;
+
+    // Caso não tenha subordinados, retorna sua própria produtividade absoluta
     if (semSubordinados(atual)) {
         return produtividade;
     }   
-
-    Funcionario * subordinado;
-
-    double somatoria,
-           conjunto;
-    
-    somatoria = 0.0;
-    conjunto = calculoConjunto(atual->qtdSubordinados); 
-
+   
+    // Itera sobre os subordinados do atual e calcula suas produtividades relativas, 
+    // sendo estas adicionadas a somatoria, aplicadando, ao final, a fórmula no retorno
     for (i = 0; i < atual->qtdSubordinados; i++) {
- 
+
+        // Recupera o subordinado atual do funcionário a partir de sua posição 
         posSubordinado = atual->subordinados[i];
         subordinado = &funcionarios[posSubordinado];
 
         somatoria += produtividadeRelativa (funcionarios, subordinado);
+        //printf("    Atual : %.2lf\n", somatoria);
     }
 
-    return MEIO * (produtividade + conjunto * somatoria);
+    // Aplica a fórmula de produtividade relativa
+    return MEIO * (produtividade + (somatoria / atual->qtdSubordinados));
+}
+
+void print (Funcionario funcionarios[], unsigned char qtd) {
+    for (int i = 0; i < qtd; i++) {
+        Funcionario f = funcionarios[i];
+        printf("%s ", f.nome);
+        printf("%d\n    ", f.produtividade);
+        for (int j = 0; j < f.qtdSubordinados; j++) 
+            printf("%s ", funcionarios[f.subordinados[j]].nome);
+        printf("\n\n");
+    }
 }
 
 void verProdutividades (Funcionario funcionarios[], unsigned char qtd) {
-    
     double prod;
     Funcionario * f;
 
