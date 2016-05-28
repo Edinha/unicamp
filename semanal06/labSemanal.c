@@ -205,11 +205,21 @@ double produtividadeRelativa (Funcionario funcionarios[], Funcionario * atual) {
         subordinado = &funcionarios[posSubordinado];
 
         somatoria += produtividadeRelativa (funcionarios, subordinado);
-        //printf("    Atual : %.2lf\n", somatoria);
     }
 
     // Aplica a fórmula de produtividade relativa
     return MEIO * (produtividade + (somatoria / atual->qtdSubordinados));
+}
+
+// A função log* é definida em dois intervalos
+// Se x é menor ou igual a 1, retorna 0
+// Se x é maior que 1, retorna 1 + o log* de logarismo na base 2 de x
+double logAsterisco (double x) {
+    if (x <= 1) {
+        return 0.0;
+    }
+
+    return (1 + logAsterisco( log2 (x) ));
 }
 
 void print (Funcionario funcionarios[], unsigned char qtd) {
