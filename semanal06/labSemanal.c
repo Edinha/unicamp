@@ -32,6 +32,7 @@
 
 #define SEM_VALOR -1
 #define ZERAR 0
+#define MEIO 0.5
 #define TAMANHO_NOME 30
 #define MAX_FUNCIONARIOS 100
 
@@ -179,8 +180,57 @@ void montarHierarquia (Funcionario funcionarios[], unsigned int qtd) {
     }
 }
 
+unsigned char semSubordinados (Funcionario * f) {
+    return (f->qtdSubordinados == 0);
+}
 
+double calculoConjunto (unsigned char qtd) {
+    double c = 1 / qtd;
+    return c;
+}
 
+double produtividadeRelativa (Funcionario funcionarios[], Funcionario * atual) {
+
+    unsigned 
+        char i,
+             posSubordinado,
+             produtividade = atual->produtividade;
+
+    if (semSubordinados(atual)) {
+        return produtividade;
+    }   
+
+    Funcionario * subordinado;
+
+    double somatoria,
+           conjunto;
+    
+    somatoria = 0.0;
+    conjunto = calculoConjunto(atual->qtdSubordinados); 
+
+    for (i = 0; i < atual->qtdSubordinados; i++) {
+ 
+        posSubordinado = atual->subordinados[i];
+        subordinado = &funcionarios[posSubordinado];
+
+        somatoria += produtividadeRelativa (funcionarios, subordinado);
+    }
+
+    return MEIO * (produtividade + conjunto * somatoria);
+}
+
+void verProdutividades (Funcionario funcionarios[], unsigned char qtd) {
+    
+    double prod;
+    Funcionario * f;
+
+    for (int i = 0; i < qtd; i++) {
+        f = &funcionarios[i];
+        prod = produtividadeRelativa (funcionarios, f);
+
+        printf("%s -> %.2lf\n", f->nome, prod);
+    }
+}
 
 int main() {
     unsigned char qtdFuncionarios;
@@ -199,7 +249,8 @@ int main() {
 
     montarHierarquia (funcionarios, qtdFuncionarios);
 
-    print(funcionarios, qtdFuncionarios);
+    //print(funcionarios, qtdFuncionarios);
+    verProdutividades(funcionarios, qtdFuncionarios);
 
     return 0;
 }
