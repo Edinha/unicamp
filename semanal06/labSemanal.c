@@ -346,6 +346,7 @@ Premiado encontrarMelhorIndice (double * totalGasto, long fator, Funcionario fun
     return premiado;
 }
 
+/*
 void print (Funcionario funcionarios[], unsigned char qtd) {
     for (int i = 0; i < qtd; i++) {
         Funcionario f = funcionarios[i];
@@ -356,7 +357,6 @@ void print (Funcionario funcionarios[], unsigned char qtd) {
         printf("\n\n");
     }
 }
-
 void verCampos (double * totalGasto, Funcionario funcionarios[], unsigned char qtd) {
     double prod, sal;
     Funcionario * f;
@@ -367,7 +367,7 @@ void verCampos (double * totalGasto, Funcionario funcionarios[], unsigned char q
         sal = salario(f, totalGasto, funcionarios, qtd);
         printf("%s -> %.2lf -> %.2lf\n", f->nome, prod, sal);
     }
-}
+} */
 
 void printarResposta (Premiado premiado) {
     printf("%s %.2lf\n", premiado.premiado->nome, premiado.indice);
@@ -390,8 +390,6 @@ int main() {
     
     melhorFuncionario = encontrarMelhorIndice (&totalGasto, fator, funcionarios, qtdFuncionarios);
 
-    //print(funcionarios, qtdFuncionarios);
-    //verCampos(&totalGasto, funcionarios, qtdFuncionarios);
     printarResposta(melhorFuncionario);
 
     return 0;
