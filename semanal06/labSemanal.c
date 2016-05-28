@@ -139,9 +139,24 @@ unsigned char posicaoFuncionarioPeloNome (string nome, Funcionario funcionarios[
     return SEM_VALOR;
 }
 
-void adicionaSubordinado (Funcionario * funcionario, unsigned char posSubordinado) {
-    funcionario->subordinados[funcionario->qtdSubordinados] = posSubordinado;
-    funcionario->qtdSubordinados++;
+void adicionaSubordinadoAoChefe (Funcionario * chefe, unsigned char posSubordinado) {
+    unsigned char indice = chefe->qtdSubordinados;
+
+    chefe->subordinados[indice] = posSubordinado;
+    chefe->qtdSubordinados++;
+}
+
+void adicionaChefeAoSubordinado (Funcionario * subordinado, unsigned char posChefe) {
+    subordinado->posChefe = posChefe;
+}
+
+void montarRelacaoChefeSubordinado (Funcionario funcionarios[], unsigned char posChefe, unsigned char posSubordinado) {
+    
+    Funcionario * chefe = &funcionarios[posChefe];
+    Funcionario * subordinado = &funcionarios[posSubordinado];
+    
+    adicionaSubordinadoAoChefe (chefe, posSubordinado);    
+    adicionaChefeAoSubordinado (subordinado, posChefe);
 }
 
 void montarHierarquia (Funcionario funcionarios[], unsigned int qtd) {
@@ -160,7 +175,7 @@ void montarHierarquia (Funcionario funcionarios[], unsigned int qtd) {
         posChefe = posicaoFuncionarioPeloNome (nomeChefe, funcionarios, qtd);
         posSubordinado = posicaoFuncionarioPeloNome (nomeSubordinado, funcionarios, qtd);
 
-        adicionaSubordinado (&funcionarios[posChefe], posSubordinado);    
+        montarRelacaoChefeSubordinado (funcionarios, posChefe, posSubordinado);    
     }
 }
 
