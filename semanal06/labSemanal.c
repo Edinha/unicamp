@@ -51,6 +51,11 @@ typedef
         unsigned char subordinados[MAX_FUNCIONARIOS - 1];
     } Funcionario;
 
+typedef
+    struct {
+        Funcionario * premiado;
+        double indice;
+    } Premiado;
 
 // Lê uma string e armazena no parâmetro string s
 void lerString (string s) {
@@ -287,6 +292,57 @@ double salario (Funcionario * atual, double * totalGasto, Funcionario funcionari
     return fracaoAtual * salarioChefe;
 }
 
+// Cálcula o indice de qualidade para um funcionário
+double indiceQualidade (Funcionario * atual, double * totalGasto, long fator, Funcionario funcionarios[], unsigned char qtd) {
+    double indice,
+           logAst, 
+           nivelAtual,
+           produtRelativa,
+           salarioAtual;
+
+    // Pega o nível do funcionário
+    nivelAtual = nivel (atual, funcionarios);
+
+    // Aplica o logAsterisco para o nível do funcionário atual
+    logAst = logAsterisco (nivelAtual);
+
+    // Produtividade e salário conforme o funcionário do parâmetro
+    produtRelativa = produtividadeRelativa (atual, funcionarios);
+    salarioAtual = salario (atual, totalGasto, funcionarios, qtd);
+
+    // Indice é a multiplicação do fator de entrada, logAst do nivel mais um,
+    // vezes a produtividade relativa sobre o log na base 2 do salário
+    indice = fator * (logAst + UM_NIVEL) * produtRelativa / log2 (salarioAtual);
+    
+    return indice;
+}
+
+// A partir de todos os registros de funcionários, itera sobre eles e encontra o que possui o maior indice de
+// qualidade dada a fórmula do enunciado
+Premiado encontrarMelhorIndice (double * totalGasto, long fator, Funcionario funcionarios[], unsigned char qtd) {
+    Premiado premiado;
+    Funcionario * atual;
+
+    double maiorIndice = ZERAR_DOUBLE, 
+           atualIndice;
+
+    for (unsigned char i = 0; i < qtd; i++) {
+        atual = &funcionarios[i];
+
+        atualIndice = indiceQualidade(atual, totalGasto, fator, funcionarios, qtd);
+
+        // Caso o indice atual seja maior que o maior até então encontrado, atualiza o premidado com novas
+        // informações para retorno 
+        if (atualIndice > maiorIndice) {
+            premiado.premiado = atual;
+            premiado.indice = atualIndice;
+            maiorIndice = atualIndice;
+        }
+    }
+
+    return premiado;
+}
+
 void print (Funcionario funcionarios[], unsigned char qtd) {
     for (int i = 0; i < qtd; i++) {
         Funcionario f = funcionarios[i];
@@ -310,11 +366,16 @@ void verCampos (double * totalGasto, Funcionario funcionarios[], unsigned char q
     }
 }
 
+void printarResposta (Premiado premiado) {
+    printf("%s %.2lf\n", premiado.premiado->nome, premiado.indice);
+}
+
 int main() {
     unsigned char qtdFuncionarios;
-    double totalGasto;
     long fator;
+    double totalGasto;
 
+    Premiado melhorFuncionario;
     Funcionario funcionarios[MAX_FUNCIONARIOS];
 
     lerReal(&totalGasto);
@@ -327,8 +388,11 @@ int main() {
 
     montarHierarquia (funcionarios, qtdFuncionarios);
 
+    melhorFuncionario = encontrarMelhorIndice (&totalGasto, fator, funcionarios, qtdFuncionarios);
+
     //print(funcionarios, qtdFuncionarios);
-    verCampos(&totalGasto, funcionarios, qtdFuncionarios);
+    //verCampos(&totalGasto, funcionarios, qtdFuncionarios);
+    printarResposta(melhorFuncionario);
 
     return 0;
 }
