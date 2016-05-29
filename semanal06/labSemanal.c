@@ -53,7 +53,7 @@ typedef
 
 typedef
     struct {
-        Funcionario * premiado;
+        Funcionario * funcionario;
         double indice;
     } Premiado;
 
@@ -331,7 +331,7 @@ Premiado encontrarMelhorIndice (double * totalGasto, long fator, Funcionario fun
         // Caso o indice atual seja maior que o maior até então encontrado, atualiza o premidado com novas
         // informações para retorno 
         if (atualIndice > maiorIndice) {
-            premiado.premiado = atual;
+            premiado.funcionario = atual;
             premiado.indice = atualIndice;
             maiorIndice = atualIndice;
         }
@@ -341,7 +341,7 @@ Premiado encontrarMelhorIndice (double * totalGasto, long fator, Funcionario fun
 }
 
 void printarResposta (Premiado premiado) {
-    printf("%s %.2lf\n", premiado.premiado->nome, premiado.indice);
+    printf("%s %.2lf\n", premiado.funcionario->nome, premiado.indice);
 }
 
 int main() {
