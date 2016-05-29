@@ -1,8 +1,8 @@
-// Nome  : William Gonçalves da Cruz
-// RA    : 188671
-// Turma : W
-
-/* Lab Semanal : Melhor funcionário do mês
+/* Nome  : William Gonçalves da Cruz
+ * RA    : 188671
+ * Turma : W
+ * 
+ * Lab Semanal : Melhor funcionário do mês
  * 
  * O objetivo do desenvolvimento desse lab é um algoritmo que retorne o funcionário mais produtivo de uma empresa em sua hieraquia.
  * Para isso, existem algumas informações e fórmulas a serem aplicadas para mensurar a produtividade de cada funcionário.
@@ -82,11 +82,6 @@ void lerNumero (unsigned char * n) {
 void inicializarHierarquiaParaFuncionario (Funcionario * funcionario) {
     funcionario->qtdSubordinados = ZERAR;
     funcionario->posChefe = SEM_VALOR;
-
-    // TODO may be unnecessary
-    for (unsigned char i = 0; i < MAX_FUNCIONARIOS - 1; i++) {
-        funcionario->subordinados[i] = SEM_VALOR;   
-    }
 }
 
 // Lê uma entrada de funcionário (nome e produtividade absoluta)
