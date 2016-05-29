@@ -103,9 +103,8 @@ void lerFuncionarios (Funcionario funcionarios[], unsigned char qtd) {
 
 // Compara duas strings e retorna verdadeiro (diferente 0) se são iguais, falso (0) se são diferentes
 unsigned char nomesIguais (string prim, string seg) {
-    unsigned 
-        char comparacao = strcmp (prim, seg);
-    return (comparacao == 0);
+    unsigned char comparacao = strcmp (prim, seg);
+    return (comparacao == ZERAR);
 } 
 
 // Retorna a posição que o funcionário ocupa no vetor de registros a partir de seu nome
@@ -340,29 +339,6 @@ Premiado encontrarMelhorIndice (double * totalGasto, long fator, Funcionario fun
 
     return premiado;
 }
-
-/*
-void print (Funcionario funcionarios[], unsigned char qtd) {
-    for (int i = 0; i < qtd; i++) {
-        Funcionario f = funcionarios[i];
-        printf("%s ", f.nome);
-        printf("%d\n    ", f.produtividade);
-        for (int j = 0; j < f.qtdSubordinados; j++) 
-            printf("%s ", funcionarios[f.subordinados[j]].nome);
-        printf("\n\n");
-    }
-}
-void verCampos (double * totalGasto, Funcionario funcionarios[], unsigned char qtd) {
-    double prod, sal;
-    Funcionario * f;
-
-    for (int i = 0; i < qtd; i++) {
-        f = &funcionarios[i];
-        prod = produtividadeRelativa (f, funcionarios);
-        sal = salario(f, totalGasto, funcionarios, qtd);
-        printf("%s -> %.2lf -> %.2lf\n", f->nome, prod, sal);
-    }
-} */
 
 void printarResposta (Premiado premiado) {
     printf("%s %.2lf\n", premiado.premiado->nome, premiado.indice);
