@@ -1,9 +1,8 @@
-#include <stdio.h>
 #include "structs.h"
 
-void lerString (String s) { 
+/*void lerString (String s) { 
     scanf(" %[^\n]s", s); 
-}
+} */
 
 // FIXME if needed
 void lerTexto (char texto[], unsigned char tamanho, char final) {
@@ -19,45 +18,53 @@ void lerTexto (char texto[], unsigned char tamanho, char final) {
         texto[i] = letra;
     }
 
-    texto[i+1] = FIM_STRING;
+    texto[i] = FIM_STRING;
 }
 
 void lerNumero(unsigned char * num) {
-    scanf("%hhd ", num);
+    scanf("%hhu ", num);
 }
 
 void lerData(Data * data) {
-    scanf("%hhd/%hhd/%d ", &data->dia, &data->mes, &data->ano);
+    scanf("%hhu/%hhu/%d ", &data->dia, &data->mes, &data->ano);
 }
 
 void lerDoenca(Doenca * doenca) {
     lerTexto(doenca->codigo, TAMANHO_CID, ESPACO);
-    lerString(doenca->nome);
-    //lerTexto(doenca->nome, TAMANHO_NOME, FIM_LINHA);
+    lerTexto(doenca->nome, TAMANHO_NOME, FIM_LINHA);
 }
 
 void lerMedico(Medico * medico) {
-    // TODO read
+    lerTexto(medico->crm, TAMANHO_CRM, ESPACO);
+    lerTexto(medico->nome, TAMANHO_NOME, FIM_LINHA);
 }
 
-void lerConsulta(Consulta * consulta) {
-    // TODO read
+
+void lerMedicos(Medico * medicos, unsigned char qtd) {
+    for (unsigned char i = 0; i < qtd; i++) {
+        Medico medico;
+
+        lerMedico(&medico);
+
+        medicos[i] = medico;
+    }
 }
 
-void lerConsultas() {
-    // TODO read all
+void lerDoencas(Doenca * doencas, unsigned char qtd) {
+    for (unsigned char i = 0; i < qtd; i++) {
+        Doenca doenca;
+
+        lerDoenca(&doenca);
+
+        doencas[i] = doenca;
+    }
 }
 
-void lerMedicos() {
-    // TODO read all
-}
-
-void lerDoencas() {
-    // TODO read all
-}
-
-void lerMatrizChave(Chave * chave) {
-    // TODO Read matrix here
+void lerMatrizChave(Chave chave) {
+    unsigned char i, j;
+    for (i = 0; i < DIMENSAO_MATRIZ; i++)
+        for (j = 0; j < DIMENSAO_MATRIZ; j++)
+            lerNumero(&chave[i][j]);
 }
 
 void lerLetraPreferida(char * letra) {
@@ -69,16 +76,50 @@ char minuscula (char letra) {
     return min;
 }
 
+void lerConsulta(Consulta * consulta) {
+    // TODO read
+}
+
+void lerConsultas(Lista lista) {
+    // TODO read all
+}
+
 int main () {
-    unsigned char t;
-    Doenca d;
+    Relatorio relatorio;
 
-    lerNumero(&t);
+    Doenca * doencas;
+    Medico * medicos;
 
-    lerDoenca(&d);
+    lerNumero(&relatorio.qtdDoencas);
 
-    printf("%s %s\n", d.codigo, d.nome);
-    printf("%d\n", t);
+    doencas = (Doenca*) malloc(sizeof(Doenca) * relatorio.qtdDoencas);   
+
+    lerDoencas(doencas, relatorio.qtdDoencas);
+
+    lerNumero(&relatorio.qtdMedicos);
+
+    medicos = (Medico*) malloc(sizeof(Medico) * relatorio.qtdMedicos);
+
+    lerMedicos(medicos, relatorio.qtdMedicos);
+
+    lerMatrizChave(relatorio.chave);
+
+    lerLetraPreferida(&relatorio.letraPreferida);
+    
+
+    //TODO explode
+    int i, j;
+    for (i = 0; i < relatorio.qtdDoencas; i++)
+        printf("%s %s\n", doencas[i].codigo, doencas[i].nome);
+    
+    printf("\n");
+    for (i = 0; i < relatorio.qtdMedicos; i++)
+        printf("%s %s\n", medicos[i].crm, medicos[i].nome);
+
+    printf("\n");
+    for (i = 0; i < DIMENSAO_MATRIZ; i++)
+        for (j = 0; j < DIMENSAO_MATRIZ; j++)
+            printf("%d ", relatorio.chave[i][j]);
 
     return 0;
 }

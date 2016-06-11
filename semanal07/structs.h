@@ -1,12 +1,16 @@
 #ifndef STRUCTS_H_
 #define STRUCTS_H_
 
-// Definições dos tamanhos máximos para certos tipos da entrada
+#include <stdio.h>
+#include <stdlib.h>
+
+// Definições caractéres de string para uso comum das funções 
 
 #define ESPACO ' '
 #define FIM_LINHA '\n'
 #define FIM_STRING '\0'
 
+// Definições dos tamanhos máximos para certos tipos da entrada
 #define DIMENSAO_MATRIZ 2
 
 #define TAMANHO_NOME 101
@@ -17,7 +21,8 @@ typedef char String[TAMANHO_NOME];
 typedef char CID[TAMANHO_CID];
 typedef char CRM[TAMANHO_CRM];
 
-typedef short Chave[DIMENSAO_MATRIZ][DIMENSAO_MATRIZ]; 
+// Talvez seja maior que unsigned char
+typedef unsigned char Chave[DIMENSAO_MATRIZ][DIMENSAO_MATRIZ]; 
 
 // Definição das estruturas utilizadas pelo programa
 
@@ -35,7 +40,7 @@ typedef
 
 typedef
     struct {
-        CRM registro;
+        CRM crm;
         String nome;
     } Medico;
 
@@ -49,30 +54,44 @@ typedef
 
 typedef 
     struct {
-        Chave matriz;
+        unsigned char qtdDoencas, qtdMedicos;
+        Chave chave;
         char letraPreferida;
     } Relatorio;
+
+typedef
+    struct No {
+        Consulta * consulta;
+        struct No * proximo;
+    } No;
+
+typedef 
+    struct {
+        No * primeiro;
+    } Lista;
 
 /* 
  *  Funções de Leitura do programa e suas declarações
  */
 
-void lerString(String);
+//void lerString(String);
 
+void lerData(Data*);
 void lerNumero(unsigned char*);
 void lerTexto(char[], unsigned char, char);
-void lerData(Data*);
 
 void lerDoenca(Doenca*);
+void lerDoencas(Doenca*, unsigned char);
+
 void lerMedico(Medico*);
-void lerConsulta(Consulta*);
+void lerMedicos(Medico*, unsigned char);
 
-void lerConsultas();
-void lerMedicos();
-void lerDoencas();
-
-void lerMatrizChave(Chave*);
+void lerMatrizChave(Chave);
 void lerLetraPreferida(char*);
+
+
+void lerConsultas(Lista);
+void lerConsulta(Consulta*);
 
 char minuscula (char);
 
