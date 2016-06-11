@@ -5,7 +5,6 @@
 #include <stdlib.h>
 
 // Definições caractéres de string para uso comum das funções 
-
 #define ESPACO ' '
 #define FIM_LINHA '\n'
 #define FIM_STRING '\0'
@@ -14,9 +13,10 @@
 #define DIMENSAO_MATRIZ 2
 
 #define TAMANHO_NOME 101
-#define TAMANHO_CID 4
 #define TAMANHO_CRM 7
+#define TAMANHO_CID 4
 
+// Definições dos tipos de string utilizados
 typedef char String[TAMANHO_NOME];
 typedef char CID[TAMANHO_CID];
 typedef char CRM[TAMANHO_CRM];
@@ -25,7 +25,6 @@ typedef char CRM[TAMANHO_CRM];
 typedef unsigned char Chave[DIMENSAO_MATRIZ][DIMENSAO_MATRIZ]; 
 
 // Definição das estruturas utilizadas pelo programa
-
 typedef 
     struct {
         unsigned char dia, mes;
@@ -89,8 +88,7 @@ void lerMedicos(Medico*, unsigned char);
 void lerMatrizChave(Chave);
 void lerLetraPreferida(char*);
 
-
-void lerConsultas(Lista);
+//void lerConsultas(Lista);
 void lerConsulta(Consulta*);
 
 char minuscula (char);
