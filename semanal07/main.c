@@ -1,12 +1,26 @@
 #include "structs.h"
 #include "operacoes.h"
 
+void freeLista(No * prim, No * atual) {
+    if (atual == NULL)
+        return;
+    
+    if (atual->proximo == prim) 
+        return;
+
+    freeLista(prim, atual->proximo);
+    free(atual->consulta);
+    free(atual);
+}
+
 int main () {
-    Lista consultas;
     Relatorio relatorio;
     
     Doenca * doencas;
     Medico * medicos;
+
+    Lista consultas;
+    consultas.primeiro = NULL;
 
     lerNumero(&relatorio.qtdDoencas);
 
@@ -22,24 +36,34 @@ int main () {
 
     lerMatrizChave(relatorio.chave);
 
+    chaveInversa(relatorio.chave, relatorio.inversa);
+    
     lerLetraPreferida(&relatorio.letraPreferida);
 
     aplicarOperacoes(&consultas, &relatorio, doencas, medicos);
 
-    //TODO explode
-    /*int i, j;
-    for (i = 0; i < relatorio.qtdDoencas; i++)
-        printf("%s %s\n", doencas[i].codigo, doencas[i].nome);
-    
-    printf("\n");
-    for (i = 0; i < relatorio.qtdMedicos; i++)
-        printf("%s %s\n", medicos[i].crm, medicos[i].nome);
+    String v;//, s = "NACIUKMF\0";
+    No * atual = consultas.primeiro;
+    printf("\nComeço listagem : \n\n");
+    for (;;) {
+        zerar(v);
+        Consulta * consulta = atual->consulta;
+       
+        criptografia(consulta->paciente, relatorio.inversa, v);
+        printf("%s %s %s %s\n", v, consulta->data, consulta->diagnostico, consulta->crmMedico);
+        
+        atual = atual->proximo;
+        if (atual == consultas.primeiro)
+            break;
+    }
 
-    printf("\n");
-    for (i = 0; i < DIMENSAO_MATRIZ; i++)
-        for (j = 0; j < DIMENSAO_MATRIZ; j++)
-            printf("%d ", relatorio.chave[i][j]);
-    */
+    free(doencas);
+    free(medicos);
+   
+    //if (consultas.primeiro->proximo == consultas.primeiro)
+    //    free(consultas.primeiro->proximo);
+    //else
+    //    freeLista(consultas.primeiro, consultas.primeiro->proximo);
 
     return 0;
 }

@@ -11,16 +11,21 @@
 #define REMOVER "rm"
 #define ALTERAR_DATA "altdata"
 #define ALTERAR_DOENCA "altdiag"
+#define ALTERAR_MEDICO "altmed"
+
+#define MODULO 26
+#define MAIOR 1
+#define MENOR 0
 
 // Definindo o tamanho da string de entrada para a operação
 #define TAMANHO_OPER 8
 
 typedef char Operacao[TAMANHO_OPER];
 
-void inserir(Lista*, Consulta*);
-void remover(Lista*, Consulta*);
+void inserir(Lista*, Consulta*, Relatorio*);
+void remover(Lista*, Consulta*, Relatorio*);
 
-void criptografar(String, Chave, String);
+void criptografia (String, Chave, String);
 
 void alteraData(Consulta*, Data);
 void alteraMedico(Consulta*, Medico*);
@@ -29,11 +34,14 @@ void alteraDiag(Consulta*, Doenca*);
 void definirOperacao(Operacao);
 void aplicarOperacoes(Lista*, Relatorio*, Doenca*, Medico*);
 
-Medico* encontrarMedico(CRM, Medico*);
-Doenca* encontrarDoenca(CID, Doenca*);
+void chaveInversa(Chave, Chave);
 
-Consulta* encontrarConsulta(Lista*, String);
+Medico* encontrarMedico(String, Medico*);
+Doenca* encontrarDoenca(String, Doenca*);
+
+Consulta* encontrarConsulta(Lista*, String, Relatorio*);
 
 unsigned char iguais (char[], char[]);
+unsigned char nomeMaior (String, String);
 
 #endif

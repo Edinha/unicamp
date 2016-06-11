@@ -13,24 +13,20 @@
 #define DIMENSAO_MATRIZ 2
 
 #define TAMANHO_NOME 101
+#define TAMANHO_DATA 11
 #define TAMANHO_CRM 7
 #define TAMANHO_CID 4
 
 // Definições dos tipos de string utilizados
 typedef char String[TAMANHO_NOME];
+typedef char Data[TAMANHO_DATA];
 typedef char CID[TAMANHO_CID];
 typedef char CRM[TAMANHO_CRM];
 
 // Talvez seja maior que unsigned char
-typedef unsigned char Chave[DIMENSAO_MATRIZ][DIMENSAO_MATRIZ]; 
+typedef int Chave[DIMENSAO_MATRIZ][DIMENSAO_MATRIZ]; 
 
 // Definição das estruturas utilizadas pelo programa
-typedef 
-    struct {
-        unsigned char dia, mes;
-        int ano;
-    } Data;
-
 typedef 
     struct {
         CID codigo;
@@ -48,13 +44,13 @@ typedef
         String paciente;
         Data data;
         CID diagnostico;
-        CRM medico;
+        CRM crmMedico;
     } Consulta;
 
 typedef 
     struct {
         unsigned char qtdDoencas, qtdMedicos;
-        Chave chave;
+        Chave chave, inversa;
         char letraPreferida;
     } Relatorio;
 
@@ -73,9 +69,7 @@ typedef
  *  Funções de Leitura do programa e suas declarações
  */
 
-//void lerString(String);
-
-void lerData(Data*);
+void lerInteiro (int*);
 void lerNumero(unsigned char*);
 void lerTexto(char[], unsigned char, char);
 
@@ -88,10 +82,15 @@ void lerMedicos(Medico*, unsigned char);
 void lerMatrizChave(Chave);
 void lerLetraPreferida(char*);
 
-//void lerConsultas(Lista);
 void lerConsulta(Consulta*);
 
-char minuscula (char);
+void zerar (String);
+
+/*void lerConsultas(Lista);
+//void lerString(String);
+//void lerData(Data*);
+//char minuscula (char);
+//char maiscula (char);*/
 
 #endif
 
