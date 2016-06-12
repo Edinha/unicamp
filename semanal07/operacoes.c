@@ -1,5 +1,12 @@
+/* Nome  : William Gonçalves da Cruz
+ * RA    : 188671
+ * Turma : W
+ */   
+
 #include "operacoes.h"
 
+// Faz a criptografia de uma string de entrada usando a técnica de Hill com a matriz 
+// chave (parametrizada) e devolve o resultado no último parâmetro
 void criptografia(String entrada, Chave chave, String descript) {
     int matriz[DIMENSAO_MATRIZ];
     for (unsigned char i = 0; i < TAMANHO_NOME; i += 2) {
@@ -18,6 +25,7 @@ void criptografia(String entrada, Chave chave, String descript) {
     }
 }
 
+// Insere uma nova consulta na lista mantendo a ordem alfabética
 void inserir(Lista * consultas, Consulta * consulta, Relatorio * relatorio) {
     No * novo = (No*) malloc(sizeof(No));
     novo->consulta = consulta;
@@ -66,7 +74,8 @@ void inserir(Lista * consultas, Consulta * consulta, Relatorio * relatorio) {
     atual->proximo = novo;
 }
 
-void remover(Lista * consultas, Consulta * consulta, Relatorio * relatorio) {
+// Remove um registro da listagem que contém o nome do paciente passado no parâmetro
+void remover(Lista * consultas, String paciente, Relatorio * relatorio) {
     // Deletando quando há apenas um registro na lista
     if (consultas->primeiro == consultas->primeiro->proximo) {
         consultas->primeiro = NULL;
@@ -74,10 +83,10 @@ void remover(Lista * consultas, Consulta * consulta, Relatorio * relatorio) {
     }
 
     String entrada, pacienteAtual;
-    criptografia (consulta->paciente, relatorio->chave, entrada);
+    criptografia (paciente, relatorio->chave, entrada);
 
     No * atual = consultas->primeiro;
-    strcpy(pacienteAtual, atual->consulta->paciente); //criptografia (atual->consulta->paciente, relatorio->chave, pacienteAtual);
+    strcpy(pacienteAtual, atual->consulta->paciente);
 
     // Primeiro registro para ser deletado
     if (iguais(entrada, pacienteAtual)) {
@@ -105,16 +114,47 @@ void remover(Lista * consultas, Consulta * consulta, Relatorio * relatorio) {
     atual->proximo = atual->proximo->proximo;
 }
 
-void alteraData(Consulta * consulta, Data data) {
-    // TODO
+// Imprime na tela um registro de consulta na ordem
+// Nome(descriptografado) , data , Códigoi Doença , CRM Médico
+void imprimeConsulta(Consulta * consulta, Relatorio * relatorio) {
+    String descript;
+    criptografia(consulta->paciente, relatorio->inversa, descript);
+
+    printf("%s %s %s %s\n", descript, consulta->data, consulta->diagnostico, consulta->crmMedico);
 }
 
-void alteraMedico(Consulta * consulta, Medico* medico) {
-    // TODO
-}
+// Lista todas as consultas a partir da letra preferida para o relatório
+// Passada na entrada
+void listarConsultas(Lista * consultas, Relatorio * relatorio) {
+    No * atual, 
+       * comecoListagem;
 
-void alteraDiag(Consulta * consulta, Doenca* doenca) {
-    // TODO
+    char letraInicial;
+    String descript;
+
+    for (atual = consultas->primeiro;; atual = atual->proximo) {
+        zerar(descript);
+        criptografia(atual->consulta->paciente, relatorio->inversa, descript);
+
+        letraInicial = descript[0];
+
+        // Caso tenha encontrado o começo do relatório
+        if (letraInicial >= relatorio->letraPreferida) {
+            comecoListagem = atual;
+            break;
+        }
+    }
+
+    // Imprime todas as consultas
+    for (;;) {
+        imprimeConsulta(atual->consulta, relatorio);
+
+        atual = atual->proximo;
+        
+        //Caso tenha voltado ao começo, acabou a listagem
+        if (atual == comecoListagem)
+            break;
+    }
 }
 
 // Retorna um ponteiro para a estrutura de Médico que possue o nome
@@ -147,7 +187,9 @@ Consulta* encontrarConsulta(Lista * consultas, String buscado, Relatorio * relat
     criptografia (buscado, relatorio->chave, entrada);
 
     strcpy(pacienteAtual, atual->consulta->paciente);
-    
+   
+    // Enquanto não foi encontrado, deve-se continuar para frente,
+    // atualizando o valor de atual e comparando com a entrada
     while (!iguais(entrada, pacienteAtual)) {
         atual = atual->proximo;
         strcpy(pacienteAtual, atual->consulta->paciente);
@@ -156,7 +198,7 @@ Consulta* encontrarConsulta(Lista * consultas, String buscado, Relatorio * relat
     return atual->consulta;
 }
 
-
+// Faz a leitura de uma nova operação do sistema
 void definirOperacao(Operacao op) {
     unsigned char i;
     char letra;
@@ -173,22 +215,26 @@ void definirOperacao(Operacao op) {
     op[i] = FIM_STRING;
 }
 
+// Função que controla o fluxo da lista de consultas, lendo cada uma das operações e aplicando-nas
+// a lista de consulta até encontrar o "0", que significa o final das operações
 void aplicarOperacoes(Lista * consultas, Relatorio * relatorio, Doenca * doencas, Medico * medicos) {
     Operacao op;
-    String busca;
+    String nome, novoValor;
     Consulta * buscada;
     Doenca * doenca;
     Medico * medico;
-
+    
     for (;;) {
-        Consulta * consulta = (Consulta*) malloc (sizeof(Consulta));
         definirOperacao(op);
 
         // Caso tenha lido "0", encerram-se as operacões nas consultas
         if (iguais(FIM_OPERACOES, op))
             break;
 
+        // Faz o fluxo de inserir, lendo todos os dados do novo paciente
         if (iguais(INSERIR, op)) {
+            Consulta * consulta = (Consulta*) malloc (sizeof(Consulta));
+            
             lerTexto(consulta->paciente, TAMANHO_NOME, ESPACO);
             lerTexto(consulta->data, TAMANHO_DATA, ESPACO);
             lerTexto(consulta->diagnostico, TAMANHO_CID, ESPACO);
@@ -197,36 +243,43 @@ void aplicarOperacoes(Lista * consultas, Relatorio * relatorio, Doenca * doencas
             inserir(consultas, consulta, relatorio);
         } 
 
+        // Faz o fluxo de remover, lendo apenas o nome do paciente
         if (iguais(REMOVER, op)) {
-            lerTexto(consulta->paciente, TAMANHO_NOME, FIM_LINHA);
-            remover(consultas, consulta, relatorio);
+            lerTexto(nome, TAMANHO_NOME, FIM_LINHA);
+            remover(consultas, nome, relatorio);
         }
 
+        // Faz o fluxo de alterar a data, lendo o nome do paciente e a nova data da consulta
         if (iguais(ALTERAR_DATA, op)) {
-            lerTexto(consulta->paciente, TAMANHO_NOME, ESPACO);
-            lerTexto(busca, TAMANHO_DATA, FIM_LINHA);
+            lerTexto(nome, TAMANHO_NOME, ESPACO);
+            lerTexto(novoValor, TAMANHO_DATA, FIM_LINHA);
 
-            buscada = encontrarConsulta(consultas, consulta->paciente, relatorio);
-            strcpy(buscada->data, busca);
+            buscada = encontrarConsulta(consultas, nome, relatorio);
+            strcpy(buscada->data, novoValor);
         }
         
+        // Faz o fluxo de alterar o diagnóstico de um paciente, lendo o nome e o novo diagnóstico
         if (iguais(ALTERAR_DOENCA, op)) {
-            lerTexto(consulta->paciente, TAMANHO_NOME, ESPACO);
-            lerTexto(busca, TAMANHO_NOME, FIM_LINHA);
-            
-            doenca = encontrarDoenca(busca, doencas);
-            buscada = encontrarConsulta(consultas, consulta->paciente, relatorio);
+            lerTexto(nome, TAMANHO_NOME, ESPACO);
+            lerTexto(novoValor, TAMANHO_NOME, FIM_LINHA);
+           
+            // Encontra a doença a partir de seu nome para obter seu CID e alterar 
+            // esse valor na consulta do paciente desejado 
+            doenca = encontrarDoenca(novoValor, doencas);
+            buscada = encontrarConsulta(consultas, nome, relatorio);
             strcpy(buscada->diagnostico, doenca->codigo);
         }   
 
+        // Faz o fluxo de alterar um médico de uma consulta, lendo o nome do paciente e o nome do médico
         if (iguais(ALTERAR_MEDICO, op)) {
-            lerTexto(consulta->paciente, TAMANHO_NOME, ESPACO);
-            lerTexto(busca, TAMANHO_NOME, FIM_LINHA);
+            lerTexto(nome, TAMANHO_NOME, ESPACO);
+            lerTexto(novoValor, TAMANHO_NOME, FIM_LINHA);
            
-            medico = encontrarMedico(busca, medicos);
-            buscada = encontrarConsulta(consultas, consulta->paciente, relatorio);
+            // Encontra o médico que possui aquele nome para obter seu CRM e alterar esse valor
+            // Na consulta do paciente desejado
+            medico = encontrarMedico(novoValor, medicos);
+            buscada = encontrarConsulta(consultas, nome, relatorio);
             strcpy(buscada->crmMedico, medico->crm);
         }
-
     }
 }

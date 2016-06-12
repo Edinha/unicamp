@@ -1,19 +1,10 @@
+/* Nome  : William Gonçalves da Cruz
+ * RA    : 188671
+ * Turma : W
+ */
+
 #include "structs.h"
 #include "operacoes.h"
-
-void freeLista(No * prim, No * atual) {
-    if (atual == NULL)
-        return;
-    
-    if (atual->proximo == prim) { 
-        free(atual);
-        return;
-    }
-
-    freeLista(prim, atual->proximo);
-    free(atual->consulta);
-    free(atual);
-}
 
 int main() {
     Relatorio relatorio;
@@ -44,25 +35,10 @@ int main() {
 
     aplicarOperacoes(&consultas, &relatorio, doencas, medicos);
 
-    // TODO explode this
-    String v;//, s = "NACIUKMF\0";
-    No * atual = consultas.primeiro;
-    printf("\nComeço listagem : \n\n");
-    for (;;) {
-        zerar(v);
-        Consulta * consulta = atual->consulta;
-       
-        criptografia(consulta->paciente, relatorio.inversa, v);
-        printf("%s %s %s %s\n", v, consulta->data, consulta->diagnostico, consulta->crmMedico);
-        
-        atual = atual->proximo;
-        if (atual == consultas.primeiro)
-            break;
-    }
+    listarConsultas(&consultas, &relatorio);
 
     free(doencas);
     free(medicos);
-   
     freeLista(consultas.primeiro, consultas.primeiro->proximo);
 
     return 0;

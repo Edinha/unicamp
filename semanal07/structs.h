@@ -1,3 +1,13 @@
+/* Nome  : William Gonçalves da Cruz
+ * RA    : 188671
+ * Turma : W
+ *
+ * Esse arquivo contém declarações de :
+ *      Funções de Leitura, Cálculos, liberar memória da listagem e transformações necessárias de tipos
+ *      como, por exemplo, de uma letra para um número da tabela, além de conter as definições das
+ *      estruturas do programa
+ */
+
 #ifndef STRUCTS_H_
 #define STRUCTS_H_
 
@@ -71,9 +81,6 @@ typedef
         No * primeiro;
     } Lista;
 
-/* 
- *  Funções de Leitura do programa e suas declarações
- */
 
 void lerInteiro(int*);
 void lerNumero(unsigned char*);
@@ -92,6 +99,8 @@ void zerar(String);
 
 void chaveInversa(Chave, Chave);
 void multiplicarMatrizes(Chave, int[]);
+
+void freeLista(No*, No*);
 
 char letraTabelaPeloNumero(int);
 
