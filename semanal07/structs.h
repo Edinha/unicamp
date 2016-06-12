@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // Definições caractéres de string para uso comum das funções 
 #define ESPACO ' '
@@ -16,6 +17,11 @@
 #define TAMANHO_DATA 11
 #define TAMANHO_CRM 7
 #define TAMANHO_CID 4
+
+// Definições números para cálculos e comparações 
+#define MODULO 26
+#define MAIOR 1
+#define MENOR 0
 
 // Definições dos tipos de string utilizados
 typedef char String[TAMANHO_NOME];
@@ -69,7 +75,7 @@ typedef
  *  Funções de Leitura do programa e suas declarações
  */
 
-void lerInteiro (int*);
+void lerInteiro(int*);
 void lerNumero(unsigned char*);
 void lerTexto(char[], unsigned char, char);
 
@@ -82,15 +88,20 @@ void lerMedicos(Medico*, unsigned char);
 void lerMatrizChave(Chave);
 void lerLetraPreferida(char*);
 
-void lerConsulta(Consulta*);
+void zerar(String);
 
-void zerar (String);
+void chaveInversa(Chave, Chave);
+void multiplicarMatrizes(Chave, int[]);
 
-/*void lerConsultas(Lista);
-//void lerString(String);
-//void lerData(Data*);
-//char minuscula (char);
-//char maiscula (char);*/
+char letraTabelaPeloNumero(int);
+
+unsigned char iguais(char[], char[]);
+unsigned char nomeMaior(String, String);
+
+int calcMod(int, int);
+int determinante(Chave);
+int numeroPelaLetraTabela(char);
+int numeroInversoComModulo26(int);
 
 #endif
 

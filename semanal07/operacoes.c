@@ -1,80 +1,5 @@
 #include "operacoes.h"
 
-char letraTabelaPeloNumero (int num) {
-    return (char) num + 'A';
-}
-
-int numeroPelaLetraTabela (char letra) {
-    return (letra - 'A');
-}
-
-unsigned char iguais (char entrada[], char procurado[]) {
-    return !strcmp(entrada, procurado);
-}
-
-unsigned char nomeMaior (String nome, String comparado) {
-    int comparacao = strcmp (nome, comparado);
-
-    if (comparacao > 0)
-        return MAIOR;
-
-    return MENOR;
-}
-
-int determinante (Chave chave) {
-    int det = 0;
-
-    det += chave[0][0] * chave[1][1];
-    det -= chave[1][0] * chave[0][1];
-
-    return det;
-}
-
-// Retorna o primeiro i encontrado a partir de 1 que satisfaz (det * i) % 26 == 1 
-int numeroInversoComModulo26 (int det) {
-    for (int i = 1;; i++) {
-        if ( (i * det) % 26 == 1) {
-            return i;
-        }
-    }
-    
-    return -1;
-}
-
-// Calcula o módulo da multiplicação entre os os parâmetros
-int calcMod (int num, int numChave) {
-    int mult = num * numChave,
-        mod  = mult % MODULO;
-
-    /* Caso seja negativo, deve-se adicionar o número usado para modular
-     * uma vez em ordem de manter o resultado esperado, pois o operadoe
-     * modular do C (%) cálcula módulos a partir de divisões inteiras */
-    if (mod < 0)
-        mod += MODULO;
-
-    return mod;
-}
-
-void chaveInversa(Chave chave, Chave inversa) {
-    int numInverso = numeroInversoComModulo26 (determinante(chave));
-    
-    inversa[0][0] = calcMod( numInverso, chave[1][1]);
-    inversa[1][1] = calcMod( numInverso, chave[0][0]);
-    inversa[0][1] = calcMod(-numInverso, chave[0][1]);
-    inversa[1][0] = calcMod(-numInverso, chave[1][0]);
-}
-
-void multiplicarMatrizes (Chave chave, int matriz[]) {
-    int prim = matriz[0],
-        seg  = matriz[1];
-
-    matriz[0] = prim * chave[0][0] + seg * chave[0][1];
-    matriz[1] = prim * chave[1][0] + seg * chave[1][1];
-
-    matriz[0] %= MODULO;
-    matriz[1] %= MODULO;
-}
-
 void criptografia(String entrada, Chave chave, String descript) {
     int matriz[DIMENSAO_MATRIZ];
     for (unsigned char i = 0; i < TAMANHO_NOME; i += 2) {
@@ -82,18 +7,14 @@ void criptografia(String entrada, Chave chave, String descript) {
             descript[i] = FIM_STRING;
             break;
         }
-        
-        //printf("Letras : %c %c", entrada[i], entrada[i+1]);
 
         matriz[0] = numeroPelaLetraTabela(entrada[i]);
         matriz[1] = numeroPelaLetraTabela(entrada[i+1]);
 
-        //printf(" Multiplicando...");
         multiplicarMatrizes (chave, matriz);
 
         descript[i]   = letraTabelaPeloNumero(matriz[0]);
         descript[i+1] = letraTabelaPeloNumero(matriz[1]);
-        //printf(" Decriptografado!\n");
     }
 }
 

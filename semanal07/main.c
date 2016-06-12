@@ -5,15 +5,17 @@ void freeLista(No * prim, No * atual) {
     if (atual == NULL)
         return;
     
-    if (atual->proximo == prim) 
+    if (atual->proximo == prim) { 
+        free(atual);
         return;
+    }
 
     freeLista(prim, atual->proximo);
     free(atual->consulta);
     free(atual);
 }
 
-int main () {
+int main() {
     Relatorio relatorio;
     
     Doenca * doencas;
@@ -42,6 +44,7 @@ int main () {
 
     aplicarOperacoes(&consultas, &relatorio, doencas, medicos);
 
+    // TODO explode this
     String v;//, s = "NACIUKMF\0";
     No * atual = consultas.primeiro;
     printf("\nComeço listagem : \n\n");
@@ -60,10 +63,7 @@ int main () {
     free(doencas);
     free(medicos);
    
-    //if (consultas.primeiro->proximo == consultas.primeiro)
-    //    free(consultas.primeiro->proximo);
-    //else
-    //    freeLista(consultas.primeiro, consultas.primeiro->proximo);
+    freeLista(consultas.primeiro, consultas.primeiro->proximo);
 
     return 0;
 }
