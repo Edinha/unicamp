@@ -15,13 +15,13 @@ int main() {
     Lista consultas;
     consultas.primeiro = NULL;
 
-    lerNumero(&relatorio.qtdDoencas);
+    lerInteiro(&relatorio.qtdDoencas);
 
     doencas = (Doenca*) malloc(sizeof(Doenca) * relatorio.qtdDoencas);   
 
     lerDoencas(doencas, relatorio.qtdDoencas);
 
-    lerNumero(&relatorio.qtdMedicos);
+    lerInteiro(&relatorio.qtdMedicos);
 
     medicos = (Medico*) malloc(sizeof(Medico) * relatorio.qtdMedicos);
 

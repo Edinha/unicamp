@@ -23,11 +23,6 @@ void lerTexto(char texto[], unsigned char tamanho, char final) {
     texto[i] = FIM_STRING;
 }
 
-// Lê um número menor doq que 255
-void lerNumero(unsigned char * num) {
-    scanf("%hhu ", num);
-}
-
 // Lê um número inteiro
 void lerInteiro(int * num) {
     scanf("%d ", num);
@@ -47,7 +42,7 @@ void lerMedico(Medico * medico) {
 
 // Lê as entradas de médicos e armazena no vetor dinâmico passado por parâmetro
 void lerMedicos(Medico * medicos, unsigned char qtd) {
-    for (unsigned char i = 0; i < qtd; i++) {
+    for (int i = 0; i < qtd; i++) {
         Medico medico;
         lerMedico(&medico);
         medicos[i] = medico;
@@ -56,7 +51,7 @@ void lerMedicos(Medico * medicos, unsigned char qtd) {
 
 // Lê as entradas de doenças e armazena no vetor dinâmico passado por parâmetro
 void lerDoencas(Doenca * doencas, unsigned char qtd) {
-    for (unsigned char i = 0; i < qtd; i++) {
+    for (int i = 0; i < qtd; i++) {
         Doenca doenca;
         lerDoenca(&doenca);
         doencas[i] = doenca;
@@ -159,7 +154,7 @@ int numeroInversoComModulo26(int det) {
     for (int i = 1;; i++) {
         numero = (i * det) % 26;
         
-        if (numero  == 1) {
+        if (numero == 1) {
             return i;
         }
     }

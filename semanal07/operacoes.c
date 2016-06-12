@@ -160,7 +160,7 @@ void listarConsultas(Lista * consultas, Relatorio * relatorio) {
 // Retorna um ponteiro para a estrutura de Médico que possue o nome
 // passado pelo parâmetro para alterações nas consultas
 Medico* encontrarMedico(String nome, Medico * medicos) {
-    for (unsigned char i = 0;;i++) {
+    for (int i = 0;;i++) {
         if (iguais(medicos[i].nome, nome))
             return &medicos[i];
     }
@@ -171,7 +171,7 @@ Medico* encontrarMedico(String nome, Medico * medicos) {
 // Retorna um ponteiro para a estrutura de doença que possue o nome
 // passado pelo parâmetro para alterações nas consultas
 Doenca* encontrarDoenca(String nome, Doenca * doencas) {
-    for (unsigned char i = 0;;i++) {
+    for (int i = 0;;i++) {
         if (iguais(doencas[i].nome, nome))
             return &doencas[i];
     }
@@ -234,7 +234,7 @@ void aplicarOperacoes(Lista * consultas, Relatorio * relatorio, Doenca * doencas
         // Faz o fluxo de inserir, lendo todos os dados do novo paciente
         if (iguais(INSERIR, op)) {
             Consulta * consulta = (Consulta*) malloc (sizeof(Consulta));
-            
+           
             lerTexto(consulta->paciente, TAMANHO_NOME, ESPACO);
             lerTexto(consulta->data, TAMANHO_DATA, ESPACO);
             lerTexto(consulta->diagnostico, TAMANHO_CID, ESPACO);

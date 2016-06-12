@@ -65,7 +65,7 @@ typedef
 
 typedef 
     struct {
-        unsigned char qtdDoencas, qtdMedicos;
+        int qtdDoencas, qtdMedicos;
         Chave chave, inversa;
         char letraPreferida;
     } Relatorio;
@@ -83,7 +83,6 @@ typedef
 
 
 void lerInteiro(int*);
-void lerNumero(unsigned char*);
 void lerTexto(char[], unsigned char, char);
 
 void lerDoenca(Doenca*);
