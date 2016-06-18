@@ -105,6 +105,7 @@ void freeLista(No * prim, No * atual) {
         return;
 
     if (atual->proximo == prim) {
+        free(atual->consulta);
         free(atual);
         return;
     }

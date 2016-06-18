@@ -132,7 +132,15 @@ void listarConsultas(Lista * consultas, Relatorio * relatorio) {
     char letraInicial;
     String descript;
 
-    for (atual = consultas->primeiro;; atual = atual->proximo) {
+    atual = consultas->primeiro;
+
+    // Caso não tenha nenhuma consulta na lista
+    if (atual == NULL) {
+        printf("%c", FIM_LINHA);
+        return;
+    }
+
+    for (;;) {
         zerar(descript);
         criptografia(atual->consulta->paciente, relatorio->inversa, descript);
 
@@ -140,6 +148,15 @@ void listarConsultas(Lista * consultas, Relatorio * relatorio) {
 
         // Caso tenha encontrado o começo do relatório
         if (letraInicial >= relatorio->letraPreferida) {
+            comecoListagem = atual;
+            break;
+        }
+
+        atual = atual->proximo;
+
+        // Caso não tenha nehuma letra maior que a preferida e tenha retornado ao primeiro
+        // registro, deve-se manter a ordem da listagem alfabética
+        if (atual == consultas->primeiro) {
             comecoListagem = atual;
             break;
         }
