@@ -18,7 +18,11 @@ typedef
 // Lê um número do arquivo de texto
 void readIntFile (FILE * file, int * i) {
 	fscanf(file, "%d ", i);
-} 
+}
+
+void printError() {
+	printf("As matrizes nao seguem as propriedades necessarias para realizar a multiplicacao.");
+}
 
 // Faz a alocação dinâmica de uma matriz passada por parâmetro, dada suas dimensões
 void allocateMatrix (int *** matrix, Dimensions dim) {
@@ -36,10 +40,14 @@ void allocateMatrix (int *** matrix, Dimensions dim) {
 // Lê uma matriz do arquivo de entrada, de acordo com o nome passado por parâmetro
 Dimensions readMatrixFromFile (char fileName[], int *** matrix) {
 	FILE * file;
-	int i, j;
 	Dimensions dim;
+	int i, j;
 
 	file = fopen(fileName, "r");
+	if (file == NULL) {
+		printError();
+		return dim;
+	}
 
 	// Lê as dimensões da primeira linha
 	readIntFile(file, &dim.xDim);
@@ -70,8 +78,8 @@ Dimensions getResultDimensions(Dimensions a, Dimensions b) {
 		result.xDim = a.xDim;
 		result.yDim = b.yDim;
 	} else 	if (a.xDim == b.yDim) {
-		result.xDim = a.yDim;
-		result.yDim = b.xDim;
+		result.xDim = b.xDim;
+		result.yDim = a.yDim;
 	}
 
 	return result;
@@ -81,7 +89,7 @@ Dimensions getResultDimensions(Dimensions a, Dimensions b) {
 // caso não seja possível
 char validMatrixDimensions (Dimensions result) {
 	if (result.xDim == INVALID_DIMENSION) {
-		printf("As matrizes nao seguem as propriedades necessarias para realizar a multiplicacao.");
+		printError();
 		return ERROR;
 	}
 
