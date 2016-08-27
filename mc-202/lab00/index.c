@@ -7,6 +7,8 @@
 #define SUCESS 1
 #define ERROR 0;
 
+#define INVALID_DIMENSION -1
+
 typedef 
 	struct {
 		int xDim, yDim;
@@ -50,8 +52,23 @@ Dimensions readMatrixFromFile (char fileName[], int *** matrix) {
 	return dim;
 }
 
-char validMatrixDimensions (Dimensions a, Dimensions b) {
-	if (a.yDim != b.xDim) {
+Dimensions getResultDimensions(Dimensions a, Dimensions b) {
+	Dimensions result;
+	result.xDim = INVALID_DIMENSION;
+
+	if (a.yDim == b.xDim) {
+		result.xDim = a.xDim;
+		result.yDim = b.yDim;
+	} else 	if (a.xDim == b.yDim) {
+		result.xDim = a.yDim;
+		result.yDim = b.xDim;
+	}
+
+	return result;
+}
+
+char validMatrixDimensions (Dimensions result) {
+	if (result.xDim == INVALID_DIMENSION) {
 		printf("As matrizes nao seguem as propriedades necessarias para realizar a multiplicacao.");
 		return ERROR;
 	}
@@ -101,11 +118,9 @@ int main() {
 
 	dimA = readMatrixFromFile(A_FILE, &matrixA);
 	dimB = readMatrixFromFile(B_FILE, &matrixB);
+	dimResult = getResultDimensions(dimA, dimB);
 
-	if (validMatrixDimensions(dimA, dimB)) {
-		dimResult.xDim = dimA.xDim;
-		dimResult.yDim = dimB.yDim;
-		
+	if (validMatrixDimensions(dimResult)) {
 		allocateMatrix(&result, dimResult);
 
 		multiplyMatrix(matrixA, dimA, matrixB, dimB, &result, dimResult);
