@@ -13,20 +13,23 @@ typedef
 		int xDim, yDim;
 	} Dimensions;
 
-void readIntFile(FILE * file, int * i) {
+void readIntFile (FILE * file, int * i) {
 	fscanf(file, "%d ", i);
 } 
 
-void allocateMatrix(int *** matrix, Dimensions dim) {
-	int i;
+void allocateMatrix (int *** matrix, Dimensions dim) {
+	int i, j;
 
 	*matrix = malloc(sizeof(int*) * dim.xDim);
 	for (i = 0; i < dim.xDim; i++) {
 		(*matrix)[i] = malloc(sizeof(int) * dim.yDim);
+		for (j = 0; j < dim.yDim; j++) {
+			(*matrix)[i][j] = 0;
+		}
 	}
 }
 
-Dimensions readMatrixFromFile(char fileName[], int *** matrix) {
+Dimensions readMatrixFromFile (char fileName[], int *** matrix) {
 	FILE * file;
 	int i, j;
 	Dimensions dim;
@@ -41,19 +44,15 @@ Dimensions readMatrixFromFile(char fileName[], int *** matrix) {
 	for (i = 0; i < dim.xDim; i++) {
 		for (j = 0; j < dim.yDim; j++) {
 			readIntFile(file, &(*matrix)[i][j]);
-			printf("%d ", (*matrix)[i][j]);
 		}
-
-		printf("\n");
 	}
 
 	fclose(file);
-	printf("End of %s \n", fileName);
 	return dim;
 }
 
-char validMatrixDimensions(Dimensions a, Dimensions b) {
-	if (a.xDim != b.yDim) {
+char validMatrixDimensions (Dimensions a, Dimensions b) {
+	if (a.yDim != b.xDim) {
 		printf(ERROR_MSG);
 		return ERROR;
 	}
@@ -61,12 +60,37 @@ char validMatrixDimensions(Dimensions a, Dimensions b) {
 	return SUCESS;
 }
 
-void freeMatrix(int *** matrix, int y) {
+void freeMatrix (int *** matrix, int y) {
 	for (int i = 0; i < y; i++) {
 		free((*matrix)[i]);
 	}
 
 	free(*matrix);
+}
+
+void multiplyMatrix (int ** matrixA, Dimensions dimA, int ** matrixB, Dimensions dimB, int *** result, Dimensions dimResult) {
+	int i, j, row;
+
+	for (row = 0; row < dimResult.xDim; row++) {
+		for (i = 0; i < dimB.yDim; i++) {
+			for (j = 0; j < dimA.yDim; j++) {
+				(*result)[row][i] += matrixA[row][j] * matrixB[j][i];
+			}
+		}
+	}
+}
+
+void printResult (int *** result, Dimensions dimResult) {
+	int i,j;
+
+	printf("%d %d\n", dimResult.xDim, dimResult.yDim);
+	for (i = 0; i < dimResult.xDim; i++) {
+		for (j = 0; j < dimResult.yDim; j++) {
+			printf("%d ", (*result)[i][j]);
+		}
+
+		printf("\n");
+	}
 }
 
 int main() {
@@ -80,10 +104,14 @@ int main() {
 	dimB = readMatrixFromFile(B_FILE, &matrixB);
 
 	if (validMatrixDimensions(dimA, dimB)) {
-		dimResult.xDim = dimA.yDim;
-		dimResult.yDim = dimB.xDim;
+		dimResult.xDim = dimA.xDim;
+		dimResult.yDim = dimB.yDim;
 		
 		allocateMatrix(&result, dimResult);
+
+		multiplyMatrix(matrixA, dimA, matrixB, dimB, &result, dimResult);
+		printResult(&result, dimResult);
+
 		freeMatrix(&result, dimResult.xDim);
 	}
 
