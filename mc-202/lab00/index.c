@@ -6,7 +6,6 @@
 
 #define SUCESS 1
 #define ERROR 0;
-#define ERROR_MSG "As matrizes nao seguem as propriedades necessarias para realizar a multiplicacao."
 
 typedef 
 	struct {
@@ -53,7 +52,7 @@ Dimensions readMatrixFromFile (char fileName[], int *** matrix) {
 
 char validMatrixDimensions (Dimensions a, Dimensions b) {
 	if (a.yDim != b.xDim) {
-		printf(ERROR_MSG);
+		printf("As matrizes nao seguem as propriedades necessarias para realizar a multiplicacao.");
 		return ERROR;
 	}
 
