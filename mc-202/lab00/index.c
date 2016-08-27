@@ -9,15 +9,18 @@
 
 #define INVALID_DIMENSION -1
 
+// Struct utilizada para representar as dimensões das matrizes no programa
 typedef 
 	struct {
 		int xDim, yDim;
 	} Dimensions;
 
+// Lê um número do arquivo de texto
 void readIntFile (FILE * file, int * i) {
 	fscanf(file, "%d ", i);
 } 
 
+// Faz a alocação dinâmica de uma matriz passada por parâmetro, dada suas dimensões
 void allocateMatrix (int *** matrix, Dimensions dim) {
 	int i, j;
 
@@ -30,6 +33,7 @@ void allocateMatrix (int *** matrix, Dimensions dim) {
 	}
 }
 
+// Lê uma matriz do arquivo de entrada, de acordo com o nome passado por parâmetro
 Dimensions readMatrixFromFile (char fileName[], int *** matrix) {
 	FILE * file;
 	int i, j;
@@ -37,11 +41,13 @@ Dimensions readMatrixFromFile (char fileName[], int *** matrix) {
 
 	file = fopen(fileName, "r");
 
+	// Lê as dimensões da primeira linha
 	readIntFile(file, &dim.xDim);
 	readIntFile(file, &dim.yDim);
 
 	allocateMatrix(matrix, dim);
 
+	// Repete o processo de leitura para as dimensões da matriz
 	for (i = 0; i < dim.xDim; i++) {
 		for (j = 0; j < dim.yDim; j++) {
 			readIntFile(file, &(*matrix)[i][j]);
@@ -52,6 +58,10 @@ Dimensions readMatrixFromFile (char fileName[], int *** matrix) {
 	return dim;
 }
 
+/* Retorna as dimensões da matriz do resultado da multiplicação entre elas, e retorna
+ * a dimensão x do resultado com valor inválido (-1) caso não haja como multiplicar as 
+ * matrizes em questão
+ */
 Dimensions getResultDimensions(Dimensions a, Dimensions b) {
 	Dimensions result;
 	result.xDim = INVALID_DIMENSION;
@@ -67,6 +77,8 @@ Dimensions getResultDimensions(Dimensions a, Dimensions b) {
 	return result;
 }
 
+// Valida se as dimensões são possível de ser multiplicadas e printa a resposta 
+// caso não seja possível
 char validMatrixDimensions (Dimensions result) {
 	if (result.xDim == INVALID_DIMENSION) {
 		printf("As matrizes nao seguem as propriedades necessarias para realizar a multiplicacao.");
@@ -76,6 +88,7 @@ char validMatrixDimensions (Dimensions result) {
 	return SUCESS;
 }
 
+// Libera a alocação da matriz em questão
 void freeMatrix (int *** matrix, int y) {
 	for (int i = 0; i < y; i++) {
 		free((*matrix)[i]);
@@ -84,6 +97,7 @@ void freeMatrix (int *** matrix, int y) {
 	free(*matrix);
 }
 
+// Multiplica a matriz 
 void multiplyMatrix (int ** matrixA, Dimensions dimA, int ** matrixB, Dimensions dimB, int *** result, Dimensions dimResult) {
 	int i, j, row;
 
@@ -95,6 +109,12 @@ void multiplyMatrix (int ** matrixA, Dimensions dimA, int ** matrixB, Dimensions
 		}
 	}
 }
+
+/* Printa o resultado no formato :
+ * Primeira linha com as dimensões m e n
+ * Printa m linhas de n números contento o resultado
+ * da multiplicação das matrizes de entrada
+*/
 
 void printResult (int *** result, Dimensions dimResult) {
 	int i,j;
