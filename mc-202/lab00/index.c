@@ -10,9 +10,9 @@
 #define INVALID_DIMENSION -1
 
 // Struct utilizada para representar as dimensões das matrizes no programa
-typedef 
+typedef
 	struct {
-		int xDim, yDim;
+		int rows, cols;
 	} Dimensions;
 
 // Lê um número do arquivo de texto
@@ -28,10 +28,10 @@ void printError() {
 void allocateMatrix (int *** matrix, Dimensions dim) {
 	int i, j;
 
-	*matrix = malloc(sizeof(int*) * dim.xDim);
-	for (i = 0; i < dim.xDim; i++) {
-		(*matrix)[i] = malloc(sizeof(int) * dim.yDim);
-		for (j = 0; j < dim.yDim; j++) {
+	*matrix = malloc(sizeof(int*) * dim.rows);
+	for (i = 0; i < dim.rows; i++) {
+		(*matrix)[i] = malloc(sizeof(int) * dim.cols);
+		for (j = 0; j < dim.cols; j++) {
 			(*matrix)[i][j] = 0;
 		}
 	}
@@ -50,14 +50,14 @@ Dimensions readMatrixFromFile (char fileName[], int *** matrix) {
 	}
 
 	// Lê as dimensões da primeira linha
-	readIntFile(file, &dim.xDim);
-	readIntFile(file, &dim.yDim);
+	readIntFile(file, &dim.rows);
+	readIntFile(file, &dim.cols);
 
 	allocateMatrix(matrix, dim);
 
 	// Repete o processo de leitura para as dimensões da matriz
-	for (i = 0; i < dim.xDim; i++) {
-		for (j = 0; j < dim.yDim; j++) {
+	for (i = 0; i < dim.rows; i++) {
+		for (j = 0; j < dim.cols; j++) {
 			readIntFile(file, &(*matrix)[i][j]);
 		}
 	}
@@ -67,28 +67,28 @@ Dimensions readMatrixFromFile (char fileName[], int *** matrix) {
 }
 
 /* Retorna as dimensões da matriz do resultado da multiplicação entre elas, e retorna
- * a dimensão x do resultado com valor inválido (-1) caso não haja como multiplicar as 
+ * a dimensão x do resultado com valor inválido (-1) caso não haja como multiplicar as
  * matrizes em questão
  */
 Dimensions getResultDimensions(Dimensions a, Dimensions b) {
 	Dimensions result;
-	result.xDim = INVALID_DIMENSION;
+	result.rows = INVALID_DIMENSION;
 
-	if (a.yDim == b.xDim) {
-		result.xDim = a.xDim;
-		result.yDim = b.yDim;
-	} else 	if (a.xDim == b.yDim) {
-		result.xDim = b.xDim;
-		result.yDim = a.yDim;
+	if (a.cols == b.rows) {
+		result.rows = a.rows;
+		result.cols = b.cols;
+	} else if (a.rows == b.cols) {
+		result.rows = b.rows;
+		result.cols = a.cols;
 	}
 
 	return result;
 }
 
-// Valida se as dimensões são possível de ser multiplicadas e printa a resposta 
+// Valida se as dimensões são possível de ser multiplicadas e printa a resposta
 // caso não seja possível
-char validMatrixDimensions (Dimensions result) {
-	if (result.xDim == INVALID_DIMENSION) {
+char validMatrirowsensions (Dimensions result) {
+	if (result.rows == INVALID_DIMENSION) {
 		printError();
 		return ERROR;
 	}
@@ -105,13 +105,22 @@ void freeMatrix (int *** matrix, int y) {
 	free(*matrix);
 }
 
-// Multiplica a matriz 
+Dimensions getDimensionForRepetition (Dimensions dimA, Dimensions dimB, Dimensions dimResult) {
+	if (dimA.rows == dimResult.rows) {
+		return dimB;
+	}
+
+	return dimA;
+}
+
+// Multiplica a matriz
 void multiplyMatrix (int ** matrixA, Dimensions dimA, int ** matrixB, Dimensions dimB, int *** result, Dimensions dimResult) {
 	int i, j, row;
+	Dimensions repetition = getDimensionForRepetition(dimA, dimB, dimResult);
 
-	for (row = 0; row < dimResult.xDim; row++) {
-		for (i = 0; i < dimB.yDim; i++) {
-			for (j = 0; j < dimA.yDim; j++) {
+	for (row = 0; row < dimResult.rows; row++) {
+		for (i = 0; i < repetition.cols; i++) {
+			for (j = 0; j < repetition.rows; j++) {
 				(*result)[row][i] += matrixA[row][j] * matrixB[j][i];
 			}
 		}
@@ -127,9 +136,9 @@ void multiplyMatrix (int ** matrixA, Dimensions dimA, int ** matrixB, Dimensions
 void printResult (int *** result, Dimensions dimResult) {
 	int i,j;
 
-	printf("%d %d\n", dimResult.xDim, dimResult.yDim);
-	for (i = 0; i < dimResult.xDim; i++) {
-		for (j = 0; j < dimResult.yDim; j++) {
+	printf("%d %d\n", dimResult.rows, dimResult.cols);
+	for (i = 0; i < dimResult.rows; i++) {
+		for (j = 0; j < dimResult.cols; j++) {
 			printf("%d ", (*result)[i][j]);
 		}
 
@@ -148,17 +157,17 @@ int main() {
 	dimB = readMatrixFromFile(B_FILE, &matrixB);
 	dimResult = getResultDimensions(dimA, dimB);
 
-	if (validMatrixDimensions(dimResult)) {
+	if (validMatrirowsensions(dimResult)) {
 		allocateMatrix(&result, dimResult);
 
 		multiplyMatrix(matrixA, dimA, matrixB, dimB, &result, dimResult);
 		printResult(&result, dimResult);
 
-		freeMatrix(&result, dimResult.xDim);
+		freeMatrix(&result, dimResult.rows);
 	}
 
-	freeMatrix(&matrixA, dimA.xDim);
-	freeMatrix(&matrixB, dimB.xDim);
+	freeMatrix(&matrixA, dimA.rows);
+	freeMatrix(&matrixB, dimB.rows);
 
 	return 0;
 }
