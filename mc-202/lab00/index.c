@@ -77,10 +77,7 @@ Dimensions getResultDimensions(Dimensions a, Dimensions b) {
 	if (a.cols == b.rows) {
 		result.rows = a.rows;
 		result.cols = b.cols;
-	} else if (a.rows == b.cols) {
-		result.rows = b.rows;
-		result.cols = a.cols;
-	}
+	} 
 
 	return result;
 }
@@ -132,7 +129,6 @@ void multiplyMatrix (int ** matrixA, Dimensions dimA, int ** matrixB, Dimensions
  * Printa m linhas de n números contento o resultado
  * da multiplicação das matrizes de entrada
 */
-
 void printResult (int *** result, Dimensions dimResult) {
 	int i,j;
 
