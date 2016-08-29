@@ -84,7 +84,7 @@ Dimensions getResultDimensions(Dimensions a, Dimensions b) {
 
 // Valida se as dimensões são possível de ser multiplicadas e printa a resposta
 // caso não seja possível
-char validMatrirowsensions (Dimensions result) {
+char validMatrixDimensions (Dimensions result) {
 	if (result.rows == INVALID_DIMENSION) {
 		printError();
 		return ERROR;
@@ -153,7 +153,7 @@ int main() {
 	dimB = readMatrixFromFile(B_FILE, &matrixB);
 	dimResult = getResultDimensions(dimA, dimB);
 
-	if (validMatrirowsensions(dimResult)) {
+	if (validMatrixDimensions(dimResult)) {
 		allocateMatrix(&result, dimResult);
 
 		multiplyMatrix(matrixA, dimA, matrixB, dimB, &result, dimResult);
