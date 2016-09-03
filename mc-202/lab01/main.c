@@ -1,3 +1,8 @@
+/* Nome  : William Gonçalves da Cruz
+ * RA    : 188671
+ * Turma : F
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 
