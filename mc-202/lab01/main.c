@@ -6,6 +6,9 @@
 #define NOT_FOUND 0
 #define FOUND 1
 
+#define FIRST_LIST "primeira "
+#define ORIGINAL_LIST "original "
+
 typedef
 	struct Node {
 		short value;
@@ -119,11 +122,14 @@ void printFirstList(List ** list) {
 		}
 	}
 
+	printf("%s ", FIRST_LIST);
 	printNodes(&start, &end);
 }
 
 void print(List ** list) {
 	Node * actual;
+
+	printf("%s ", ORIGINAL_LIST);
 	for (actual = (*list)->first; actual->next != NULL; actual = actual->next) {
 		printf("%d ", actual->value);
 	}
@@ -153,9 +159,9 @@ int main() {
 
 	readParameters(&list);
 
+	print(&list);
 	printFirstList(&list);
 
-	print(&list);
 	freeList(&list);
 	return 0;
 }
