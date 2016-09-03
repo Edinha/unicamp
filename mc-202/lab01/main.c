@@ -93,14 +93,24 @@ void readList(List ** list) {
 	}
 }
 
-/* Retorna o ponteiro para o nó que contém o mesmo valor passado no parâmetro
- * A partir de um ponteiro dado como inicio
+/* Retorna a última ocorrência do ponteiro para o nó que contém o mesmo valor
+ * passado no parâmetro, a partir de um ponteiro dado como inicio
  */
 Node * getListNodeWithValueFromStart(Node * actual, short * value) {
-	if (actual == NULL) {
-		return NULL;
+	Node * required = NULL;
+	for (; actual->next != NULL; actual = actual->next) {
+		if (actual->value == *value) {
+			required = actual;
+		}
 	}
 
+	return required;
+}
+
+/* Retorna a prmieira ocorrência do ponteiro para o nó que contém o mesmo valor
+ * passado no parâmetro, a partir de um ponteiro dado como inicio
+ */
+Node * getFirstNodeWithValueFromStart(Node * actual, short * value) {
 	for (; actual->next != NULL; actual = actual->next) {
 		if (actual->value == *value) {
 			return actual;
@@ -110,9 +120,23 @@ Node * getListNodeWithValueFromStart(Node * actual, short * value) {
 	return NULL;
 }
 
-// Retorna a partir do começo da listagem
+// Retorna a última ocorrência do valor a partir do começo da listagem
 Node * getListNodeWithValue(List ** list, short * value) {
 	return getListNodeWithValueFromStart((*list)->first, value);
+}
+
+// Retorna a primeira ocorrência a partir do começo da listagem
+Node * getFirstListNodeWithValue(List ** list, short * value) {
+	return getFirstNodeWithValueFromStart((*list)->first, value);
+}
+
+// Retorna o primeiro nó que contém o valor de M
+Node * getMStartNodeWithValue(List ** list) {
+	Node * mStart = getListNodeWithValue(list, &(*list)->m);
+	if (mStart == NULL) {
+		mStart = (*list)->first;
+	}
+	return mStart;
 }
 
 /* Printa, a partir do nó começo, todos os valores dos nós subsequentes, até
@@ -134,15 +158,15 @@ void printNodes(Node ** start, short * endValue, char listIdentifier[]) {
  * parâmetro m, n, p e passa esses parâmetros para serem printados
  */
 void printFirstList(List ** list) {
-	Node * start = getListNodeWithValue(list, &(*list)->m),
-		 * end = getListNodeWithValue(list, &(*list)->n);
+	Node * start = getFirstListNodeWithValue(list, &(*list)->m),
+		 * end = getFirstListNodeWithValue(list, &(*list)->n);
 
 	if (start == NULL) {
 		start = (*list)->first;
 	}
 
 	if (end == NULL) {
-		end = getListNodeWithValue(list, &(*list)->p);
+		end = getFirstListNodeWithValue(list, &(*list)->p);
 		if (end == NULL) {
 			end = (*list)->last;
 		}
@@ -155,15 +179,12 @@ void printFirstList(List ** list) {
  * parâmetro m, n, p e passa esses parâmetros para serem printados
  */
 void printSecondList(List ** list) {
-	Node * mStart = getListNodeWithValue(list, &(*list)->m),
-		 * start = getListNodeWithValueFromStart(mStart, &(*list)->n),
+	Node * mStart = getMStartNodeWithValue(list),
+		 * start = getFirstNodeWithValueFromStart(mStart, &(*list)->n),
 		 * end = getListNodeWithValueFromStart(mStart, &(*list)->p);
 
 	if (start == NULL) {
 		start = mStart;
-		if (start == NULL) {
-			start = (*list)->first;
-		}
 	}
 
 	if (end == NULL) {
@@ -177,17 +198,14 @@ void printSecondList(List ** list) {
  * parâmetro m, n, p e passa esses parâmetros para serem printados
  */
 void printThirdList(List ** list) {
-	Node * mStart = getListNodeWithValue(list, &(*list)->m),
+	Node * mStart = getMStartNodeWithValue(list),
 		 * start = getListNodeWithValueFromStart(mStart, &(*list)->p),
 		 * end = (*list)->last;
 
 	if (start == NULL) {
-		start = getListNodeWithValueFromStart(mStart, &(*list)->n);
+		start = getFirstNodeWithValueFromStart(mStart, &(*list)->n);
 		if (start == NULL) {
 			start = mStart;
-			if(start == NULL) {
-				start = (*list)->first;
-			}
 		}
 	}
 
