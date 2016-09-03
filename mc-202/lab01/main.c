@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // Define o 'fim de linha' para o final da lista de entrada
 #define END_LINE '\n'
@@ -31,16 +32,6 @@ typedef
 		Node * first, * last;
 		short m, n, p;
 	} List;
-
-// Lê um short da entrada para o ponteiro passado por parâmetro
-void readShort(short * value) {
-	scanf("%hi", value);
-}
-
-// Lê um char da entrada para o ponteiro passado por parâmetro
-void readChar(char * c) {
-	scanf("%c", c);
-}
 
 // Lê os parâmetros m, n, p da lista
 void readParameters(List ** list) {
@@ -86,13 +77,19 @@ void insert(List ** list, short value) {
  * se encontre o final de linha (\n)
  */
 void readList(List ** list) {
-	char c;
+	char allValues[1000],
+		 * splited;
+
 	short value;
 
-	for (;c != END_LINE;) {
-		readShort(&value);
+	// Lê toda a entrada e separa por espaço para pegar todos os valores
+	scanf("%[^\n]s", allValues);
+	splited = strtok(allValues, " ");
+	for (;splited != NULL;) {
+		// Pega o próximo elemento do splited
+		sscanf(splited, "%hi", &value);
 		insert(list, value);
-		readChar(&c);
+		splited = strtok(NULL, " ");
 	}
 }
 
