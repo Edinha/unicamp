@@ -3,10 +3,10 @@
 
 #define END_LINE '\n'
 
-#define NOT_FOUND 0
-#define FOUND 1
-
+#define PARAMETERS "m=%d, n=%d, p=%d\n"
 #define FIRST_LIST "primeira "
+#define SECOND_LIST "segunda "
+#define THIRD_LIST "terceira "
 #define ORIGINAL_LIST "original "
 
 typedef
@@ -17,7 +17,7 @@ typedef
 
 typedef
 	struct {
-		Node * first;
+		Node * first, * last;
 		short m, n, p;
 	} List;
 
@@ -36,9 +36,10 @@ void readParameters(List ** list) {
 void init(List ** list) {
 	(*list) = malloc(sizeof(List*));
 	(*list)->first = NULL;
+	(*list)->last = NULL;
 }
 
-Node* createNode(short value) {
+Node * createNode(short value) {
 	Node * n = malloc(sizeof(Node));
 	n->value = value;
 	n->next = NULL;
@@ -51,6 +52,7 @@ void insert(List ** list, short value) {
 
 	if (actual == NULL) {
 		(*list)->first = node;
+		(*list)->last = node;
 		return;
 	}
 
@@ -58,6 +60,7 @@ void insert(List ** list, short value) {
 	}
 
 	actual->next = node;
+	(*list)->last = node;
 }
 
 void readList(List ** list) {
@@ -69,18 +72,6 @@ void readList(List ** list) {
 		insert(list, value);
 		readChar(&c);
 	}
-}
-
-Node * getListLastElement(List ** list) {
-	Node * actual = (*list)->first;
-	if (actual == NULL) {
-		return NULL;
-	}
-
-	for (; actual->next != NULL; actual = actual->next) {
-	}
-
-	return actual;
 }
 
 Node * getListNodeWithValue(List ** list, short * value) {
@@ -98,9 +89,11 @@ Node * getListNodeWithValue(List ** list, short * value) {
 	return NULL;
 }
 
-void printNodes(Node ** start, Node ** end) {
+void printNodes(Node ** start, short * endValue, char listIdentifier[]) {
 	Node * actual = (*start);
-	for (; actual->value != (*end)->value; actual = actual->next) {
+
+	printf("%s ", listIdentifier);
+	for (; actual->value != *endValue; actual = actual->next) {
 		printf("%d ", actual->value);
 	}
 
@@ -118,23 +111,55 @@ void printFirstList(List ** list) {
 	if (end == NULL) {
 		end = getListNodeWithValue(list, &(*list)->p);
 		if (end == NULL) {
-			end = getListLastElement(list);
+			end = (*list)->last;
 		}
 	}
 
-	printf("%s ", FIRST_LIST);
-	printNodes(&start, &end);
+	printNodes(&start, &end->value, FIRST_LIST);
+}
+
+void printSecondList(List ** list) {
+	Node * start = getListNodeWithValue(list, &(*list)->n),
+		 * end = getListNodeWithValue(list, &(*list)->p);
+
+	if (start == NULL) {
+		start = getListNodeWithValue(list, &(*list)->m);
+		if (start == NULL) {
+			start = (*list)->first;
+		}
+	}
+
+	if (end == NULL) {
+		end = (*list)->last;
+	}
+
+	printNodes(&start, &end->value, SECOND_LIST);
+}
+
+void printThirdList(List ** list) {
+	Node * start = getListNodeWithValue(list, &(*list)->p),
+		 * end = (*list)->last;
+
+	if (start == NULL) {
+		start = getListNodeWithValue(list, &(*list)->n);
+		if (start == NULL) {
+			start = (*list)->first;
+		}
+	}
+
+	printNodes(&start, &end->value, THIRD_LIST);
 }
 
 void print(List ** list) {
 	Node * actual;
 
-	printf("%s ", ORIGINAL_LIST);
+	printf(ORIGINAL_LIST);
 	for (actual = (*list)->first; actual->next != NULL; actual = actual->next) {
 		printf("%d ", actual->value);
 	}
 
 	printf("%d\n", actual->value);
+	printf(PARAMETERS, (*list)->m, (*list)->n, (*list)->p);
 }
 
 void freeNodes(Node * n) {
@@ -161,6 +186,8 @@ int main() {
 
 	print(&list);
 	printFirstList(&list);
+	printSecondList(&list);
+	printThirdList(&list);
 
 	freeList(&list);
 	return 0;
