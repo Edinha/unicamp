@@ -93,9 +93,10 @@ void readList(List ** list) {
 	}
 }
 
-// Retorna o ponteiro para o nó que contém o mesmo valor passado no parâmetro
-Node * getListNodeWithValue(List ** list, short * value) {
-	Node * actual = (*list)->first;
+/* Retorna o ponteiro para o nó que contém o mesmo valor passado no parâmetro
+ * A partir de um ponteiro dado como inicio
+ */
+Node * getListNodeWithValueFromStart(Node * actual, short * value) {
 	if (actual == NULL) {
 		return NULL;
 	}
@@ -109,6 +110,11 @@ Node * getListNodeWithValue(List ** list, short * value) {
 	return NULL;
 }
 
+// Retorna a partir do começo da listagem
+Node * getListNodeWithValue(List ** list, short * value) {
+	return getListNodeWithValueFromStart((*list)->first, value);
+}
+
 /* Printa, a partir do nó começo, todos os valores dos nós subsequentes, até
  * que se encontre o valor final parametrizado, sempre identificando qual das
  * listas (primeira, segunda, terceira) está sendo printada
@@ -116,7 +122,7 @@ Node * getListNodeWithValue(List ** list, short * value) {
 void printNodes(Node ** start, short * endValue, char listIdentifier[]) {
 	Node * actual = (*start);
 
-	printf("%s ", listIdentifier);
+	printf("%s", listIdentifier);
 	for (; actual->value != *endValue; actual = actual->next) {
 		printf("%d ", actual->value);
 	}
@@ -149,11 +155,12 @@ void printFirstList(List ** list) {
  * parâmetro m, n, p e passa esses parâmetros para serem printados
  */
 void printSecondList(List ** list) {
-	Node * start = getListNodeWithValue(list, &(*list)->n),
-		 * end = getListNodeWithValue(list, &(*list)->p);
+	Node * mStart = getListNodeWithValue(list, &(*list)->m),
+		 * start = getListNodeWithValueFromStart(mStart, &(*list)->n),
+		 * end = getListNodeWithValueFromStart(mStart, &(*list)->p);
 
 	if (start == NULL) {
-		start = getListNodeWithValue(list, &(*list)->m);
+		start = mStart;
 		if (start == NULL) {
 			start = (*list)->first;
 		}
@@ -170,13 +177,14 @@ void printSecondList(List ** list) {
  * parâmetro m, n, p e passa esses parâmetros para serem printados
  */
 void printThirdList(List ** list) {
-	Node * start = getListNodeWithValue(list, &(*list)->p),
+	Node * mStart = getListNodeWithValue(list, &(*list)->m),
+		 * start = getListNodeWithValueFromStart(mStart, &(*list)->p),
 		 * end = (*list)->last;
 
 	if (start == NULL) {
-		start = getListNodeWithValue(list, &(*list)->n);
+		start = getListNodeWithValueFromStart(mStart, &(*list)->n);
 		if (start == NULL) {
-			start = getListNodeWithValue(list, &(*list)->m);
+			start = mStart;
 			if(start == NULL) {
 				start = (*list)->first;
 			}
