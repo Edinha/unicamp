@@ -3,6 +3,9 @@
 
 #define END_LINE '\n'
 
+#define NOT_FOUND 0
+#define FOUND 1
+
 typedef
 	struct Node {
 		short value;
@@ -12,6 +15,7 @@ typedef
 typedef
 	struct {
 		Node * first;
+		short m, n, p;
 	} List;
 
 void readShort(short * value) {
@@ -20,6 +24,10 @@ void readShort(short * value) {
 
 void readChar(char * c) {
 	scanf("%c", c);
+}
+
+void readParameters(List ** list) {
+	scanf("%hi %hi %hi", &(*list)->m, &(*list)->n, &(*list)->p);
 }
 
 void init(List ** list) {
@@ -36,14 +44,14 @@ Node* createNode(short value) {
 
 void insert(List ** list, short value) {
 	Node * node = createNode(value),
-		 * actual;
+		 * actual = actual = (*list)->first;
 
-	if ((*list)->first == NULL) {
+	if (actual == NULL) {
 		(*list)->first = node;
 		return;
 	}
 
-	for (actual = (*list)->first; actual->next != NULL; actual = actual->next) {
+	for (; actual->next != NULL; actual = actual->next) {
 	}
 
 	actual->next = node;
@@ -53,23 +61,60 @@ void readList(List ** list) {
 	char c;
 	short value;
 
-	for (;;) {
+	for (;c != END_LINE;) {
 		readShort(&value);
 		insert(list, value);
 		readChar(&c);
+	}
+}
 
-		if (c == END_LINE){
-			break;
+Node * getListLastElement(List ** list) {
+	Node * actual = (*list)->first;
+	if (actual == NULL) {
+		return NULL;
+	}
+
+	for (; actual->next != NULL; actual = actual->next) {
+	}
+
+	return actual;
+}
+
+Node * getListNodeWithValue(List ** list, short * value) {
+	Node * actual = (*list)->first;
+	if (actual == NULL) {
+		return NULL;
+	}
+
+	for (; actual->next != NULL; actual = actual->next) {
+		if (actual->value == *value) {
+			return actual;
 		}
+	}
+
+	return NULL;
+}
+
+void printFirstList(List ** list) {
+	Node * start = getListNodeWithValue(list, &(*list)->m),
+		 * end = getListNodeWithValue(list, &(*list)->n);
+
+	if (start == NULL) {
+		start = (*list)->first;
+	}
+
+	if (end == NULL) {
+		return;
 	}
 }
 
 void print(List ** list) {
 	Node * actual;
-
-	for (actual = (*list)->first; actual != NULL; actual = actual->next) {
+	for (actual = (*list)->first; actual->next != NULL; actual = actual->next) {
 		printf("%d ", actual->value);
 	}
+
+	printf("%d\n", actual->value);
 }
 
 void freeNodes(Node * n) {
@@ -88,10 +133,15 @@ void freeList(List ** list) {
 
 int main() {
 	List * list = NULL;
+
 	init(&list);
 	readList(&list);
-	print(&list);
 
+	readParameters(&list);
+
+	printFirstList(&list);
+
+	print(&list);
 	freeList(&list);
 	return 0;
 }
