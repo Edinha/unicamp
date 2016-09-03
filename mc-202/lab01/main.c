@@ -95,6 +95,15 @@ Node * getListNodeWithValue(List ** list, short * value) {
 	return NULL;
 }
 
+void printNodes(Node ** start, Node ** end) {
+	Node * actual = (*start);
+	for (; actual->value != (*end)->value; actual = actual->next) {
+		printf("%d ", actual->value);
+	}
+
+	printf("%d\n", actual->value);
+}
+
 void printFirstList(List ** list) {
 	Node * start = getListNodeWithValue(list, &(*list)->m),
 		 * end = getListNodeWithValue(list, &(*list)->n);
@@ -104,8 +113,13 @@ void printFirstList(List ** list) {
 	}
 
 	if (end == NULL) {
-		return;
+		end = getListNodeWithValue(list, &(*list)->p);
+		if (end == NULL) {
+			end = getListLastElement(list);
+		}
 	}
+
+	printNodes(&start, &end);
 }
 
 void print(List ** list) {
