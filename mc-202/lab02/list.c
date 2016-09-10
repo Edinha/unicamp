@@ -20,7 +20,7 @@ void insert(int key, List ** list) {
 	Node * new = createNode(key), 
 		 * actual;
 	
-	int cost = 0;
+	int cost = 2;
 
 	if ((*list)->first == NULL) {
 		(*list)->first = new;
@@ -44,7 +44,7 @@ void find(int key, List ** list) {
 	Node * actual,
 		 * previous;
 
-	int cost = 0;
+	int cost = 1;
 
 	previous = NULL;
 	actual = (*list)->first;
@@ -83,7 +83,7 @@ void removeList(int key, List ** list) {
 
 	previous = (*list)->first;
 	actual = previous->next;
-	cost++;
+	cost += 2;
 
 	for (; actual != NULL; cost++) {
 		if (actual->key == key) {
