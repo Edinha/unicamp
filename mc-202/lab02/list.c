@@ -10,13 +10,14 @@ Node * createNode(int key) {
 	return node;
 }
 
-void init(List * list) {
+void init(List * list, int transpositionValue) {
 	list = malloc(sizeof(List));
 	list->first = NULL;
 	list->allCosts = 0;
+	list->transpositionValue = transpositionValue;
 }
 
-void insert(int key, List * list, int transpositionValue) {
+void insert(int key, List * list) {
 	Node * new = createNode(key), 
 		 * actual;
 	
@@ -35,12 +36,12 @@ void insert(int key, List * list, int transpositionValue) {
 	actual->next = new;
 	list->allCosts += cost;
 
-	if (transpositionValue == TR) {
+	if (list->transpositionValue == TR) {
 		transposition(&actual, &actual->next);
 	}
 }
 
-void find(int key, List * list, int transpositionValue) {
+void find(int key, List * list) {
 	Node * actual,
 		 * previous;
 
@@ -58,16 +59,16 @@ void find(int key, List * list, int transpositionValue) {
 		actual = actual->next;
 	}
 
-	if (transpositionValue == TR) {
+	if (list->transpositionValue == TR) {
 		transposition(&previous, &actual);
-	} else if (transpositionValue == MTF) {
+	} else if (list->transpositionValue == MTF) {
 		transposition(&list->first, &actual);
 	}
 
 	list->allCosts += cost;
 }
 
-void remove(int key, List * list) {
+void removeList(int key, List * list) {
 	Node * actual,
 		 * previous;
 

@@ -19,23 +19,23 @@ typedef
 typedef 
 	struct {
 		Node * first;
-		int allCosts;
+		int allCosts, transpositionValue;
 	} List;
 
 /* Inicializa um nó com o valor parametrizado */
 Node * createNode(int);
 
 /* Inicializa a lista alocando as memórias necessárias */
-void init(List*);
+void init(List*, int);
 
 /* Insere a chave inteira na lista */
-void insert(int, List*, int);
+void insert(int, List*);
 
 /* Encontra a chave inteira na lista */
-void find(int, List*, int);
+void find(int, List*);
 
 /* Remove a chave inteira da lista */
-void remove(int, List*);
+void removeList(int, List*);
 
 /* Faz a transposição na lista entre os dois nós parametrizados */
 void transposition(Node**, Node**);
