@@ -4,12 +4,25 @@ int main() {
 	List * mtf, 
 		 * tr;
 
+	int requestSize;
+	Request * requests = NULL;
+
 	init(&tr, TR);
 	init(&mtf, MTF);
 
-	// readInitialList(&tr);
-	// copy(&tr, &mtf);
+	requestSize = readInitialList(&tr);
+	copy(&tr, &mtf);
 
+	initRequests(&requests, requestSize);
+	readRequests(&requests, requestSize);
+
+	applyRequests(&tr, &requests, requestSize);
+	applyRequests(&mtf, &requests, requestSize);
+
+	printList(&mtf);
+	printList(&tr);
+
+	free(requests);
 	freeList(&tr);
 	freeList(&mtf);
 

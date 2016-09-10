@@ -30,31 +30,47 @@ int readInitialList(List ** list) {
 	return requests;
 }
 
-void readRequests(List ** list, int requests) {
-	int actual, i;
-	char operation;
-
-	for (i = 0; i < requests; i++) {
-		readChar(&operation);
-		readInt(&actual);
-
-		applyOperation(list, operation, actual);
+void initRequests(Request ** requests, int size) {
+	*requests = malloc(sizeof(Request) * size);
+	for (int i = 0; i < size; i++) {
+		(*requests)[i].key = 0;
+		(*requests)[i].operation = '\0';
 	}
 }
 
-void applyOperation(List ** list, char operation, int actual) {
-	switch (operation) {
-		case INSERT: 
-			insert(actual, list);
-			break;
-		case FIND:
-			find(actual, list);
-			break;
-		case REMOVE:
-			removeList(actual, list);
-			break;
-		default:
-			break;
+Request readRequest() {
+	Request request;
+	readChar(&request.operation);
+	readInt(&request.key);
+	return request;
+}
+
+void readRequests(Request ** requests, int size) {
+	for (int i = 0; i < size; i++) {
+		(*requests)[i] = readRequest();
+	}
+}
+
+void applyRequests(List ** list, Request ** requests, int size) {
+	int i;
+	Request request;
+	
+	for (i = 0; i < size; i++) {
+		request = (*requests)[i];
+
+		switch (request.operation) {
+			case INSERT: 
+				insert(request.key, list);
+				break;
+			case FIND:
+				find(request.key, list);
+				break;
+			case REMOVE:
+				removeList(request.key, list);
+				break;
+			default:
+				break;
+		}
 	}
 }
 

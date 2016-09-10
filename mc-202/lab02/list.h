@@ -1,6 +1,9 @@
 #ifndef LIST_H
 #define LIST_H
 
+#include <stdlib.h>
+#include <stdio.h>
+
 /* Definições dos métodos de transposição */ 
 #define MTF 0
 #define TR 1

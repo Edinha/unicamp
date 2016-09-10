@@ -1,5 +1,4 @@
 #include "list.h"
-#include <stdlib.h>
 
 /* Implementação dos métodos da lista */
 
@@ -110,6 +109,10 @@ void copy(List ** original, List ** copy) {
 }
 
 void transposition(Node ** previous, Node ** actual) {
+	if (*previous == NULL) {
+		return;
+	}
+	
 	int aux = (*previous)->key;
 	(*previous)->key = (*actual)->key;
 	(*actual)->key = aux;
