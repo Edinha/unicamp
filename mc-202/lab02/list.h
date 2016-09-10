@@ -7,6 +7,7 @@
 /* Definições dos métodos de transposição */ 
 #define MTF 0
 #define TR 1
+#define NO_TRANSPOSITION -1
 
 /* Definições para a estruturação da lista simples 
  * O nó contém sua chave inteira e seu ponteiro para o próximo
@@ -45,6 +46,9 @@ void copy(List**, List**);
 
 /* Faz a transposição na lista entre os dois nós parametrizados */
 void transposition(Node**, Node**);
+
+/* Faz a transposição na para o primeiro da lista */
+void transpositionListFirst(List**, Node**, Node**);
 
 /* Libera o espaço da memória dos nós de uma lista */
 void freeNodes(Node*);

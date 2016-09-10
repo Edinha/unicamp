@@ -13,16 +13,24 @@ void readChar(char * c) {
 int readInitialList(List ** list) {
 	int listSize, 
 		actual, 
-		requests, 
+		requests,
+		transpositionAux,
 		i;
 
 	readInt(&listSize);
 	readInt(&requests);
 
+	// Tira o valor da transposição da lista para a lista inicial
+	transpositionAux = (*list)->transpositionValue;
+	(*list)->transpositionValue = NO_TRANSPOSITION;
+
 	for (i = 0; i < listSize; i++) {
 		readInt(&actual);
 		insert(actual, list);
 	}
+
+	// Volta o valor da transposição da lista ao original
+	(*list)->transpositionValue = transpositionAux;
 
 	// Reinicializa o custo da lista para as inserções iniciais
 	(*list)->allCosts = 0;

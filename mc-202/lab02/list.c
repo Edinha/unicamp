@@ -61,7 +61,7 @@ void find(int key, List ** list) {
 	if ((*list)->transpositionValue == TR) {
 		transposition(&previous, &actual);
 	} else if ((*list)->transpositionValue == MTF) {
-		transposition(&(*list)->first, &actual);
+		transpositionListFirst(list, &previous, &actual);
 	}
 
 	(*list)->allCosts += cost;
@@ -116,6 +116,16 @@ void transposition(Node ** previous, Node ** actual) {
 	int aux = (*previous)->key;
 	(*previous)->key = (*actual)->key;
 	(*actual)->key = aux;
+}
+
+void transpositionListFirst(List ** list, Node ** previous, Node ** actual) {
+	if (*previous == NULL) {
+		return;
+	}
+
+	(*previous)->next = (*actual)->next;
+	(*actual)->next = (*list)->first;
+	(*list)->first = (*actual);
 }
 
 void freeNodes(Node * node) {
