@@ -26,18 +26,27 @@ typedef
 Node * createNode(int);
 
 /* Inicializa a lista alocando as memórias necessárias */
-void init(List*, int);
+void init(List**, int);
 
 /* Insere a chave inteira na lista */
-void insert(int, List*);
+void insert(int, List**);
 
 /* Encontra a chave inteira na lista */
-void find(int, List*);
+void find(int, List**);
 
 /* Remove a chave inteira da lista */
-void removeList(int, List*);
+void removeList(int, List**);
+
+/* Copiar os valores de uma lista para a outra */
+void copy(List**, List**);
 
 /* Faz a transposição na lista entre os dois nós parametrizados */
 void transposition(Node**, Node**);
+
+/* Libera o espaço da memória dos nós de uma lista */
+void freeNodes(Node*);
+
+/* Libera o espaço da memória da lista */
+void freeList(List**);
 
 #endif

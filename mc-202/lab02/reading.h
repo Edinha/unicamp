@@ -15,16 +15,16 @@ void readInt(int*);
 /* Lê um char da entrada */
 void readChar(char*);
 
-/* Ler a lista inicial da entrada e retorna o nṹmero de requisições */
-int readInitialList(List*);
+/* Ler a lista inicial da entrada e retorna o número de requisições */
+int readInitialList(List**);
 
 /* Lê todas as request e as aplica */
-void readRequests(List*, int);
+void readRequests(List**, int);
 
 /* Aplica uma operação a listagem de acordo com as requisições lidas */
-void applyOperation(List * list, char operation, int actual);
+void applyOperation(List**, char, int);
 
 /* Escreve a listagem na tela */
-void printList(List*);
+void printList(List**);
 
 #endif

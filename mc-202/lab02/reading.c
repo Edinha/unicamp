@@ -1,6 +1,7 @@
 #include "reading.h"
 
 /* Implementação das funções */
+
 void readInt(int * i) {
 	scanf("%d ", i);
 }
@@ -9,7 +10,7 @@ void readChar(char * c) {
 	scanf("%c ", c);
 }
 
-int readInitialList(List * list) {
+int readInitialList(List ** list) {
 	int listSize, 
 		actual, 
 		requests, 
@@ -24,12 +25,12 @@ int readInitialList(List * list) {
 	}
 
 	// Reinicializa o custo da lista para as inserções iniciais
-	list->allCosts = 0;
+	(*list)->allCosts = 0;
 
 	return requests;
 }
 
-void readRequests(List * list, int requests) {
+void readRequests(List ** list, int requests) {
 	int actual, i;
 	char operation;
 
@@ -41,7 +42,7 @@ void readRequests(List * list, int requests) {
 	}
 }
 
-void applyOperation(List * list, char operation, int actual) {
+void applyOperation(List ** list, char operation, int actual) {
 	switch (operation) {
 		case INSERT: 
 			insert(actual, list);
@@ -57,10 +58,10 @@ void applyOperation(List * list, char operation, int actual) {
 	}
 }
 
-void printList(List * list) {
-	Node * actual = list->first;
+void printList(List ** list) {
+	Node * actual = (*list)->first;
 
-	printf("%d\n", list->allCosts);
+	printf("%d\n", (*list)->allCosts);
 	
 	for (; actual != NULL; actual = actual->next) {
 		printf("%d ", actual->key);
