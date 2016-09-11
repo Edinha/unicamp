@@ -50,7 +50,7 @@ void transposition(Node**, Node**);
 /* Faz a transposição na para o primeiro da lista */
 void transpositionListFirst(List**, Node**, Node**);
 
-/* Libera o espaço da memória dos nós de uma lista */
+/* Libera o espaço da memória dos nós de uma lista com estratégia recursiva */
 void freeNodes(Node*);
 
 /* Libera o espaço da memória da lista */

@@ -29,13 +29,13 @@ void initRequests(Request**, int);
 /* Lê uma única linha de requisição e retorna seu valor */
 Request readRequest();
 
-/* Lê todas as requisições da entrada, instanciando seu ponteiro parametrizado como vetor */
+/* Lê todas as requisições da entrada no ponteiro parametrizado */
 void readRequests(Request**, int);
 
 /* Aplica todas requisições a listagem */
 void applyRequests(List**, Request**, int);
 
-/* Escreve a listagem na tela */
+/* Escreve a listagem e seu custo após as operações na tela */
 void printList(List**);
 
 #endif

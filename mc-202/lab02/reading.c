@@ -20,7 +20,7 @@ int readInitialList(List ** list) {
 	readInt(&listSize);
 	readInt(&requests);
 
-	// Tira o valor da transposição da lista para a lista inicial
+	// Tira o valor da transposição da lista para a lista inicial não ser transposta quando inserida
 	transpositionAux = (*list)->transpositionValue;
 	(*list)->transpositionValue = NO_TRANSPOSITION;
 

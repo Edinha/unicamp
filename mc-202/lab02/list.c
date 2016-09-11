@@ -20,6 +20,7 @@ void insert(int key, List ** list) {
 	Node * new = createNode(key), 
 		 * actual;
 	
+	// O custo de uma inserção em lista não vazia nesse algoritmo começa em 2
 	int cost = 2;
 
 	if ((*list)->first == NULL) {
@@ -35,6 +36,8 @@ void insert(int key, List ** list) {
 	actual->next = new;
 	(*list)->allCosts += cost;
 
+	/* Faz a transposição entre o anterior e o próximo caso seja a lista
+	 * Em formato TR */
 	if ((*list)->transpositionValue == TR) {
 		transposition(&actual, &actual->next);
 	}
@@ -58,6 +61,7 @@ void find(int key, List ** list) {
 		actual = actual->next;
 	}
 
+	// Faz a transposição dependendo do formato da lista em que se foi buscado
 	if ((*list)->transpositionValue == TR) {
 		transposition(&previous, &actual);
 	} else if ((*list)->transpositionValue == MTF) {
@@ -71,7 +75,8 @@ void removeList(int key, List ** list) {
 	Node * actual,
 		 * previous;
 
-	int cost = 0;
+	// O custo de uma remoção em lista não vazia nesse algoritmo começa em 2
+	int cost = 2;
 
 	if ((*list)->first->key == key) {
 		actual = (*list)->first;
@@ -83,7 +88,6 @@ void removeList(int key, List ** list) {
 
 	previous = (*list)->first;
 	actual = previous->next;
-	cost += 2;
 
 	for (; actual != NULL; cost++) {
 		if (actual->key == key) {
@@ -105,24 +109,29 @@ void copy(List ** original, List ** copy) {
 		insert(actual->key, copy);
 	}
 
+	// Reinicializa a copia, pois não há importancia para elementos iniciais
 	(*copy)->allCosts = 0;
 }
 
 void transposition(Node ** previous, Node ** actual) {
+	// Caso o atual seja o primeiro da lista, não há transposição
 	if (*previous == NULL) {
 		return;
 	}
 	
+	// Troca as chaves dos nós apenas, não seus ponteiros
 	int aux = (*previous)->key;
 	(*previous)->key = (*actual)->key;
 	(*actual)->key = aux;
 }
 
 void transpositionListFirst(List ** list, Node ** previous, Node ** actual) {
+	// Caso o atual seja o primeiro da lista, não há transposição
 	if (*previous == NULL) {
 		return;
 	}
 
+	// Troca os ponteiros para colocar o atual em primeiro
 	(*previous)->next = (*actual)->next;
 	(*actual)->next = (*list)->first;
 	(*list)->first = (*actual);
