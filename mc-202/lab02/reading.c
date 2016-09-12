@@ -1,3 +1,8 @@
+/* Nome  : William Gonçalves da Cruz
+ * RA    : 188671
+ * Turma : F
+ */
+
 #include "reading.h"
 
 /* Implementação das funções */
@@ -11,8 +16,8 @@ void readChar(char * c) {
 }
 
 int readInitialList(List ** list) {
-	int listSize, 
-		actual, 
+	int listSize,
+		actual,
 		requests,
 		transpositionAux,
 		i;
@@ -62,12 +67,12 @@ void readRequests(Request ** requests, int size) {
 void applyRequests(List ** list, Request ** requests, int size) {
 	int i;
 	Request request;
-	
+
 	for (i = 0; i < size; i++) {
 		request = (*requests)[i];
 
 		switch (request.operation) {
-			case INSERT: 
+			case INSERT:
 				insert(request.key, list);
 				break;
 			case FIND:
@@ -86,7 +91,7 @@ void printList(List ** list) {
 	Node * actual = (*list)->first;
 
 	printf("%d\n", (*list)->allCosts);
-	
+
 	for (; actual != NULL; actual = actual->next) {
 		printf("%d ", actual->key);
 	}

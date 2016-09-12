@@ -1,3 +1,8 @@
+/* Nome  : William Gonçalves da Cruz
+ * RA    : 188671
+ * Turma : F
+ */
+
 #include "list.h"
 
 /* Implementação dos métodos da lista */
@@ -17,9 +22,9 @@ void init(List ** list, int transpositionValue) {
 }
 
 void insert(int key, List ** list) {
-	Node * new = createNode(key), 
+	Node * new = createNode(key),
 		 * actual;
-	
+
 	// O custo de uma inserção em lista não vazia nesse algoritmo começa em 2
 	int cost = 2;
 
@@ -118,7 +123,7 @@ void transposition(Node ** previous, Node ** actual) {
 	if (*previous == NULL) {
 		return;
 	}
-	
+
 	// Troca as chaves dos nós apenas, não seus ponteiros
 	int aux = (*previous)->key;
 	(*previous)->key = (*actual)->key;

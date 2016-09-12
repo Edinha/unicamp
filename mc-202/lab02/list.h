@@ -1,26 +1,31 @@
+/* Nome  : William Gonçalves da Cruz
+ * RA    : 188671
+ * Turma : F
+ */
+
 #ifndef LIST_H
 #define LIST_H
 
 #include <stdlib.h>
 #include <stdio.h>
 
-/* Definições dos métodos de transposição */ 
+/* Definições dos métodos de transposição */
 #define MTF 0
 #define TR 1
 #define NO_TRANSPOSITION -1
 
-/* Definições para a estruturação da lista simples 
+/* Definições para a estruturação da lista simples
  * O nó contém sua chave inteira e seu ponteiro para o próximo
- * a lista contém o primeiro elemento e um inteiro com todos os custos 
+ * a lista contém o primeiro elemento e um inteiro com todos os custos
  * de acesso na referente lista.
  */
-typedef 
+typedef
 	struct Node {
 		int key;
 		struct Node * next;
 	} Node;
 
-typedef 
+typedef
 	struct {
 		Node * first;
 		int allCosts, transpositionValue;
