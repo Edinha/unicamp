@@ -1,0 +1,35 @@
+/* Nome  : William Gonçalves da Cruz
+ * RA    : 188671
+ * Turma : F
+ */
+
+#ifndef DOLL_H
+#define DOLL_H
+
+#include "stack.h"
+
+/* Definições para a estrutura de cada boneca da entrada.
+ * Ela conterá seu valor de tamanho, uma indentificação de sua cor e
+ * uma pilha de bonecas que estão dentro dela
+ */
+
+typedef
+	enum {
+		RED, BLUE, NO_COLOR
+	} Color;
+
+typedef
+	struct {
+		int size;
+		Color color;
+		Stack * innerDolls;
+	} Doll;
+
+/* Método para inicializar a boneca de matrioshka */
+void initDoll (Doll**);
+
+/* Método que coloca a primeira boneca no inteirior da segunda */
+void incubate (Doll**, Doll**);
+
+
+#endif
