@@ -35,6 +35,4 @@ bool sameNumberDifferentColor (Colored*, Colored*);
 /* Imprime a resposta do programa */
 void response (List**);
 
-void printDolls (Doll*);
-
 #endif

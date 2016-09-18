@@ -7,14 +7,6 @@
 
 /* Implementação dos métodos */
 
-// TODO DELETE
-void printEntry (int * dollsNumbers, int arraySize) {
-	printf("%d\n", arraySize);
-	for (int i = 0; i < arraySize; i++) {
-		printf("%d ", dollsNumbers[i]);
-	}
-}
-
 void readInt (int * i) {
 	scanf("%d ", i);
 }
@@ -45,8 +37,6 @@ int readArrayFromFile (int ** dollsNumbers) {
 void createDollsRelation (Doll ** external) {
 	int * dollsNumbers;
 	int arraySize = readArrayFromFile(&dollsNumbers);
-
-	printEntry(dollsNumbers, arraySize);
 
 	*external = incubateEntryDolls(&dollsNumbers, arraySize);
 

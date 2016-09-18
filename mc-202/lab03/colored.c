@@ -36,7 +36,6 @@ int insertColoredDollOnList (Doll * doll, List ** list) {
 	for (actual = previous->next; actual != NULL;) {
 		colored = (Colored*) actual->value;
 
-		// TODO validate already existing
 		if (sameNumberDifferentColor(colored, newColored)) {
 			return ERROR_COLORING;
 		}
@@ -98,13 +97,4 @@ void response (List ** list) {
 				break;
 		}
 	}
-}
-
-// TODO Delete
-void printDolls (Doll * doll) {
-	printf("\n\nNumber: %d Color: %d", doll->number, doll->color);
-	Doll * a = (Doll*) doll->innerDolls->first->value;
-	printf("\n\nNumber: %d Color: %d", a->number, a->color);
-	Doll * b = (Doll*) a->innerDolls->first->next->value;
-	printf("\n\nNumber: %d Color: %d", b->number, b->color);
 }
