@@ -49,3 +49,18 @@ void freeDolls (Doll * doll) {
 bool blank (List ** list) {
 	return (*list)->first == NULL;
 }
+
+void freeList(List ** list) {
+	freeNodes((*list)->first);
+	free(*list);
+}
+
+void freeNodes(Node * node) {
+	if (node == NULL) {
+		return;
+	}
+
+	freeNodes(node->next);
+	free(node->value);
+	free(node);
+}

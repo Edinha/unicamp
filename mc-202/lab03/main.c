@@ -21,14 +21,13 @@ int main() {
 		if (coloringStatus == ERROR_COLORING) {
 			printf("%s", ERROR_MESSAGE);
 		} else {
-			// TODO print the right thing
+			response(&numbersByColor);
 		}
 
-		printDolls(outsided);
-
-		// TODO free numbersByColor
 		freeDolls(outsided);
 	}
+
+	freeList(&numbersByColor);
 
 	return 0;
 }

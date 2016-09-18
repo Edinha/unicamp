@@ -8,7 +8,7 @@
 /* Implementação dos métodos */
 
 /* Método retorna NULL caso a entrada esteja malformada */
-Doll* incubateEntryDolls (int ** dollsNumbers, int size) {
+Doll * incubateEntryDolls (int ** dollsNumbers, int size) {
 	int i, actualSize, popedSize;
 
 	Stack * numbers,
@@ -42,9 +42,7 @@ Doll* incubateEntryDolls (int ** dollsNumbers, int size) {
 
 			// Caso o último desempilhado não corresponda em par com o atual, a entrada está malformada
 			if (popedSize != actualSize) {
-				freeDolls(parent);
-				freeDolls(children);
-				return NULL;
+				return freeAll(parent, children, &numbers, &dolls);
 			}
 
 			// Caso parent NULL, a filha é teoricamente a boneca mais externa possível
@@ -58,22 +56,29 @@ Doll* incubateEntryDolls (int ** dollsNumbers, int size) {
 
 		// Caso acabem os números mas não é o final da leitura, a entrada está malformada
 		if (empty(&numbers) && parent != children) {
-			freeDolls(parent);
-			freeDolls(children);
-			return NULL;
+			return freeAll(parent, children, &numbers, &dolls);
 		}
 	}
 
 	// Caso após todo o algorimo ainda sobrarem números, a entrada está malformada
 	if (!empty(&numbers)) {
-		freeDolls(parent);
-		freeDolls(children);
-		return NULL;
+		return freeAll(parent, children, &numbers, &dolls);
 	}
+
+	freeStack(&numbers);
+	freeStack(&dolls);
 
 	return parent;
 }
 
 bool isStartOfNewDoll (int number) {
 	return (number < 0);
+}
+
+Doll * freeAll (Doll * parent, Doll * children, Stack ** numbers, Stack ** dolls) {
+	freeDolls(parent);
+	freeDolls(children);
+	freeStack(numbers);
+	freeStack(dolls);
+	return NULL;
 }

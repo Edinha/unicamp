@@ -15,7 +15,7 @@
 
 typedef
 	enum {
-		RED = 1, BLUE = 2, NO_COLOR = 0
+		RED, BLUE, NO_COLOR
 	} Color;
 
 typedef
@@ -38,6 +38,12 @@ void incubate (Doll*, List**);
 
 /* Ḿétodo que irá liberar a memória das dolls */
 void freeDolls (Doll*);
+
+/* Método que libera o espaço da lista */
+void freeList(List**);
+
+/* Método que libera o espaço do nó */
+void freeNodes(Node*);
 
 /* Método que valida se a lista está vazia */
 bool blank (List**);

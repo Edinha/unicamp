@@ -13,9 +13,12 @@
  */
 
 /* Monta a pilha de bonecas a partir do vetor de entrada e retorna aquela que incuba todas */
-Doll* incubateEntryDolls (int**, int);
+Doll * incubateEntryDolls (int**, int);
 
 /* Método que verifica se o número é negativo, indicando começo de nova boneca */
 bool isStartOfNewDoll (int);
+
+/* Método que libera todas as memórias em fluxo de erro da montagem */
+Doll * freeAll (Doll*, Doll*, Stack**, Stack**);
 
 #endif

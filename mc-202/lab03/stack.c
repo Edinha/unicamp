@@ -49,3 +49,16 @@ void * peek (Stack ** stack) {
 bool empty (Stack ** stack) {
 	return (*stack)->head == NULL;
 }
+
+void freeStack (Stack ** stack) {
+	void * value;
+
+	while (!empty(stack)) {
+		value = pop(stack);
+		if (value != NULL) {
+			free(value);
+		}
+	}
+
+	free(*stack);
+}

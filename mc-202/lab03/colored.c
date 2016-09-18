@@ -41,6 +41,10 @@ int insertColoredDollOnList (Doll * doll, List ** list) {
 			return ERROR_COLORING;
 		}
 
+		if (colored->number == newColored->number) {
+			return SUCESS_COLORING;
+		}
+
 		if (colored->number > newColored->number) {
 			break;
 		}
@@ -72,6 +76,28 @@ bool sameNumberDifferentColor (Colored * colored, Colored * new) {
 	}
 
 	return true;
+}
+
+void response (List ** list) {
+	Node * actual;
+	Colored * colored;
+	printf("%s", SUCESS_MESSAGE);
+
+	for (actual = (*list)->first; actual != NULL; actual = actual->next) {
+		colored = (Colored*) actual->value;
+		printf("%d: ", colored->number);
+
+		switch (colored->color) {
+			case RED:
+				printf("vermelho\n");
+				break;
+			case BLUE:
+				printf("azul\n");
+				break;
+			default:
+				break;
+		}
+	}
 }
 
 // TODO Delete

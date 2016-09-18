@@ -14,6 +14,7 @@
 
 #define ERROR_COLORING 1
 #define SUCESS_COLORING 0
+#define SUCESS_MESSAGE "sequencia valida pode ser colorida\n"
 
 typedef
 	struct {
@@ -30,6 +31,9 @@ Colored * createColored (Doll*);
  * a pintura das bonecas
  */
 bool sameNumberDifferentColor (Colored*, Colored*);
+
+/* Imprime a resposta do programa */
+void response (List**);
 
 void printDolls (Doll*);
 

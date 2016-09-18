@@ -45,4 +45,7 @@ void* peek (Stack**);
 /* Método que valida se a pilha está vazia */
 bool empty (Stack**);
 
+/* Método que libera a memórica alocada pela pilha */
+void freeStack (Stack**);
+
 #endif
