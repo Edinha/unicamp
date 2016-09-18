@@ -12,11 +12,17 @@ void initDoll (Doll ** doll) {
 	(*doll) = malloc(sizeof(Doll));
 	(*doll)->size = 0;
 	(*doll)->color = NO_COLOR;
-	initStack(&(*doll)->innerDolls);
+	(*doll)->innerDolls = malloc(sizeof(List));
+	(*doll)->innerDolls->first = NULL;
+	(*doll)->innerDolls->count = 0;
 }
 
-/* Empilha a boneca filha na pai */
+/* Adiciona uma boneca como filha da outra */
 void incubate (Doll ** child, Doll ** parent) {
 	void * value = (void*) (*child);
-	push(value, &(*parent)->innerDolls);
+	Node * new = createNode(value);
+
+	new->next = (*parent)->innerDolls->first;
+	(*parent)->innerDolls->first = new;
+	(*parent)->innerDolls->count++;
 }

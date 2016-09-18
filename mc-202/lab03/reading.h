@@ -21,4 +21,7 @@ int readArrayFromFile (int**);
 /* Método que criará a relação entre as bonecas da entrada */
 void createDollsRelation ();
 
+/* Método que verifica se o número é negativo, indicando começo de nova boneca */
+bool isStartOfNewDoll (int);
+
 #endif

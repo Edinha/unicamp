@@ -8,6 +8,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 /* Definições da estrutura de pilha utilizada pelo programa
  * Cada elemento da pilha é definido como um nó, que possue seu valor armazenado

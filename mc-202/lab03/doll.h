@@ -10,7 +10,7 @@
 
 /* Definições para a estrutura de cada boneca da entrada.
  * Ela conterá seu valor de tamanho, uma indentificação de sua cor e
- * uma pilha de bonecas que estão dentro dela
+ * uma lista de bonecas que estão dentro dela
  */
 
 typedef
@@ -20,9 +20,15 @@ typedef
 
 typedef
 	struct {
+		int count;
+		Node * first;
+	} List;
+
+typedef
+	struct {
 		int size;
 		Color color;
-		Stack * innerDolls;
+		List * innerDolls;
 	} Doll;
 
 /* Método para inicializar a boneca de matrioshka */

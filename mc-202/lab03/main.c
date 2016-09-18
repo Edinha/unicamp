@@ -3,7 +3,9 @@
  * Turma : F
  */
 
-int main() {
+#include "reading.h"
 
+int main() {
+	createDollsRelation();
 	return 0;
 }
