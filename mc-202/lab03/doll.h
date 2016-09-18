@@ -40,5 +40,4 @@ void incubate (Doll*, List**);
 /* Ḿétodo que irá liberar a memória das dolls */
 void freeDolls (Doll*);
 
-
 #endif
