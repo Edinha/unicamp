@@ -37,5 +37,8 @@ void initDoll (Doll**);
 /* Método que coloca a primeira boneca no interior da lista */
 void incubate (Doll*, List**);
 
+/* Ḿétodo que irá liberar a memória das dolls */
+void freeDolls (Doll*);
+
 
 #endif

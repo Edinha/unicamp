@@ -42,23 +42,18 @@ int readArrayFromFile (int ** dollsNumbers) {
 }
 
 /* Método que criará a relação entre as bonecas da entrada */
-void createDollsRelation () {
+void createDollsRelation (Doll ** external) {
 	int * dollsNumbers;
 	int arraySize = readArrayFromFile(&dollsNumbers);
 
 	printEntry(dollsNumbers, arraySize);
-	Doll * external = incubateEntryDolls(&dollsNumbers, arraySize);
 
-	if (external == NULL) {
-		printf("sequencia invalida ou nao pode colorir");
-	} else {
-		Doll * children = (Doll*) external->innerDolls->first->value;
-		printf("\n\n%d", children->size);
-	}
+	*external = incubateEntryDolls(&dollsNumbers, arraySize);
 
 	free(dollsNumbers);
 }
 
+/* Método retorna NULL caso a entrada esteja malformada */
 Doll* incubateEntryDolls (int ** dollsNumbers, int size) {
 	int i, actualSize, popedSize;
 
@@ -74,6 +69,7 @@ Doll* incubateEntryDolls (int ** dollsNumbers, int size) {
 	for (i = 0; i < size; i++) {
 		actualSize = (*dollsNumbers)[i];
 
+		// Se for o começo de uma nova boneca, empilhe suas informações
 		if (isStartOfNewDoll(actualSize)) {
 			Doll * actual;
 			initDoll(&actual);
@@ -83,27 +79,41 @@ Doll* incubateEntryDolls (int ** dollsNumbers, int size) {
 			push((void*) actual, &dolls);
 
 		} else {
+			/* Se for o final de uma nova boneca, desempilhe suas informações e valide a entrada antes
+			 * de finalmente incubar as bonecas de acordo com a entrada */
+
 			popedSize = * ((int*) pop(&numbers));
 			children = (Doll*) pop(&dolls);
 			parent = (Doll*) peek(&dolls);
 
+			// Caso o último desempilhado não corresponda em par com o atual, a entrada está malformada
 			if (popedSize != actualSize) {
+				freeDolls(parent);
+				freeDolls(children);
 				return NULL;
 			}
 
+			// Caso parent NULL, a filha é teoricamente a boneca mais externa possível
 			if (parent == NULL) {
 				parent = children;
 			} else {
+				// Senão, é preciso incubar uma na outra
 				incubate(children, &parent->innerDolls);
 			}
 		}
 
-		if (empty(&numbers) && i > 0) {
+		// Caso acabem os números mas não é o final da leitura, a entrada está malformada
+		if (empty(&numbers) && parent != children) {
+			freeDolls(parent);
+			freeDolls(children);
 			return NULL;
 		}
 	}
 
+	// Caso após todo o algorimo ainda sobrarem números, a entrada está malformada
 	if (!empty(&numbers)) {
+		freeDolls(parent);
+		freeDolls(children);
 		return NULL;
 	}
 

@@ -6,6 +6,15 @@
 #include "reading.h"
 
 int main() {
-	createDollsRelation();
+	Doll * outsided;
+
+	createDollsRelation(&outsided);
+
+	if (outsided == NULL) {
+		printf("%s", ERROR_MESSAGE);
+	}
+
+	freeDolls(outsided);
+
 	return 0;
 }

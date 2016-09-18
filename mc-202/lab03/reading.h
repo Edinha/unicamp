@@ -12,14 +12,16 @@
  * definições de constantes importantes para o fluxo.
  */
 
+#define ERROR_MESSAGE "sequencia invalida ou nao pode colorir\n"
+
 /* Lê um inteiro no parâmetro passado */
 void readInt (int*);
 
 /* Lê o vetor de entrada do arquivo, bem como seu tamanho e o retorna */
 int readArrayFromFile (int**);
 
-/* Método que criará a relação entre as bonecas da entrada */
-void createDollsRelation ();
+/* Método que criará a relação entre as bonecas da entrada e retornará caso aconteca erro de leitura */
+void createDollsRelation (Doll**);
 
 /* Método que verifica se o número é negativo, indicando começo de nova boneca */
 bool isStartOfNewDoll (int);
