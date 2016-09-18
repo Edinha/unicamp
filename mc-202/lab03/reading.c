@@ -48,14 +48,20 @@ void createDollsRelation () {
 
 	printEntry(dollsNumbers, arraySize);
 	Doll * external = incubateEntryDolls(&dollsNumbers, arraySize);
-	Doll * children = (Doll*) external->innerDolls->first->value;
 
-	printf("\n\n%d", children->size);
+	if (external == NULL) {
+		printf("sequencia invalida ou nao pode colorir");
+	} else {
+		Doll * children = (Doll*) external->innerDolls->first->value;
+		printf("\n\n%d", children->size);
+	}
+
 	free(dollsNumbers);
 }
 
 Doll* incubateEntryDolls (int ** dollsNumbers, int size) {
-	int i, actualSize;
+	int i, actualSize, popedSize;
+
 	Stack * numbers,
 		  * dolls;
 
@@ -75,25 +81,25 @@ Doll* incubateEntryDolls (int ** dollsNumbers, int size) {
 			actual->size = -actualSize;
 			push((void*) &actual->size, &numbers);
 			push((void*) actual, &dolls);
-		} else {
-			if (empty(&numbers)) {
-				return NULL;
-			}
 
-			actualSize = * ((int*) pop(&numbers));
+		} else {
+			popedSize = * ((int*) pop(&numbers));
 			children = (Doll*) pop(&dolls);
 			parent = (Doll*) peek(&dolls);
 
-			if (parent == NULL) {
-				if (children->size != actualSize) {
-					return NULL;
-				}
-
-				parent = children;
-				break;
+			if (popedSize != actualSize) {
+				return NULL;
 			}
 
-			incubate(children, &parent->innerDolls);
+			if (parent == NULL) {
+				parent = children;
+			} else {
+				incubate(children, &parent->innerDolls);
+			}
+		}
+
+		if (empty(&numbers) && i > 0) {
+			return NULL;
 		}
 	}
 
