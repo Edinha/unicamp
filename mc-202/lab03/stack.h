@@ -39,4 +39,10 @@ void push (void*, Stack**);
 /* Método de desempilhar um inteiro do topo da pilha */
 void* pop (Stack**);
 
+/* Método que visualiza o topo da pilha */
+void* peek (Stack**);
+
+/* Método que valida se a pilha está vazia */
+bool empty (Stack**);
+
 #endif

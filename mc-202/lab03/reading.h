@@ -24,4 +24,7 @@ void createDollsRelation ();
 /* Método que verifica se o número é negativo, indicando começo de nova boneca */
 bool isStartOfNewDoll (int);
 
+/* Monta a pilha de bonecas a partir do vetor de entrada e retorna aquela que incuba todas */
+Doll* incubateEntryDolls (int**, int);
+
 #endif

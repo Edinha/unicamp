@@ -5,19 +5,29 @@
 
 #include "reading.h"
 
+/* Implementação dos métodos */
+
+// TODO DELETE
+void printEntry (int * dollsNumbers, int arraySize) {
+	printf("%d\n", arraySize);
+	for (int i = 0; i < arraySize; i++) {
+		printf("%d ", dollsNumbers[i]);
+	}
+}
+
 void readInt (int * i) {
 	scanf("%d ", i);
 }
 
-int readArrayFromFile (int ** dollsSizes) {
+int readArrayFromFile (int ** dollsNumbers) {
 	int i, arraySize;
 
 	readInt(&arraySize);
 
-	(*dollsSizes) = malloc(arraySize * sizeof(int));
+	(*dollsNumbers) = malloc(arraySize * sizeof(int));
 
 	for (i = 0; i < arraySize; i++) {
-		readInt(&(*dollsSizes)[i]);
+		readInt(&(*dollsNumbers)[i]);
 	}
 
 	return arraySize;
@@ -25,16 +35,59 @@ int readArrayFromFile (int ** dollsSizes) {
 
 /* Método que criará a relação entre as bonecas da entrada */
 void createDollsRelation () {
-	int * dollsSizes;
-	int arraySize = readArrayFromFile(&dollsSizes);
+	int * dollsNumbers;
+	int arraySize = readArrayFromFile(&dollsNumbers);
 
-	printf("%d\n", arraySize);
+	printEntry(dollsNumbers, arraySize);
+	incubateEntryDolls(&dollsNumbers, arraySize);
 
-	for (int i = 0; i < arraySize; i++) {
-		printf("%d ", dollsSizes[i]);
+	free(dollsNumbers);
+}
+
+Doll* incubateEntryDolls (int ** dollsNumbers, int size) {
+	int i, actualSize;
+	Stack * numbers,
+		  * dolls;
+
+	Doll * parent,
+		 * children;
+
+	initStack(&numbers);
+	initStack(&dolls);
+
+	for (i = 0; i < size; i++) {
+		actualSize = (*dollsNumbers)[i];
+
+		if (isStartOfNewDoll(actualSize)) {
+			Doll * actual;
+			initDoll(&actual);
+
+			actual->size = actualSize;
+			push((void*) &actual->size, &numbers);
+			push((void*) &actual, &dolls);
+		} else {
+			if (empty(&numbers)) {
+				return NULL;
+			}
+
+
+			children = (Doll*) pop(&dolls);
+			parent = (Doll*) peek(&dolls);
+
+			if (parent == NULL) {
+				break;
+			}
+
+			pop(&numbers);
+			incubate(&children, &parent->innerDolls);
+		}
 	}
 
-	free(dollsSizes);
+	if (!empty(&numbers)) {
+		return NULL;
+	}
+
+	return parent;
 }
 
 bool isStartOfNewDoll (int number) {

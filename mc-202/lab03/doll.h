@@ -34,8 +34,8 @@ typedef
 /* Método para inicializar a boneca de matrioshka */
 void initDoll (Doll**);
 
-/* Método que coloca a primeira boneca no inteirior da segunda */
-void incubate (Doll**, Doll**);
+/* Método que coloca a primeira boneca no interior da lista */
+void incubate (Doll**, List**);
 
 
 #endif

@@ -26,10 +26,26 @@ void push (void * value, Stack ** stack) {
 }
 
 void * pop (Stack ** stack) {
+	if (empty(stack)) {
+		return NULL;
+	}
+
 	Node * oldHead = (*stack)->head;
 	void * value = oldHead->value;
 
 	(*stack)->head = (*stack)->head->next;
 	free(oldHead);
 	return value;
+}
+
+void* peek (Stack ** stack) {
+	if (empty(stack)) {
+		return NULL;
+	}
+
+	return (*stack)->head->value;
+}
+
+bool empty (Stack ** stack) {
+	return (*stack)->head == NULL;
 }
