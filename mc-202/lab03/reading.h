@@ -9,10 +9,11 @@
 #include "doll.h"
 #include "builder.h"
 
-/* Serão aqui descritas as definições das funções de leitura do programa, bem como
- * definições de constantes importantes para o fluxo.
+/* Serão aqui descritas as definições das funções de leitura do programa em formato de vetor,
+ * a ser passado para a montagem das estruturas de bonecas no 'builder'.
  */
 
+/* Definição da mensagem de erro para sequência inválida */
 #define ERROR_MESSAGE "sequencia invalida ou nao pode colorir\n"
 
 /* Lê um inteiro no parâmetro passado */
