@@ -38,7 +38,7 @@ void * pop (Stack ** stack) {
 	return value;
 }
 
-void* peek (Stack ** stack) {
+void * peek (Stack ** stack) {
 	if (empty(stack)) {
 		return NULL;
 	}

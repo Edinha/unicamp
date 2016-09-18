@@ -35,7 +35,7 @@ typedef
 void initDoll (Doll**);
 
 /* Método que coloca a primeira boneca no interior da lista */
-void incubate (Doll**, List**);
+void incubate (Doll*, List**);
 
 
 #endif

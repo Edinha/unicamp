@@ -39,8 +39,10 @@ void createDollsRelation () {
 	int arraySize = readArrayFromFile(&dollsNumbers);
 
 	printEntry(dollsNumbers, arraySize);
-	incubateEntryDolls(&dollsNumbers, arraySize);
+	Doll * external = incubateEntryDolls(&dollsNumbers, arraySize);
+	Doll * children = (Doll*) external->innerDolls->first->value;
 
+	printf("\n\n%d", children->size);
 	free(dollsNumbers);
 }
 
@@ -62,24 +64,24 @@ Doll* incubateEntryDolls (int ** dollsNumbers, int size) {
 			Doll * actual;
 			initDoll(&actual);
 
-			actual->size = actualSize;
+			actual->size = -actualSize;
 			push((void*) &actual->size, &numbers);
-			push((void*) &actual, &dolls);
+			push((void*) actual, &dolls);
 		} else {
 			if (empty(&numbers)) {
 				return NULL;
 			}
 
-
 			children = (Doll*) pop(&dolls);
 			parent = (Doll*) peek(&dolls);
 
 			if (parent == NULL) {
+				parent = children;
 				break;
 			}
 
 			pop(&numbers);
-			incubate(&children, &parent->innerDolls);
+			incubate(children, &parent->innerDolls);
 		}
 	}
 

@@ -18,8 +18,8 @@ void initDoll (Doll ** doll) {
 }
 
 /* Adiciona uma boneca como filha da outra */
-void incubate (Doll ** child, List ** innerDolls) {
-	void * value = (void*) (*child);
+void incubate (Doll * child, List ** innerDolls) {
+	void * value = (void*) (child);
 	Node * new = createNode(value);
 
 	new->next = (*innerDolls)->first;
