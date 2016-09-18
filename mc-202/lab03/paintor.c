@@ -7,8 +7,6 @@
 
 /* Implementação dos métodos */
 
-// TODO check if all numbers and colors match
-
 int blueCounter (Doll ** doll) {
 	int counter = 0;
 	Node * actual = (*doll)->innerDolls->first;
@@ -24,34 +22,39 @@ int blueCounter (Doll ** doll) {
 	return counter;
 }
 
-void defineColorForDolls (Doll ** doll) {
+int defineColorForDolls (Doll ** doll, List ** numbersByColor) {
 	if (doll == NULL) {
-		return;
+		return ERROR_COLORING;
 	}
 
 	if ((*doll) == NULL) {
-		return;
+		return ERROR_COLORING;
 	}
 
 	if (blank(&(*doll)->innerDolls)) {
 		(*doll)->color = getColor((*doll)->number, 0);
-		return;
+		return insertColoredDollOnList (*doll, numbersByColor);
 	}
 
-	// TODO get color from the inner Dolls
-	defineColorForInnerDolls(doll);
+	return defineColorForInnerDolls(doll, numbersByColor);
 }
 
-void defineColorForInnerDolls (Doll ** doll) {
+int defineColorForInnerDolls (Doll ** doll, List ** numbersByColor) {
 	Node * actual = (*doll)->innerDolls->first;
 	Doll * inner;
+	int coloringStatus;
 
 	for (; actual != NULL; actual = actual->next) {
 		inner = (Doll*) actual->value;
-		defineColorForDolls(&inner);
+		coloringStatus = defineColorForDolls(&inner, numbersByColor);
+		if (coloringStatus == ERROR_COLORING) {
+			return ERROR_COLORING;
+		}
 	}
 
 	(*doll)->color = getColor((*doll)->number, blueCounter(doll));
+
+	return insertColoredDollOnList(*doll, numbersByColor);
 }
 
 Color getColor (int m, int n) {
@@ -62,13 +65,4 @@ Color getColor (int m, int n) {
 	}
 
 	return RED;
-}
-
-// TODO Delete
-void printDolls (Doll * doll) {
-	printf("\n\nNumber: %d Color: %d", doll->number, doll->color);
-	Doll * a = (Doll*) doll->innerDolls->first->value;
-	printf("\n\nNumber: %d Color: %d", a->number, a->color);
-	Doll * b = (Doll*) a->innerDolls->first->next->value;
-	printf("\n\nNumber: %d Color: %d", b->number, b->color);
 }

@@ -8,17 +8,27 @@
 
 int main() {
 	Doll * outsided;
+	List * numbersByColor = malloc(sizeof(List));
+	int coloringStatus;
 
 	createDollsRelation(&outsided);
 
 	if (outsided == NULL) {
 		printf("%s", ERROR_MESSAGE);
+	} else {
+		coloringStatus = defineColorForDolls(&outsided, &numbersByColor);
+
+		if (coloringStatus == ERROR_COLORING) {
+			printf("%s", ERROR_MESSAGE);
+		} else {
+			// TODO print the right thing
+		}
+
+		printDolls(outsided);
+
+		// TODO free numbersByColor
+		freeDolls(outsided);
 	}
-
-	defineColorForDolls(&outsided);
-	printDolls(outsided);
-
-	freeDolls(outsided);
 
 	return 0;
 }

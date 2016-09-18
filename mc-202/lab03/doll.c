@@ -27,11 +27,13 @@ void incubate (Doll * child, List ** innerDolls) {
 
 /* Método faz recursivamente o free para liberar todas as bonecas e suas filhas */
 void freeDolls (Doll * doll) {
+	Node * n;
+
 	if (doll == NULL) {
 		return;
 	}
 
-	Node * n = doll->innerDolls->first;
+	n = doll->innerDolls->first;
 	if (n == NULL) {
 		free(doll);
 		return;
