@@ -19,12 +19,20 @@ void readInt (int * i) {
 	scanf("%d ", i);
 }
 
+void initNumbers (int ** dollsNumbers, int arraySize) {
+	int i;
+	for (i = 0; i < arraySize; i++) {
+		(*dollsNumbers)[i] = 0;
+	}
+}
+
 int readArrayFromFile (int ** dollsNumbers) {
 	int i, arraySize;
 
 	readInt(&arraySize);
 
 	(*dollsNumbers) = malloc(arraySize * sizeof(int));
+	initNumbers(dollsNumbers, arraySize);
 
 	for (i = 0; i < arraySize; i++) {
 		readInt(&(*dollsNumbers)[i]);
@@ -72,15 +80,19 @@ Doll* incubateEntryDolls (int ** dollsNumbers, int size) {
 				return NULL;
 			}
 
+			actualSize = * ((int*) pop(&numbers));
 			children = (Doll*) pop(&dolls);
 			parent = (Doll*) peek(&dolls);
 
 			if (parent == NULL) {
+				if (children->size != actualSize) {
+					return NULL;
+				}
+
 				parent = children;
 				break;
 			}
 
-			pop(&numbers);
 			incubate(children, &parent->innerDolls);
 		}
 	}
