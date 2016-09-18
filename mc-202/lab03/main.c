@@ -4,6 +4,7 @@
  */
 
 #include "reading.h"
+#include "paintor.h"
 
 int main() {
 	Doll * outsided;
@@ -13,6 +14,9 @@ int main() {
 	if (outsided == NULL) {
 		printf("%s", ERROR_MESSAGE);
 	}
+
+	defineColorForDolls(&outsided);
+	printDolls(outsided);
 
 	freeDolls(outsided);
 

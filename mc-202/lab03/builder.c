@@ -28,8 +28,8 @@ Doll* incubateEntryDolls (int ** dollsNumbers, int size) {
 			Doll * actual;
 			initDoll(&actual);
 
-			actual->size = -actualSize;
-			push((void*) &actual->size, &numbers);
+			actual->number = -actualSize;
+			push((void*) &actual->number, &numbers);
 			push((void*) actual, &dolls);
 
 		} else {

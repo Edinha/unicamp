@@ -10,11 +10,10 @@
 /* Método para inicializar a boneca de matrioshka */
 void initDoll (Doll ** doll) {
 	(*doll) = malloc(sizeof(Doll));
-	(*doll)->size = 0;
+	(*doll)->number = 0;
 	(*doll)->color = NO_COLOR;
 	(*doll)->innerDolls = malloc(sizeof(List));
 	(*doll)->innerDolls->first = NULL;
-	(*doll)->innerDolls->count = 0;
 }
 
 /* Adiciona uma boneca como filha da outra */
@@ -24,7 +23,6 @@ void incubate (Doll * child, List ** innerDolls) {
 
 	new->next = (*innerDolls)->first;
 	(*innerDolls)->first = new;
-	(*innerDolls)->count++;
 }
 
 /* Método faz recursivamente o free para liberar todas as bonecas e suas filhas */
@@ -44,4 +42,8 @@ void freeDolls (Doll * doll) {
 	}
 
 	free(doll);
+}
+
+bool blank (List ** list) {
+	return (*list)->first == NULL;
 }

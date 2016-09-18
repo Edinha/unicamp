@@ -15,18 +15,17 @@
 
 typedef
 	enum {
-		RED, BLUE, NO_COLOR
+		RED = 1, BLUE = 2, NO_COLOR = 0
 	} Color;
 
 typedef
 	struct {
-		int count;
 		Node * first;
 	} List;
 
 typedef
 	struct {
-		int size;
+		int number;
 		Color color;
 		List * innerDolls;
 	} Doll;
@@ -39,5 +38,8 @@ void incubate (Doll*, List**);
 
 /* Ḿétodo que irá liberar a memória das dolls */
 void freeDolls (Doll*);
+
+/* Método que valida se a lista está vazia */
+bool blank (List**);
 
 #endif
