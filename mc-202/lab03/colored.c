@@ -29,6 +29,10 @@ int insertColoredDollOnList (Doll * doll, List ** list) {
 		return SUCESS_COLORING;
 	}
 
+	if (colored->number == newColored->number) {
+		return SUCESS_COLORING;
+	}
+
 	if (sameNumberDifferentColor(colored, newColored)) {
 		return ERROR_COLORING;
 	}
