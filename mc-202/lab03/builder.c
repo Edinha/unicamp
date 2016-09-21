@@ -55,8 +55,8 @@ Doll * incubateEntryDolls (int ** dollsNumbers, int size) {
 		}
 
 		// Caso acabem os números mas não é o final da leitura, a entrada está malformada
-		if (empty(&numbers) && parent != children) {
-			return freeAll(parent, children, &numbers, &dolls);
+		if (empty(&numbers) && i < (size - 1)) {
+			return freeAll(parent, NULL, &numbers, &dolls);
 		}
 	}
 
