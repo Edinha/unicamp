@@ -23,6 +23,11 @@ int insertColoredDollOnList (Doll * doll, List ** list) {
 	previous = (*list)->first;
 	colored = (Colored*) previous->value;
 
+	/* Cobrindo os casos para o primeiro elemento da lista */
+	if (sameNumberDifferentColor(colored, newColored)) {
+		return ERROR_COLORING;
+	}
+
 	if (colored->number > newColored->number) {
 		newNode->next = previous;
 		(*list)->first = newNode;
@@ -33,13 +38,10 @@ int insertColoredDollOnList (Doll * doll, List ** list) {
 		return SUCESS_COLORING;
 	}
 
-	if (sameNumberDifferentColor(colored, newColored)) {
-		return ERROR_COLORING;
-	}
-
 	for (actual = previous->next; actual != NULL;) {
 		colored = (Colored*) actual->value;
 
+		/* Cobrindo os casos para cada elemento da lista */
 		if (sameNumberDifferentColor(colored, newColored)) {
 			return ERROR_COLORING;
 		}
@@ -48,6 +50,7 @@ int insertColoredDollOnList (Doll * doll, List ** list) {
 			return SUCESS_COLORING;
 		}
 
+		/* Chegando a posição onde o número ordenado deveria estar */
 		if (colored->number > newColored->number) {
 			break;
 		}
