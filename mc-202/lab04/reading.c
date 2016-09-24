@@ -7,15 +7,15 @@
 
 /* Implementação dos métodos */
 
-void readInt (int * i) {
+void readInt(int * i) {
 	scanf("%d ", i);
 }
 
-void readChar (char * c) {
+void readChar(char * c) {
 	scanf(" %c", c);
 }
 
-void readArray (char * letters, int size) {
+void readArray(char * letters, int size) {
 	int i = 0;
 	for (; i < size; i++) {
 		readChar(&letters[i]);

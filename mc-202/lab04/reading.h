@@ -24,13 +24,13 @@ typedef
     } Board;
 
 /* Lê um inteiro no parâmetro passado */
-void readInt (int*);
+void readInt(int*);
 
 /* Lê um char no parâmetro passado */
-void readChar (char*);
+void readChar(char*);
 
 /* Lê um vetor específico da entrada  */
-void readArray (char*, int size);
+void readArray(char*, int size);
 
 /* Lê e retorna a matriz alocada com o tamanho da entrada e retorna o tabuleiro */
 Board* readMatrixEntry();
