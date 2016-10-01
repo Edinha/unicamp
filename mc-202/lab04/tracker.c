@@ -35,11 +35,6 @@ int isPossiblePrefix(Element * prefix, int size) {
 	return SUCESS;
 }
 
-Element* initElements(int size) {
-	Element * elements = malloc(size * sizeof(Element));
-	return elements;
-}
-
 Element createElement(int index, char letter) {
 	Element e;
 	e.index = index;
@@ -74,13 +69,11 @@ int tracePossibilities(Element * elements, Board * board, int pos) {
 }
 
 int checkBoardSolution(Board * board) {
-	Element * elements = initElements(board->size);
+	/* Aloca uma vetor local para elementos do tamanho do tabuleiro e retorna as
+	 * a primeira chamada do backtracking para o posição 0 */
 
-	int result = tracePossibilities(elements, board, 0);
-
-	free(elements);
-
-	return result;
+	Element elements[board->size];
+	return tracePossibilities(elements, board, 0);
 }
 
 void printResult (int result) {

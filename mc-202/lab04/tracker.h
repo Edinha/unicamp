@@ -29,9 +29,6 @@ int checkBoardSolution(Board*);
 /* A partir de um prefixo e um tamanho, verifica se a disposição é válida */
 int isPossiblePrefix(Element*, int);
 
-/* Inicializa o vetor de elementos a serem dispostos com um tamanho parametrizado */
-Element* initElements(int);
-
 /* Cria um elemento do vetor a partir de um número e um char */
 Element createElement(int, char);
 
