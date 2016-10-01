@@ -3,22 +3,22 @@
 
 // TODO DELETE
 void print(Board * board) {
-    printf("%d\n", board->size);
-    for (int i = 0; i < board->size; i++) {
-        for (int j = 0; j < board->size; j++) { 
-            printf("%c", board->matrix[i][j]);
-        }
-        printf("\n");
-    }
+	printf("%d\n", board->size);
+	for (int i = 0; i < board->size; i++) {
+		for (int j = 0; j < board->size; j++) {
+			printf("%c", board->matrix[i][j]);
+		}
+		printf("\n");
+	}
 }
 
 int main() {
 
-    Board * board = readMatrixEntry();
+	Board * board = readMatrixEntry();
 
-    print(board);
+	print(board);
 
-    freeBoard(board);
+	freeBoard(board);
 
-    return 0;
+	return 0;
 }

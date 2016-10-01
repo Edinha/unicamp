@@ -18,10 +18,10 @@
 
 /* Define a estrutura que guarda os valores para o tabuleiro */
 typedef
-    struct {
-        int size;
-        char ** matrix;
-    } Board;
+	struct {
+		int size;
+		char ** matrix;
+	} Board;
 
 /* Lê um inteiro no parâmetro passado */
 void readInt(int*);

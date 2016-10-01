@@ -6,8 +6,10 @@
 #ifndef TRACKER_H
 #define TRACKER_H
 
-/* Esse arquivo conterá as definições do algoritmo de backtracking para definir se 
- * há solução no tabuleiro passado por parâmetro 
+#include "reading.h"
+
+/* Esse arquivo conterá as definições do algoritmo de backtracking para definir se
+ * há solução no tabuleiro passado por parâmetro
  */
 
 /* Definição dos padrões para erro e sucesso do retorno da função */
