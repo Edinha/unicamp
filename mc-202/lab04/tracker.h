@@ -12,6 +12,13 @@
  * há solução no tabuleiro passado por parâmetro
  */
 
+/* Estrutura para um elemento posicionado para a solução */
+typedef
+	struct {
+		int index;
+		char letter;
+	} Element;
+
 /* Definição dos padrões para erro e sucesso do retorno da função */
 #define SUCESS 1
 #define ERROR 0
@@ -19,6 +26,22 @@
 /* Verifica se há solução para o programa e retorna */
 int checkBoardSolution(Board*);
 
-// TODO função para backtrack-zar as paradas
+/* A partir de um prefixo e um tamanho, verifica se a disposição é válida */
+int isPossiblePrefix(Element*, int);
+
+/* Inicializa o vetor de elementos a serem dispostos com um tamanho parametrizado */
+Element* initElements(int);
+
+/* Cria um elemento do vetor a partir de um número e um char */
+Element createElement(int, char);
+
+/* Passa, por backtracking, avaliando as possibilidades e retorna se há solução ou não */
+int tracePossibilities(Element* , char** , int, int);
+
+/* A partir do tabuleiro recebido, realiza os preparativos para o backtracking e retorna seu valor */
+int checkBoardSolution(Board*);
+
+/* Printa a mensagem respectiva ao resultado encontrado pelo algoritmo */
+void printResult(int);
 
 #endif
