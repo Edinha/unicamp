@@ -1,4 +1,11 @@
+/* Nome  : William Gonçalves da Cruz
+ * RA    : 188671
+ * Turma : F
+ */
+
 #include "tracker.h"
+
+/* Implementação dos métodos */
 
 int isPossiblePrefix(Element * prefix, int size) {
 	int i;
@@ -45,7 +52,6 @@ int tracePossibilities(Element * elements, char ** letters, int size, int pos) {
 	Element actual;
 
 	if (pos == size) {
-		// TODO make some return here is possible
 		return isPossiblePrefix(elements, size);
 	}
 
@@ -53,10 +59,12 @@ int tracePossibilities(Element * elements, char ** letters, int size, int pos) {
 		actual = createElement(i, letters[pos][i]);
 		elements[pos] = actual;
 
+		// Caso o prefixo atual seja inválido, retornar como error
 		if (!isPossiblePrefix(elements, pos)) {
 			return ERROR;
 		}
 
+		// Chama a recursão avancando com a posição, e caso obtenha sucesso, o retorna
 		if (tracePossibilities(elements, letters, size, pos + 1)) {
 			return SUCESS;
 		}
@@ -67,6 +75,7 @@ int tracePossibilities(Element * elements, char ** letters, int size, int pos) {
 
 int checkBoardSolution(Board * board) {
 	Element * elements = initElements(board->size);
+
 	int result = tracePossibilities(elements, board->matrix, board->size, 0);
 
 	free(elements);
