@@ -47,16 +47,16 @@ Element createElement(int index, char letter) {
 	return e;
 }
 
-int tracePossibilities(Element * elements, char ** letters, int size, int pos) {
+int tracePossibilities(Element * elements, Board * board, int pos) {
 	int i;
 	Element actual;
 
-	if (pos == size) {
-		return isPossiblePrefix(elements, size);
+	if (pos == board->size) {
+		return isPossiblePrefix(elements, board->size);
 	}
 
-	for (i = 0; i < size; i++) {
-		actual = createElement(i, letters[pos][i]);
+	for (i = 0; i < board->size; i++) {
+		actual = createElement(i, board->matrix[pos][i]);
 		elements[pos] = actual;
 
 		// Caso o prefixo atual seja inválido, retornar como error
@@ -65,7 +65,7 @@ int tracePossibilities(Element * elements, char ** letters, int size, int pos) {
 		}
 
 		// Chama a recursão avancando com a posição, e caso obtenha sucesso, o retorna
-		if (tracePossibilities(elements, letters, size, pos + 1)) {
+		if (tracePossibilities(elements, board, pos + 1)) {
 			return SUCESS;
 		}
 	}
@@ -76,7 +76,7 @@ int tracePossibilities(Element * elements, char ** letters, int size, int pos) {
 int checkBoardSolution(Board * board) {
 	Element * elements = initElements(board->size);
 
-	int result = tracePossibilities(elements, board->matrix, board->size, 0);
+	int result = tracePossibilities(elements, board, 0);
 
 	free(elements);
 

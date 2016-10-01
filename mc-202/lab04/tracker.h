@@ -36,7 +36,7 @@ Element* initElements(int);
 Element createElement(int, char);
 
 /* Passa, por backtracking, avaliando as possibilidades e retorna se há solução ou não */
-int tracePossibilities(Element* , char** , int, int);
+int tracePossibilities(Element* , Board*, int);
 
 /* A partir do tabuleiro recebido, realiza os preparativos para o backtracking e retorna seu valor */
 int checkBoardSolution(Board*);
