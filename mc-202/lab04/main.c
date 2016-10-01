@@ -1,5 +1,5 @@
 
-#include "reading.h"
+#include "tracker.h"
 
 // TODO DELETE
 void print(Board * board) {
@@ -13,10 +13,15 @@ void print(Board * board) {
 }
 
 int main() {
+	int result;
 
 	Board * board = readMatrixEntry();
 
 	print(board);
+
+	result = checkBoardSolution(board);
+
+	printResult(result);
 
 	freeBoard(board);
 

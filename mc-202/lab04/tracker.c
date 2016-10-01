@@ -57,7 +57,7 @@ int tracePossibilities(Element * elements, char ** letters, int size, int pos) {
 			return ERROR;
 		}
 
-		if (tracePossibilities(elements, letters, size, pos++)) {
+		if (tracePossibilities(elements, letters, size, pos + 1)) {
 			return SUCESS;
 		}
 	}
