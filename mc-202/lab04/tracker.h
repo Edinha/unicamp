@@ -19,6 +19,9 @@ typedef
 		char letter;
 	} Element;
 
+/* Define a função que retorna o valor absoluto de x */
+#define ABS(x) ((x) > 0 ? (x) : -(x))
+
 /* Definição dos padrões para erro e sucesso do retorno da função */
 #define SUCESS 1
 #define ERROR 0

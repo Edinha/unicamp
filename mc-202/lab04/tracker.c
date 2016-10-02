@@ -22,7 +22,7 @@ int isPossiblePrefix(Element * prefix, int size) {
 		}
 
 		// Está na diagonal
-		if ((size - 1) - i == abs(last.index - actual.index)) {
+		if ((size - 1) - i == ABS(last.index - actual.index)) {
 			return ERROR;
 		}
 
