@@ -29,11 +29,8 @@ int checkBoardSolution(Board*);
 /* A partir de um prefixo e um tamanho, verifica se a disposição é válida */
 int isPossiblePrefix(Element*, int);
 
-/* Cria um elemento do vetor a partir de um número e um char */
-Element createElement(int, char);
-
 /* Passa, por backtracking, avaliando as possibilidades e retorna se há solução ou não */
-int tracePossibilities(Element* , Board*, int);
+int tracePossibilities(Element*, Board*, int);
 
 /* A partir do tabuleiro recebido, realiza os preparativos para o backtracking e retorna seu valor */
 int checkBoardSolution(Board*);

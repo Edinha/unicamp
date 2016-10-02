@@ -35,29 +35,21 @@ int isPossiblePrefix(Element * prefix, int size) {
 	return SUCESS;
 }
 
-Element createElement(int index, char letter) {
-	Element e;
-	e.index = index;
-	e.letter = letter;
-	return e;
-}
-
 int tracePossibilities(Element * elements, Board * board, int pos) {
 	int i;
-	Element actual;
 
 	if (pos == board->size) {
 		return isPossiblePrefix(elements, board->size);
 	}
 
-	for (i = 0; i < board->size; i++) {
-		actual = createElement(i, board->matrix[pos][i]);
-		elements[pos] = actual;
+	// Caso o prefixo atual seja inválido, retornar como error
+	if (!isPossiblePrefix(elements, pos)) {
+		return ERROR;
+	}
 
-		// Caso o prefixo atual seja inválido, retornar como error
-		if (!isPossiblePrefix(elements, pos)) {
-			return ERROR;
-		}
+	for (i = 0; i < board->size; i++) {
+		elements[pos].index = i;
+		elements[pos].letter = board->matrix[pos][i];
 
 		// Chama a recursão avancando com a posição, e caso obtenha sucesso, o retorna
 		if (tracePossibilities(elements, board, pos + 1)) {

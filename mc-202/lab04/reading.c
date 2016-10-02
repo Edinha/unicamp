@@ -42,11 +42,8 @@ void freeBoard(Board * board) {
 	int i;
 	for (i = 0; i < board->size; i++) {
 		free(board->matrix[i]);
-		board->matrix[i] = NULL;
 	}
 
 	free(board->matrix);
-	board->matrix = NULL;
 	free(board);
-	board = NULL;
 }
