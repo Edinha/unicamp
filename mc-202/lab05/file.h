@@ -15,22 +15,28 @@
 
 #define INITIAL_COUNT 1;
 
-/* Definição de string */
-typedef char string[21];
+/* Definição de String */
+typedef char String[21];
 
-typedef 
+typedef
 	struct {
 		int count;
-		string name;
+		String name;
 	} File;
 
 /* Cria um ponteiro de arquivo a partir de um nome */
-File* createFile(string);
+File* createFile(String);
 
 /* Aumenta a contagem do arquivo */
 void increase(File**);
 
-/* Diminue a contagem do arquivo */
-void decrease(File**);
+/* Faz uma comparação entre os nomes dos arquivos parametrizados
+ * Retorna 0 caso sejam iguais, positivo caso o primeiro seja maior que o segundo
+ * e negativo caso o primeiro seja menor que o segundo, ordem alfabética respeitada
+ */
+int compareFiles(File*, File*);
+
+/* Libera a memória de uma estrutura de arquivo */
+void freeFile(File**);
 
 #endif

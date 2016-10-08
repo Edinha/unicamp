@@ -7,7 +7,7 @@
 
 int main() {
 
-	string a, b;
+	String a, b;
 
 	readCommand(a);
 	readFilename(b);

@@ -6,7 +6,7 @@
 
 /*  Implementação dos métodos */
 
-void readString(string s, int type) {
+void readString(String s, int type) {
 	if (type) {
 		scanf("%[^\x20]s", s);
 		scanf(" ");
@@ -15,11 +15,11 @@ void readString(string s, int type) {
 	}
 }
 
-void readCommand(string command) {
+void readCommand(String command) {
 	readString(command, 1);
 }
 
-void readFilename(string filename) {
+void readFilename(String filename) {
 	readString(filename, 0);
 }
 
