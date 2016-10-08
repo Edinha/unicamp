@@ -7,21 +7,21 @@
 
 /* Implementação dos métodos */
 
-NodeTree * createNodeTree(File * file) {
+NodeTree* createNodeTree(File * file) {
 	NodeTree * node = malloc(sizeof(NodeTree));
 	node->file = file;
 	node->left = node->right = NULL;
 	return node;
 }
 
-NodeList * createNodeList(File * file) {
+NodeList* createNodeList(File * file) {
 	NodeList * node = malloc(sizeof(NodeList));
 	node->file = file;
 	node->next = NULL;
 	return node;
 }
 
-NodeTree * minValue(NodeTree * root) {
+NodeTree* minValue(NodeTree * root) {
 	NodeTree * current;
 
 	while (current->left) {

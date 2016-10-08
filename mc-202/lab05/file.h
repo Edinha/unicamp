@@ -11,7 +11,7 @@
 
 /* Esse arquivo conterá as definições para a estrutura de um arquivo de entrada
  * a ser controlado pelo programa
-*/
+ */
 
 /* Constantes númericas para retorno booleano e inicialização do programa */
 #define ERROR 0

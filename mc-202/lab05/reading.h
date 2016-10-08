@@ -7,16 +7,17 @@
 #define READING_H
 
 #include <stdio.h>
-#include "file.h"
+#include "tree.h"
+#include "commander.h"
 
 /* Esse arquivo conterá as definições para as funções de entrada do programa
  * como leitura e manutenção dos dados
-*/
+ */
 
 /* Definições dos commandos que o programa pode realizar nos arquivos de entrada */
 #define TOUCH "touch"
 #define RM "rm"
-#define LS "ls";
+#define LS "ls"
 
 /* Lê uma String do programa de acordo com seu tipo de final, parametrizado como inteiro */
 void readString(String, int);
@@ -28,6 +29,9 @@ void readCommand(String);
 void readFilename(String);
 
 // TODO this will receive also the motherfucking tree and the printing functions
-void readAllCommands();
+void readAllCommands(Tree*);
+
+/* Decide qual método aplicar no diretório de acordo com a entrada */
+void decideCommandAction(Tree*, String, String);
 
 #endif

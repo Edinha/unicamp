@@ -28,6 +28,6 @@ void insertFile(Tree*, File*);
 NodeTree* insert(NodeTree*, File*);
 
 /* Remove um nó da árvore */
-NodeTree* remove(NodeTree*, String);
+NodeTree* delete(NodeTree*, String);
 
 #endif

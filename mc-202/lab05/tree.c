@@ -42,19 +42,19 @@ NodeTree* insert(NodeTree * root, File * file) {
 }
 
 // TODO, dont know how its gonna work though
-NodeTree * remove(NodeTree * root, String expression) {
+NodeTree* delete(NodeTree * root, String expression) {
 	if (!root) {
 		return root;
 	}
 
 	int comparison = isPrefixExpression(root->file, expression);
 	if (comparison > 0) {
-		root->left = remove(root->left, expression);
+		root->left = delete(root->left, expression);
 		return root;
 	}
 
 	if (comparison < 0) {
-		root->right = remove(root->right, expression);
+		root->right = delete(root->right, expression);
 		return root;
 	}
 
@@ -77,7 +77,7 @@ NodeTree * remove(NodeTree * root, String expression) {
 	// Caso de nós com os dois filhos
 	temp = minValue(root->right);
 	root->file = temp->file;
-	root->right = remove(root->right, temp->file->name);
+	root->right = delete(root->right, temp->file->name);
 
 	return root;
 }

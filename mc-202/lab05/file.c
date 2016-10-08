@@ -45,5 +45,5 @@ int isPrefixExpression(File * file, String expression) {
 }
 
 void freeFile(File ** file) {
-	free((*file));
+	free(*file);
 }

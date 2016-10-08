@@ -24,6 +24,32 @@ void readFilename(String filename) {
 }
 
 // TODO this will receive also the motherfucking tree and the printing functions
-void readAllCommands() {
+void readAllCommands(Tree * directory) {
+	String command, filename;
+	for (;;) {
+		readCommand(command);
+		readFilename(filename);
 
+		decideCommandAction(directory, command, filename);
+
+		// TODO decide when to break this infinite for
+	}
+}
+
+void decideCommandAction(Tree * directory, String command, String filename) {
+	void (*function) (Tree*, String);
+
+	if (!strcmp(command, TOUCH)) {
+		function = &touch;
+	}
+
+	if (!strcmp(command, RM)) {
+		function = &rm;
+	}
+
+	if (!strcmp(command, LS)) {
+		function = &ls;
+	}
+
+	(*function) (directory, filename);
 }
