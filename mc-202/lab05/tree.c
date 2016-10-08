@@ -7,13 +7,6 @@
 
 /* Implementação dos métodos */
 
-NodeTree* createNodeTree(File * file) {
-	NodeTree * node = malloc(sizeof(NodeTree));
-	node->file = file;
-	node->left = node->right = NULL;
-	return node;
-}
-
 Tree* createTree() {
 	Tree * tree = malloc(sizeof(Tree));
 	tree->root = NULL;
@@ -49,8 +42,47 @@ NodeTree* insert(NodeTree * root, File * file) {
 }
 
 // TODO, dont know how its gonna work though
-void remove(NodeTree * root, String expression) {
+NodeTree * remove(NodeTree * root, String expression) {
+	if (!root) {
+		return root;
+	}
 
+	int comparison = isPrefixExpression(root->file, expression);
+	if (comparison > 0) {
+		root->left = remove(root->left, expression);
+		return root;
+	}
+
+	if (comparison < 0) {
+		root->right = remove(root->right, expression);
+		return root;
+	}
+
+	NodeTree * temp = NULL;
+
+	// Casos de nó com apenas um filho
+	if (!root->left) {
+		temp = root->right;
+	}
+
+	if (!root->right) {
+		temp = root->left;
+	}
+
+	if (temp) {
+		freeNodeTree(&root);
+		return temp;
+	}
+
+	// Caso de nós com os dois filhos
+	temp = minValue(root->right);
+	root->file = temp->file;
+	root->right = remove(root->right, temp->file->name);
+
+	return root;
 }
 
-// TODO free the motherfucking tree
+void freeTree(Tree ** tree) {
+	freeNodeTree(&(*tree)->root);
+	free(*tree);
+}

@@ -7,12 +7,13 @@
 
 int main() {
 
-	String a, b;
+	File * f = createFile("lala");
 
-	readCommand(a);
-	readFilename(b);
+	int i = isPrefixExpression(f, "lal*");
 
-	printf("%s %s", a, b);
+	printf("Resposta: %d \n", i);
+
+	freeFile(&f);
 
 	return 0;
 }

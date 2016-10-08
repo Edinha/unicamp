@@ -13,7 +13,14 @@
  * a ser controlado pelo programa
 */
 
+/* Constantes númericas para retorno booleano e inicialização do programa */
+#define ERROR 0
+#define SUCCESS 1
 #define INITIAL_COUNT 1;
+
+/* Constantes de char do programa */
+#define REGEX_LETTER '*'
+#define STRING_END '\0'
 
 /* Definição de String */
 typedef char String[21];
@@ -35,6 +42,12 @@ void increase(File**);
  * e negativo caso o primeiro seja menor que o segundo, ordem alfabética respeitada
  */
 int compareFiles(File*, File*);
+
+/* Método que compara o nome do arquivo com a expressão parametrizada
+ * Retorna SUCCESS caso seja prefixo possível e ERROR caso contrário,
+ * leva em conta o uso do * para regex
+ */
+int isPrefixExpression(File*, String);
 
 /* Libera a memória de uma estrutura de arquivo */
 void freeFile(File**);

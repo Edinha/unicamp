@@ -22,7 +22,27 @@ int compareFiles(File * first, File * second) {
 	return strcmp(first->name, second->name);
 }
 
-// int isPrefixExpression(File * file, String expression)
+int isPrefixExpression(File * file, String expression) {
+	for (int i = 0; ; i++) {
+		if (file->name[i] == STRING_END) {
+			return ERROR;
+		}
+
+		if (expression[i] == STRING_END) {
+			break;
+		}
+
+		if (expression[i] == REGEX_LETTER) {
+			return SUCCESS;
+		}
+
+		if (file->name[i] != expression[i]) {
+			return ERROR;
+		}
+	}
+
+	return SUCCESS;
+}
 
 void freeFile(File ** file) {
 	free((*file)->name);
