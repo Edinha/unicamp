@@ -21,4 +21,10 @@ void rm(Tree*, String);
 /* Cria um arquivo no diretório com o nome parametrizado */
 void touch(Tree*, String);
 
+/* A partir de uma expressão, retorna a lista de arquivos encontrados */
+List* similar(Tree*, String);
+
+/* Insere na lista todos os arquivos similares a expressão dada */
+void similarExpression(NodeTree*, String, List*);
+
 #endif

@@ -7,12 +7,6 @@
 
 /* Implementação dos métodos */
 
-Tree* createTree() {
-	Tree * tree = malloc(sizeof(Tree));
-	tree->root = NULL;
-	return tree;
-}
-
 void insertFile(Tree * tree, File * file) {
 	tree->root = insert(tree->root, file);
 }
@@ -80,9 +74,4 @@ NodeTree* delete(NodeTree * root, String expression) {
 	root->right = delete(root->right, temp->file->name);
 
 	return root;
-}
-
-void freeTree(Tree ** tree) {
-	freeNodeTree(&(*tree)->root);
-	free(*tree);
 }
