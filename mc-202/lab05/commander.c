@@ -11,10 +11,13 @@
 void ls(Tree * directory, String expression) {
 	List * list = similar(directory, expression);
 	NodeList * n = list->head;
+	int count;
 
-	while (n) {
-		// TODO printar nome de n
-		n = n->next;
+	for (; n ; n = n->next) {
+		count = n->file->count;
+		for (; count > 0; count--) {
+			printf("%s\n", n->file->name);
+		}
 	}
 
 	freeList(&list);
@@ -25,9 +28,8 @@ void rm(Tree * directory, String expression) {
 	List * list = similar(directory, expression);
 	NodeList * n = list->head;
 
-	while (n) {
+	for (; n ; n = n->next) {
 		delete(directory->root, n->file->name);
-		n = n->next;
 	}
 
 	freeList(&list);

@@ -6,7 +6,6 @@
 #ifndef READING_H
 #define READING_H
 
-#include <stdio.h>
 #include "commander.h"
 
 /* Esse arquivo conterá as definições para as funções de entrada do programa
