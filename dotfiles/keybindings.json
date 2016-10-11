@@ -1,0 +1,35 @@
+// Place your key bindings in this file to overwrite the defaults
+[{
+	"key": "ctrl+b",
+	"command": "editor.action.addSelectionToNextFindMatch",
+	"when": "editorTextFocus"
+},{
+	"key": "shift+alt+m",
+	"command": "cmstead.jsRefactor.convertToMemberFunction",
+	"when": "editorTextFocus"
+},{
+	"key": "shift+alt+t",
+	"command": "editor.action.indentationToTabs",
+	"when": "editorTextFocus"
+},{
+	"key": "shift+alt+l",
+	"command": "cmstead.jsRefactor.extractVariable",
+	"when": "editorTextFocus"
+},{
+	"key": "shift+alt+r",
+	"command": "editor.action.rename",
+	"when": "editorTextFocus"
+},{
+	"key": "ctrl+d",
+	"command": "editor.action.deleteLines",
+	"when": "editorTextFocus"
+},{
+	"key": "ctrl+alt+t",
+	"command": "workbench.action.terminal.new"
+},{
+	"key": "ctrl+t",
+	"command": "workbench.action.showCommands"
+},{
+	"key": "ctrl+shift+r",
+	"command": "workbench.action.quickOpen"
+}]
