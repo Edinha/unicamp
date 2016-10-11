@@ -15,5 +15,11 @@ int main() {
 
 	freeFile(&f);
 
+	Tree * directory = createTree();
+
+	readAllCommands(directory);
+
+	freeTree(&directory);
+
 	return 0;
 }

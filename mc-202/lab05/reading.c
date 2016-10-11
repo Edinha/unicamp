@@ -11,8 +11,13 @@ void readAllCommands(Tree * directory) {
 
 	// Leitura até o final do arquivo
 	while (scanf("%[^\x20]s", command) != EOF) {
-		scanf( "%[^\n]s", filename);
-		decideCommandAction(directory, command, filename);
+		scanf(" ");
+		scanf("%[^\n]s", filename);
+		scanf("\n");
+
+		// TODO remove once it worked
+		printf("%s %s\n", command, filename);
+		//decideCommandAction(directory, command, filename);
 	}
 }
 

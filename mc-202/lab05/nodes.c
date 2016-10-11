@@ -60,7 +60,7 @@ int empty(List * list) {
 }
 
 void freeNodeTree(NodeTree ** node) {
-	if (!node) {
+	if (!(*node)) {
 		return;
 	}
 
@@ -71,7 +71,7 @@ void freeNodeTree(NodeTree ** node) {
 }
 
 void freeNodeList(NodeList ** node) {
-	if (!node) {
+	if (!(*node)) {
 		return;
 	}
 
