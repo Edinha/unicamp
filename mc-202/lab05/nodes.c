@@ -55,6 +55,10 @@ void insertFileList(List * list, File * file) {
 	list->tail = newNode;
 }
 
+int empty(List * list) {
+	return !list->head;
+}
+
 void freeNodeTree(NodeTree ** node) {
 	if (!node) {
 		return;

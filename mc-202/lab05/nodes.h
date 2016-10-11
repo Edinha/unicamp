@@ -54,6 +54,9 @@ NodeTree* minValue(NodeTree*);
 /* Insere um valor de file na lista */
 void insertFileList(List*, File*);
 
+/* Retorna zero caso a lista tenha elementos e diferente de zero caso esteja vazia */
+int empty(List*);
+
 /* Libera recursivamente os nós de uma árvore */
 void freeNodeTree(NodeTree**);
 

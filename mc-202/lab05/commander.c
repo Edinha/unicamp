@@ -13,6 +13,12 @@ void ls(Tree * directory, String expression) {
 	NodeList * n = list->head;
 	int count;
 
+	if (empty(list)) {
+		// TODO print error message
+		freeList(&list);
+		return;
+	}
+
 	for (; n ; n = n->next) {
 		count = n->file->count;
 		for (; count > 0; count--) {
@@ -27,6 +33,12 @@ void ls(Tree * directory, String expression) {
 void rm(Tree * directory, String expression) {
 	List * list = similar(directory, expression);
 	NodeList * n = list->head;
+
+	if (empty(list)) {
+		// TODO print error message
+		freeList(&list);
+		return;
+	}
 
 	for (; n ; n = n->next) {
 		delete(directory->root, n->file->name);
