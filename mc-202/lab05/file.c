@@ -23,25 +23,25 @@ int compareFiles(File * first, File * second) {
 }
 
 int isPrefixExpression(File * file, String expression) {
-	for (int i = 0; ; i++) {
-		if (file->name[i] == STRING_END) {
-			return ERROR;
-		}
-
-		if (expression[i] == STRING_END) {
-			break;
-		}
-
+	for (int i = 0; expression[i] != STRING_END; i++) {
 		if (expression[i] == REGEX_LETTER) {
-			return SUCCESS;
+			return EQUALS;
 		}
 
-		if (file->name[i] != expression[i]) {
-			return ERROR;
+		if (file->name[i] == STRING_END) {
+			return LESSER;
+		}
+
+		if (file->name[i] < expression[i]) {
+			return LESSER;
+		}
+
+		if (file->name[i] > expression[i]) {
+			return HIGHER;
 		}
 	}
 
-	return SUCCESS;
+	return EQUALS;
 }
 
 void freeFile(File ** file) {

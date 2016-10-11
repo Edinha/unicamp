@@ -13,7 +13,6 @@ void insertFile(Tree * tree, File * file) {
 
 // TODO change to AVL insert maybe
 NodeTree* insert(NodeTree * root, File * file) {
-
 	if (!root) {
 		root = createNodeTree(file);
 		return root;

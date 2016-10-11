@@ -14,9 +14,10 @@
  * a ser controlado pelo programa
  */
 
-/* Constantes númericas para retorno booleano e inicialização do programa */
-#define ERROR 0
-#define SUCCESS 1
+/* Constantes númericas para retorno de comparação do prefixo inicialização do programa */
+#define LESSER -1
+#define EQUALS 0
+#define HIGHER 1
 #define INITIAL_COUNT 1;
 
 /* Constantes de char do programa */
@@ -45,8 +46,8 @@ void increase(File**);
 int compareFiles(File*, File*);
 
 /* Método que compara o nome do arquivo com a expressão parametrizada
- * Retorna SUCCESS caso seja prefixo possível e ERROR caso contrário,
- * leva em conta o uso do * para regex
+ * Retorna EQUALS caso seja prefixo possível e LESSER, HIGHER caso contrário,
+ * dependendo se é menor ou maior, leva em consideração * para regex
  */
 int isPrefixExpression(File*, String);
 
