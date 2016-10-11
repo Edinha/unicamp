@@ -6,31 +6,12 @@
 
 /*  Implementação dos métodos */
 
-void readString(String s, int type) {
-	if (type) {
-		scanf("%[^\x20]s", s);
-		scanf(" ");
-	} else {
-		scanf("%[^\n]s", s);
-	}
-}
-
-void readCommand(String command) {
-	readString(command, 1);
-}
-
-void readFilename(String filename) {
-	readString(filename, 0);
-}
-
 void readAllCommands(Tree * directory) {
 	String command, filename;
-	for (;;) {
-		readCommand(command);
-		readFilename(filename);
 
-		// TODO decide when to break this infinite for
-
+	// Leitura até o final do arquivo
+	while (scanf("%[^\x20]s", command) != EOF) {
+		scanf( "%[^\n]s", filename);
 		decideCommandAction(directory, command, filename);
 	}
 }
@@ -38,11 +19,12 @@ void readAllCommands(Tree * directory) {
 void decideCommandAction(Tree * directory, String command, String filename) {
 	void (*function) (Tree*, String);
 
+	// Coloca o ponteiro de função de acordo com a comparação na string
 	if (!strcmp(command, TOUCH)) {
 		function = &touch;
 	} else if (!strcmp(command, RM)) {
 		function = &rm;
-	} else 	if (!strcmp(command, LS)) {
+	} else if (!strcmp(command, LS)) {
 		function = &ls;
 	}
 
