@@ -32,39 +32,8 @@ NodeTree* insert(NodeTree * root, File * file) {
 	}
 
 	updateHeight(&root);
-	balanceFactor = factor(root);
 
-	if (root->left) {
-		comparison = compareFiles(root->left->file, file);
-
-		if (balanceFactor > 1) {
-			if (comparison > 0) {
-				return rightRotate(root);
-			}
-
-			if (comparison < 0) {
-				root->left = leftRotate(root->left);
-				return rightRotate(root);
-			}
-		}
-	}
-
-	if (root->right) {
-		comparison = compareFiles(root->right->file, file);
-
-		if (balanceFactor < -1) {
-			if (comparison < 0) {
-				return leftRotate(root);
-			}
-
-			if (comparison > 0) {
-				root->right = rightRotate(root->right);
-				return leftRotate(root);
-			}
-		}
-	}
-
-	return root;
+	return insertRotationCases(root, file);
 }
 
 // TODO, dont know how its gonna work though
@@ -119,63 +88,6 @@ NodeTree* delete(NodeTree * root, String expression) {
 	}
 
 	updateHeight(&root);
-	balanceFactor = factor(root);
 
-	if (root->left) {
-		int leftFactor = factor(root->left);
-
-		if (balanceFactor > 1) {
-			if (leftFactor >= 0) {
-				return rightRotate(root);
-			}
-
-			if (leftFactor < 0) {
-				root->left = leftRotate(root->left);
-				return rightRotate(root);
-			}
-		}
-	}
-
-	if (root->right) {
-		int rightFactor = factor(root->right);
-
-		if (balanceFactor < -1) {
-			if (rightFactor <= 0) {
-				return leftRotate(root);
-			}
-
-			if (rightFactor > 0) {
-				root->right = rightRotate(root->right);
-				return leftRotate(root);
-			}
-		}
-	}
-
-	return root;
-}
-
-NodeTree * rightRotate(NodeTree * root) {
-	NodeTree * x = root->left,
-			 * temp = x->right;
-
-	x->right = root;
-	root->left = temp;
-
-	updateHeight(&x);
-	updateHeight(&root);
-
-	return x;
-}
-
-NodeTree * leftRotate(NodeTree * root) {
-	NodeTree * x = root->right,
-			 * temp = x->left;
-
-	x->left = root;
-	root->right = temp;
-
-	updateHeight(&x);
-	updateHeight(&root);
-
-	return x;
+	return deleteRotationCases(root);
 }

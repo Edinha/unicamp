@@ -54,6 +54,8 @@ void similarExpression(NodeTree * root, String expression, List ** list, String 
 		similarExpression(root->left, expression, list, operation);
 
 		insertFileList(list, root->file);
+
+		// Caso seja operação de lista, imprime o nome dos arquivos
 		if (!strcmp(operation, LS)) {
 			printFilename(root->file);
 		}

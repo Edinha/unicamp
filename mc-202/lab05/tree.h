@@ -6,8 +6,7 @@
 #ifndef TREE_H
 #define TREE_H
 
-#include "file.h"
-#include "nodes.h"
+#include "balancer.h"
 
 /* Esse arquivo conterá as definições para funções de árvore do programa
  * como inserir, remover e balancear uma árvore
