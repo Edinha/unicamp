@@ -36,6 +36,9 @@ typedef
 /* Cria um ponteiro de arquivo a partir de um nome */
 File* createFile(String);
 
+/* Copiar os valores do arquivo parametrizado para um novo ponteiro */
+File* copy(File*);
+
 /* Aumenta a contagem do arquivo */
 void increase(File**);
 

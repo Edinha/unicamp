@@ -26,7 +26,7 @@ void rm(Tree * directory, String expression) {
 	}
 
 	for (; n ; n = n->next) {
-		delete(directory->root, n->file->name);
+		directory->root = delete(directory->root, n->file->name);
 	}
 
 	freeList(&list);

@@ -17,18 +17,19 @@ NodeTree* insert(NodeTree * root, File * file) {
 		return createNodeTree(file);
 	}
 
-	int balanceFactor,
-		comparison = compareFiles(root->file, file);
+	int comparison = compareFiles(root->file, file);
+
+	if (!comparison) {
+		// Caso nomes iguais, aumenta a contagem do nó
+		increase(&root->file);
+		freeFile(&file);
+		return root;
+	}
 
 	if (comparison > 0) {
 		root->left = insert(root->left, file);
 	} else if (comparison < 0) {
 		root->right = insert(root->right, file);
-	} else {
-		// Caso nomes iguais, aumenta a contagem do nó
-		increase(&root->file);
-		freeFile(&file);
-		return root;
 	}
 
 	updateHeight(&root);
@@ -42,8 +43,7 @@ NodeTree* delete(NodeTree * root, String expression) {
 		return root;
 	}
 
-	int balanceFactor,
-		comparison = isPrefixExpression(root->file, expression);
+	int comparison = isPrefixExpression(root->file, expression);
 
 	if (comparison > 0) {
 		root->left = delete(root->left, expression);
@@ -80,7 +80,7 @@ NodeTree* delete(NodeTree * root, String expression) {
 	// Caso de nós com os dois filhos
 	temp = minValue(root->right);
 	freeFile(&root->file);
-	root->file = createFile(temp->file->name);
+	root->file = copy(temp->file);
 	root->right = delete(root->right, temp->file->name);
 
 	if (!root) {

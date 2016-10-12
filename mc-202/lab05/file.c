@@ -14,6 +14,13 @@ File* createFile(String name) {
 	return f;
 }
 
+File* copy(File * file) {
+	File * f = malloc(sizeof(File));
+	f->count = file->count;
+	strcpy(f->name, file->name);
+	return f;
+}
+
 void increase(File ** file) {
 	(*file)->count++;
 }

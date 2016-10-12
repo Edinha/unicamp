@@ -98,6 +98,14 @@ NodeTree * deleteRotationCases(NodeTree * root) {
 }
 
 NodeTree * rightRotate(NodeTree * root) {
+	if (!root) {
+		return root;
+	}
+
+	if (!root->left) {
+		return root;
+	}
+
 	NodeTree * x = root->left,
 			 * temp = x->right;
 
@@ -111,6 +119,14 @@ NodeTree * rightRotate(NodeTree * root) {
 }
 
 NodeTree * leftRotate(NodeTree * root) {
+	if (!root) {
+		return root;
+	}
+
+	if (!root->right) {
+		return root;
+	}
+
 	NodeTree * x = root->right,
 			 * temp = x->left;
 
