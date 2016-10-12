@@ -51,6 +51,9 @@ int compareFiles(File*, File*);
  */
 int isPrefixExpression(File*, String);
 
+/* Printa o nome do arquivo n vezes, dado quantos dele existem no diretório */
+void printFilename(File*);
+
 /* Libera a memória de uma estrutura de arquivo */
 void freeFile(File**);
 

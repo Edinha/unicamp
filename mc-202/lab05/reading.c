@@ -16,8 +16,8 @@ void readAllCommands(Tree * directory) {
 		scanf("\n");
 
 		// TODO remove once it worked
-		printf("%s %s\n", command, filename);
-		//decideCommandAction(directory, command, filename);
+		// printf("%s %s\n", command, filename);
+		decideCommandAction(directory, command, filename);
 	}
 }
 

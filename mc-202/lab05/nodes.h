@@ -33,7 +33,7 @@ typedef
 
 typedef
 	struct {
-		NodeList * head, * tail;
+		NodeList * head;
 	} List;
 
 /* Inicializa um ponteiro para a árvore */
@@ -52,7 +52,7 @@ NodeList* createNodeList(File*);
 NodeTree* minValue(NodeTree*);
 
 /* Insere um valor de file na lista */
-void insertFileList(List*, File*);
+void insertFileList(List**, File*);
 
 /* Retorna zero caso a lista tenha elementos e diferente de zero caso esteja vazia */
 int empty(List*);

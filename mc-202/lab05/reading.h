@@ -12,11 +12,6 @@
  * como leitura e manutenção dos dados
  */
 
-/* Definições dos commandos que o programa pode realizar nos arquivos de entrada */
-#define RM "rm"
-#define LS "ls"
-#define TOUCH "touch"
-
 // TODO this will receive also the motherfucking tree and the printing functions
 /* Lê em uma repetição os comandos da entrada e os executa para a estrutura parametrizada */
 void readAllCommands(Tree*);

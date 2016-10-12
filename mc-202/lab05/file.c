@@ -44,6 +44,13 @@ int isPrefixExpression(File * file, String expression) {
 	return EQUALS;
 }
 
+void printFilename(File * file) {
+	int i;
+	for (i = 0; i < file->count; i++) {
+		printf("%s\n", file->name);
+	}
+}
+
 void freeFile(File ** file) {
 	free(*file);
 }

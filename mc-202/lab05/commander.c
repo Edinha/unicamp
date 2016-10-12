@@ -7,37 +7,22 @@
 
 /* Implementação dos métodos */
 
-// TODO method to list all tree nodes with expression
 void ls(Tree * directory, String expression) {
-	List * list = similar(directory, expression);
-	NodeList * n = list->head;
-	int count;
+	List * list = similar(directory, expression, LS);
 
 	if (empty(list)) {
-		// TODO print error message
-		freeList(&list);
-		return;
-	}
-
-	for (; n ; n = n->next) {
-		count = n->file->count;
-		for (; count > 0; count--) {
-			printf("%s\n", n->file->name);
-		}
+		printf(EMPTY_MESSAGE);
 	}
 
 	freeList(&list);
 }
 
-// TODO method to remove all tree nodes with expression
 void rm(Tree * directory, String expression) {
-	List * list = similar(directory, expression);
+	List * list = similar(directory, expression, RM);
 	NodeList * n = list->head;
 
 	if (empty(list)) {
-		// TODO print error message
-		freeList(&list);
-		return;
+		printf(EMPTY_MESSAGE);
 	}
 
 	for (; n ; n = n->next) {
@@ -52,21 +37,35 @@ void touch(Tree * directory, String filename) {
 	insertFile(directory, file);
 }
 
-List* similar(Tree * directory, String expression) {
+List* similar(Tree * directory, String expression, String operation) {
 	List * list = createList();
-	similarExpression(directory->root, expression, list);
+	similarExpression(directory->root, expression, &list, operation);
 	return list;
 }
 
-void similarExpression(NodeTree * root, String expression, List * list) {
+void similarExpression(NodeTree * root, String expression, List ** list, String operation) {
 	if (!root) {
 		return;
 	}
 
-	if (isPrefixExpression(root->file, expression)) {
+	int comparison = isPrefixExpression(root->file, expression);
+
+	if (!comparison) {
+		similarExpression(root->left, expression, list, operation);
+
 		insertFileList(list, root->file);
+		if (!strcmp(operation, LS)) {
+			printFilename(root->file);
+		}
+
+		similarExpression(root->right, expression, list, operation);
+		return;
 	}
 
-	similarExpression(root->left, expression, list);
-	similarExpression(root->right, expression, list);
+	if (comparison > 0) {
+		similarExpression(root->left, expression, list, operation);
+		return;
+	}
+
+	similarExpression(root->right, expression, list, operation);
 }

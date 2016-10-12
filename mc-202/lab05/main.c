@@ -7,14 +7,6 @@
 
 int main() {
 
-	File * f = createFile("lala");
-
-	int i = isPrefixExpression(f, "lal*");
-
-	printf("Resposta: %d \n", i);
-
-	freeFile(&f);
-
 	Tree * directory = createTree();
 
 	readAllCommands(directory);
