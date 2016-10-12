@@ -22,4 +22,10 @@ NodeTree* insert(NodeTree*, File*);
 /* Remove um nó da árvore */
 NodeTree* delete(NodeTree*, String);
 
+/* Realiza a rotação a direita do nó */
+NodeTree* rightRotate(NodeTree*);
+
+/* Realiza a rotação a esquerda do nó */
+NodeTree* leftRotate(NodeTree*);
+
 #endif

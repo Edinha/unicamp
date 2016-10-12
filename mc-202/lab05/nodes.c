@@ -21,6 +21,7 @@ List* createList() {
 
 NodeTree* createNodeTree(File * file) {
 	NodeTree * node = malloc(sizeof(NodeTree));
+	node->height = 1;
 	node->file = file;
 	node->left = node->right = NULL;
 	return node;
@@ -42,7 +43,6 @@ NodeTree* minValue(NodeTree * root) {
 	return current;
 }
 
-// TODO alfabetic order
 void insertFileList(List ** list, File * file) {
 	NodeList * newNode = createNodeList(file);
 	newNode->next = (*list)->head;
@@ -51,6 +51,34 @@ void insertFileList(List ** list, File * file) {
 
 int empty(List * list) {
 	return !list->head;
+}
+
+int height(NodeTree * root) {
+	if (!root) {
+		return 0;
+	}
+
+	return root->height;
+}
+
+int factor(NodeTree * root) {
+	if (!root) {
+		return 0;
+	}
+
+	return height(root->left) - height(root->right);
+}
+
+int max(int a, int b) {
+	return (a > b) ? a : b;
+}
+
+void updateHeight(NodeTree ** node) {
+	if (!(*node)) {
+		return;
+	}
+
+	(*node)->height = max(height((*node)->left), height((*node)->right)) + 1;
 }
 
 void freeNodeTree(NodeTree ** node) {

@@ -14,24 +14,56 @@ void insertFile(Tree * tree, File * file) {
 // TODO change to AVL insert maybe
 NodeTree* insert(NodeTree * root, File * file) {
 	if (!root) {
-		root = createNodeTree(file);
-		return root;
+		return createNodeTree(file);
 	}
 
-	int comparison = compareFiles(root->file, file);
+	int balanceFactor,
+		comparison = compareFiles(root->file, file);
 
-	if (comparison == 0) {
+	if (comparison > 0) {
+		root->left = insert(root->left, file);
+	} else if (comparison < 0) {
+		root->right = insert(root->right, file);
+	} else {
+		// Caso nomes iguais, aumenta a contagem do nó
 		increase(&root->file);
 		freeFile(&file);
 		return root;
 	}
 
-	if (comparison > 0) {
-		root->left = insert(root->left, file);
-		return root;
+	updateHeight(&root);
+	balanceFactor = factor(root);
+
+	if (root->left) {
+		comparison = compareFiles(root->left->file, file);
+
+		if (balanceFactor > 1) {
+			if (comparison > 0) {
+				return rightRotate(root);
+			}
+
+			if (comparison < 0) {
+				root->left = leftRotate(root->left);
+				return rightRotate(root);
+			}
+		}
 	}
 
-	root->right = insert(root->right, file);
+	if (root->right) {
+		comparison = compareFiles(root->right->file, file);
+
+		if (balanceFactor < -1) {
+			if (comparison < 0) {
+				return leftRotate(root);
+			}
+
+			if (comparison > 0) {
+				root->right = rightRotate(root->right);
+				return leftRotate(root);
+			}
+		}
+	}
+
 	return root;
 }
 
@@ -41,7 +73,8 @@ NodeTree* delete(NodeTree * root, String expression) {
 		return root;
 	}
 
-	int comparison = isPrefixExpression(root->file, expression);
+	int balanceFactor,
+		comparison = isPrefixExpression(root->file, expression);
 
 	if (comparison > 0) {
 		root->left = delete(root->left, expression);
@@ -70,15 +103,79 @@ NodeTree* delete(NodeTree * root, String expression) {
 	/* Caso um dos filhos seja nulo, é possível remover root
 	 * e ficar apenas com temp na recursão */
 	if (changed) {
-		free(root->file);
+		freeFile(&root->file);
 		free(root);
 		return temp;
 	}
 
 	// Caso de nós com os dois filhos
 	temp = minValue(root->right);
+	freeFile(&root->file);
 	root->file = createFile(temp->file->name);
 	root->right = delete(root->right, temp->file->name);
 
+	if (!root) {
+		return root;
+	}
+
+	updateHeight(&root);
+	balanceFactor = factor(root);
+
+	if (root->left) {
+		int leftFactor = factor(root->left);
+
+		if (balanceFactor > 1) {
+			if (leftFactor >= 0) {
+				return rightRotate(root);
+			}
+
+			if (leftFactor < 0) {
+				root->left = leftRotate(root->left);
+				return rightRotate(root);
+			}
+		}
+	}
+
+	if (root->right) {
+		int rightFactor = factor(root->right);
+
+		if (balanceFactor < -1) {
+			if (rightFactor <= 0) {
+				return leftRotate(root);
+			}
+
+			if (rightFactor > 0) {
+				root->right = rightRotate(root->right);
+				return leftRotate(root);
+			}
+		}
+	}
+
 	return root;
+}
+
+NodeTree * rightRotate(NodeTree * root) {
+	NodeTree * x = root->left,
+			 * temp = x->right;
+
+	x->right = root;
+	root->left = temp;
+
+	updateHeight(&x);
+	updateHeight(&root);
+
+	return x;
+}
+
+NodeTree * leftRotate(NodeTree * root) {
+	NodeTree * x = root->right,
+			 * temp = x->left;
+
+	x->left = root;
+	root->right = temp;
+
+	updateHeight(&x);
+	updateHeight(&root);
+
+	return x;
 }

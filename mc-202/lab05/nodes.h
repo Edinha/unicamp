@@ -14,6 +14,7 @@
 
 typedef
 	struct NodeTree {
+		int height;
 		File * file;
 		struct NodeTree * left;
 		struct NodeTree * right;
@@ -56,6 +57,18 @@ void insertFileList(List**, File*);
 
 /* Retorna zero caso a lista tenha elementos e diferente de zero caso esteja vazia */
 int empty(List*);
+
+/* Retorna a altura de um nó da árvore */
+int height(NodeTree* root);
+
+/* Retorna o fator de balanceamento da árvore */
+int factor(NodeTree*);
+
+/* Retorna o máximo valor entre dois inteiros */
+int max(int, int);
+
+/* Atualiza o valor da altura de um nó */
+void updateHeight(NodeTree**);
 
 /* Libera recursivamente os nós de uma árvore */
 void freeNodeTree(NodeTree**);
