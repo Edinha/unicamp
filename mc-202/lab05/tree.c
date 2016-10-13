@@ -77,8 +77,11 @@ NodeTree* delete(NodeTree * root, String expression) {
 
 	// Caso de nós com os dois filhos
 	temp = minValue(root->right);
+
+	// Copia o arquivo de temp para raiz atual da recursão, elimidando ponteiro antigo
 	freeFile(&root->file);
 	root->file = copy(temp->file);
+
 	root->right = delete(root->right, temp->file->name);
 
 	updateHeight(&root);

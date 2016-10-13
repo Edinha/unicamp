@@ -1,0 +1,2 @@
+- quanto tempo gasta seu programa para cada caso de teste?
+- quanto tempo em média ele gasta para executar cada comando?

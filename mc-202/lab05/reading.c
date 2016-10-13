@@ -23,7 +23,7 @@ void decideCommandAction(Tree * directory, String command, String filename) {
 	int (*function) (Tree*, String);
 	int found;
 
-	// Coloca o ponteiro de função de acordo com a comparação na string
+	// Coloca o ponteiro de função de acordo com a comparação com as constantes de commandos
 	if (!strcmp(command, TOUCH)) {
 		function = &touch;
 	} else if (!strcmp(command, RM)) {
