@@ -9,7 +9,7 @@
 void readAllCommands(Tree * directory) {
 	String command, filename;
 
-	// Leitura até o final do arquivo
+	// Leitura até o final do arquivo (EOF)
 	while (scanf("%[^\x20]s", command) != EOF) {
 		scanf(" ");
 		scanf("%[^\n]s", filename);
