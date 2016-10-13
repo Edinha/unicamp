@@ -30,10 +30,10 @@ void rm(Tree*, String);
 void touch(Tree*, String);
 
 /* A partir de uma expressão, retorna a lista de arquivos encontrados */
-List* similar(Tree*, String, String);
+List* similar(Tree*, String, int);
 
 /* Insere na lista todos os arquivos similares a expressão dada */
-void similarExpression(NodeTree*, String, List**, String);
+void similarExpression(NodeTree*, String, List**, int);
 
 /* Printa mensagem de não encontrado */
 void printError();

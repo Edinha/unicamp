@@ -8,7 +8,7 @@
 /* Implementação dos métodos */
 
 void ls(Tree * directory, String expression) {
-	List * list = similar(directory, expression, LS);
+	List * list = similar(directory, expression, 1);
 
 	if (empty(list)) {
 		printf(EMPTY_MESSAGE);
@@ -18,7 +18,7 @@ void ls(Tree * directory, String expression) {
 }
 
 void rm(Tree * directory, String expression) {
-	List * list = similar(directory, expression, RM);
+	List * list = similar(directory, expression, 0);
 	NodeList * n = list->head;
 
 	if (empty(list)) {
@@ -37,13 +37,13 @@ void touch(Tree * directory, String filename) {
 	insertFile(directory, file);
 }
 
-List* similar(Tree * directory, String expression, String operation) {
+List* similar(Tree * directory, String expression, int isLsOperation) {
 	List * list = createList();
-	similarExpression(directory->root, expression, &list, operation);
+	similarExpression(directory->root, expression, &list, isLsOperation);
 	return list;
 }
 
-void similarExpression(NodeTree * root, String expression, List ** list, String operation) {
+void similarExpression(NodeTree * root, String expression, List ** list, int isLsOperation) {
 	if (!root) {
 		return;
 	}
@@ -51,23 +51,21 @@ void similarExpression(NodeTree * root, String expression, List ** list, String 
 	int comparison = isPrefixExpression(root->file, expression);
 
 	if (!comparison) {
-		similarExpression(root->left, expression, list, operation);
+		similarExpression(root->left, expression, list, isLsOperation);
 
+		// TODO passing in open tests, but grande.in explodes this list, dont know ua
 		insertFileList(list, root->file);
 
 		// Caso seja operação de lista, imprime o nome dos arquivos
-		if (!strcmp(operation, LS)) {
+		if (isLsOperation) {
 			printFilename(root->file);
 		}
 
-		similarExpression(root->right, expression, list, operation);
-		return;
-	}
+		similarExpression(root->right, expression, list, isLsOperation);
 
-	if (comparison > 0) {
-		similarExpression(root->left, expression, list, operation);
-		return;
+	} else if (comparison > 0) {
+		similarExpression(root->left, expression, list, isLsOperation);
+	} else {
+		similarExpression(root->right, expression, list, isLsOperation);
 	}
-
-	similarExpression(root->right, expression, list, operation);
 }
