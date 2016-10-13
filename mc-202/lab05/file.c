@@ -30,7 +30,9 @@ int compareFiles(File * first, File * second) {
 }
 
 int isPrefixExpression(File * file, String expression) {
-	for (int i = 0; expression[i] != STRING_END; i++) {
+	int i;
+	for (i = 0; expression[i] != STRING_END; i++) {
+		// Maybe comment this later
 		if (expression[i] == REGEX_LETTER) {
 			return EQUALS;
 		}

@@ -13,24 +13,11 @@ Tree* createTree() {
 	return tree;
 }
 
-List* createList() {
-	List * list = malloc(sizeof(List));
-	list->head = NULL;
-	return list;
-}
-
 NodeTree* createNodeTree(File * file) {
 	NodeTree * node = malloc(sizeof(NodeTree));
 	node->height = 1;
 	node->file = file;
 	node->left = node->right = NULL;
-	return node;
-}
-
-NodeList* createNodeList(File * file) {
-	NodeList * node = malloc(sizeof(NodeList));
-	node->file = file;
-	node->next = NULL;
 	return node;
 }
 
@@ -41,16 +28,6 @@ NodeTree* minValue(NodeTree * root) {
 	}
 
 	return current;
-}
-
-void insertFileList(List ** list, File * file) {
-	NodeList * newNode = createNodeList(file);
-	newNode->next = (*list)->head;
-	(*list)->head = newNode;
-}
-
-int empty(List * list) {
-	return !list->head;
 }
 
 int height(NodeTree * root) {
@@ -92,21 +69,7 @@ void freeNodeTree(NodeTree ** node) {
 	free(*node);
 }
 
-void freeNodeList(NodeList ** node) {
-	if (!(*node)) {
-		return;
-	}
-
-	freeNodeList(&(*node)->next);
-	free(*node);
-}
-
 void freeTree(Tree ** tree) {
 	freeNodeTree(&(*tree)->root);
 	free(*tree);
-}
-
-void freeList(List ** list) {
-	freeNodeList(&(*list)->head);
-	free(*list);
 }

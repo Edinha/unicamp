@@ -37,7 +37,7 @@ void similarExpression(NodeTree * root, String expression, Tree * directory, int
 	if (!comparison) {
 		similarExpression(root->left, expression, directory, isLsOperation, found);
 
-		// Caso seja operação de lista, imprime o nome dos arquivos
+		// Caso seja operação de listagem, imprime o nome dos arquivos
 		if (isLsOperation) {
 			printFilename(root->file);
 		}

@@ -9,7 +9,7 @@
 #include "tree.h"
 
 /* Esse arquivo conterá as definições para as funções de commando
- * de listagem, remoção e adição de arquivos no diretório
+ * de listagem, remoção e adição de arquivos no diretório.
  * Todos os commandos retornam um inteiro, dizendo se arquivos similares a expressão
  * parametrizada foram encontrados ou não;
  */
