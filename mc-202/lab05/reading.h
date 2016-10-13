@@ -12,11 +12,15 @@
  * como leitura e manutenção dos dados
  */
 
-// TODO this will receive also the motherfucking tree and the printing functions
+/* Mensagem caso não existam arquivos correspondentes a expressão no diretório */
+#define EMPTY_MESSAGE "nao existem arquivos com essa expressao\n"
+
 /* Lê em uma repetição os comandos da entrada e os executa para a estrutura parametrizada */
 void readAllCommands(Tree*);
 
-/* Decide qual método aplicar no diretório de acordo com a entrada de commando da linha */
+/* Decide qual método aplicar no diretório de acordo com a entrada de commando da linha
+ * e printa sua resposta, caso ela exista
+ */
 void decideCommandAction(Tree*, String, String);
 
 #endif

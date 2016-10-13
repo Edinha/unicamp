@@ -7,43 +7,27 @@
 
 /* Implementação dos métodos */
 
-void ls(Tree * directory, String expression) {
-	List * list = similar(directory, expression, 1);
-
-	if (empty(list)) {
-		printf(EMPTY_MESSAGE);
-	}
-
-	freeList(&list);
+int ls(Tree * directory, String expression) {
+	return similar(directory, expression, 1);
 }
 
-void rm(Tree * directory, String expression) {
-	List * list = similar(directory, expression, 0);
-	NodeList * n = list->head;
-
-	if (empty(list)) {
-		printf(EMPTY_MESSAGE);
-	}
-
-	for (; n ; n = n->next) {
-		directory->root = delete(directory->root, n->file->name);
-	}
-
-	freeList(&list);
+int rm(Tree * directory, String expression) {
+	return similar(directory, expression, 0);
 }
 
-void touch(Tree * directory, String filename) {
+int touch(Tree * directory, String filename) {
 	File * file = createFile(filename);
 	insertFile(directory, file);
+	return FOUND;
 }
 
-List* similar(Tree * directory, String expression, int isLsOperation) {
-	List * list = createList();
-	similarExpression(directory->root, expression, &list, isLsOperation);
-	return list;
+int similar(Tree * directory, String expression, int isLsOperation) {
+	int found = NOT_FOUND;
+	similarExpression(directory->root, expression, directory, isLsOperation, &found);
+	return found;
 }
 
-void similarExpression(NodeTree * root, String expression, List ** list, int isLsOperation) {
+void similarExpression(NodeTree * root, String expression, Tree * directory, int isLsOperation, int * found) {
 	if (!root) {
 		return;
 	}
@@ -51,21 +35,26 @@ void similarExpression(NodeTree * root, String expression, List ** list, int isL
 	int comparison = isPrefixExpression(root->file, expression);
 
 	if (!comparison) {
-		similarExpression(root->left, expression, list, isLsOperation);
-
-		// TODO passing in open tests, but grande.in explodes this list, dont know ua
-		insertFileList(list, root->file);
+		similarExpression(root->left, expression, directory, isLsOperation, found);
 
 		// Caso seja operação de lista, imprime o nome dos arquivos
 		if (isLsOperation) {
 			printFilename(root->file);
 		}
 
-		similarExpression(root->right, expression, list, isLsOperation);
+		similarExpression(root->right, expression, directory, isLsOperation, found);
+
+		// Caso a operação seja remoção, aplica após o percorrimento das sub-árvores
+		if (!isLsOperation) {
+			directory->root = delete(directory->root, root->file->name);
+		}
+
+		// Atualiza o valor do ponteiro para encontrado
+		*found = FOUND;
 
 	} else if (comparison > 0) {
-		similarExpression(root->left, expression, list, isLsOperation);
+		similarExpression(root->left, expression, directory, isLsOperation, found);
 	} else {
-		similarExpression(root->right, expression, list, isLsOperation);
+		similarExpression(root->right, expression, directory, isLsOperation, found);
 	}
 }

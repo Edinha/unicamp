@@ -20,7 +20,8 @@ void readAllCommands(Tree * directory) {
 }
 
 void decideCommandAction(Tree * directory, String command, String filename) {
-	void (*function) (Tree*, String);
+	int (*function) (Tree*, String);
+	int found;
 
 	// Coloca o ponteiro de função de acordo com a comparação na string
 	if (!strcmp(command, TOUCH)) {
@@ -31,5 +32,10 @@ void decideCommandAction(Tree * directory, String command, String filename) {
 		function = &ls;
 	}
 
-	(*function) (directory, filename);
+	found = (*function) (directory, filename);
+
+	// Caso não tenha sido encontrado, mensagem de não existência é printada
+	if (found == NOT_FOUND) {
+		printf(EMPTY_MESSAGE);
+	}
 }
