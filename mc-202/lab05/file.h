@@ -18,6 +18,9 @@
 #define LESSER -1
 #define EQUALS 0
 #define HIGHER 1
+
+/* Constantes para contagem */
+#define EMPTY_COUNT 0
 #define INITIAL_COUNT 1
 
 /* Constantes de char do programa */

@@ -14,12 +14,12 @@
  * parametrizada foram encontrados ou não;
  */
 
-/* Definições dos commandos que o programa pode realizar nos arquivos de entrada */
+/* Constantes dos commandos que o programa pode realizar nos arquivos de entrada */
 #define RM "rm"
 #define LS "ls"
 #define TOUCH "touch"
 
-/* Definição dos estados para similares encontrados ou não */
+/* Constantes dos estados para similares encontrados ou não */
 #define FOUND 1
 #define NOT_FOUND 0
 

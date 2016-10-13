@@ -15,9 +15,9 @@ Tree* createTree() {
 
 NodeTree* createNodeTree(File * file) {
 	NodeTree * node = malloc(sizeof(NodeTree));
-	node->height = 1;
 	node->file = file;
 	node->left = node->right = NULL;
+	node->height = INITIAL_COUNT;
 	return node;
 }
 
@@ -32,7 +32,7 @@ NodeTree* minValue(NodeTree * root) {
 
 int height(NodeTree * root) {
 	if (!root) {
-		return 0;
+		return EMPTY_COUNT;
 	}
 
 	return root->height;
@@ -40,7 +40,7 @@ int height(NodeTree * root) {
 
 int factor(NodeTree * root) {
 	if (!root) {
-		return 0;
+		return EMPTY_COUNT;
 	}
 
 	return height(root->left) - height(root->right);

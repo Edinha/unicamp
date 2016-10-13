@@ -11,7 +11,6 @@ void insertFile(Tree * tree, File * file) {
 	tree->root = insert(tree->root, file);
 }
 
-// TODO change to AVL insert maybe
 NodeTree* insert(NodeTree * root, File * file) {
 	if (!root) {
 		return createNodeTree(file);
@@ -37,7 +36,6 @@ NodeTree* insert(NodeTree * root, File * file) {
 	return insertRotationCases(root, file);
 }
 
-// TODO, dont know how its gonna work though
 NodeTree* delete(NodeTree * root, String expression) {
 	if (!root) {
 		return root;
@@ -82,10 +80,6 @@ NodeTree* delete(NodeTree * root, String expression) {
 	freeFile(&root->file);
 	root->file = copy(temp->file);
 	root->right = delete(root->right, temp->file->name);
-
-	if (!root) {
-		return root;
-	}
 
 	updateHeight(&root);
 

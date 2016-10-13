@@ -9,10 +9,10 @@
 #include "commander.h"
 
 /* Esse arquivo conterá as definições para as funções de entrada do programa
- * como leitura e manutenção dos dados
+ * como leitura e manutenção dos dados, bem como a saída de erro na expressão.
  */
 
-/* Mensagem caso não existam arquivos correspondentes a expressão no diretório */
+/* Constante de mensagem caso não existam arquivos correspondentes a expressão no diretório */
 #define EMPTY_MESSAGE "nao existem arquivos com essa expressao\n"
 
 /* Lê em uma repetição os comandos da entrada e os executa para a estrutura parametrizada */
