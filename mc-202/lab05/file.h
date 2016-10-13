@@ -18,7 +18,7 @@
 #define LESSER -1
 #define EQUALS 0
 #define HIGHER 1
-#define INITIAL_COUNT 1;
+#define INITIAL_COUNT 1
 
 /* Constantes de char do programa */
 #define REGEX_LETTER '*'
@@ -38,6 +38,9 @@ File* createFile(String);
 
 /* Copiar os valores do arquivo parametrizado para um novo ponteiro */
 File* copy(File*);
+
+/* Engloba a criação e alocação de um ponteiro de arquivo a partir das informações básicas (nome e contagem)*/
+File* baseFile(String, int);
 
 /* Aumenta a contagem do arquivo */
 void increase(File**);
