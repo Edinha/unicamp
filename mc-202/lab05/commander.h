@@ -33,11 +33,11 @@ int rm(Tree*, String);
 int touch(Tree*, String);
 
 /* A partir de uma expressão, retorna se existem similares ou não */
-int similar(Tree * directory, String expression, int isLsOperation);
+int similar(Tree*, String, int);
 
 /* Aplica a operação parametrizada a arquivos similares a expressão e altera o ponteiro caso algum
  * similar tenha sido encontrado.
  */
-void similarExpression(NodeTree * root, String expression, Tree * directory, int isLsOperation, int * found);
+void similarExpression(NodeTree*, String, Tree*, int, int*);
 
 #endif
