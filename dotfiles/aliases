@@ -1,2 +1,1 @@
-alias git gut='git add .'
 alias ls='ls --color=auto'

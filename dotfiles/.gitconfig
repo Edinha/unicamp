@@ -1,0 +1,9 @@
+[user]
+	name = edinha
+	email = edinha.gon.cruz@gmail.com
+[push]
+	default = simple
+[core]
+	editor = vim
+[alias]
+	gud = add
