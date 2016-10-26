@@ -6,11 +6,13 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include "ingredient.h"
+#include "client.h"
 
 /* Esse arquivo conterá as definições para a estrutura de nós do programa
- * usadas na implementação da base estrutural da árvore splay
+ * usadas na implementação da base estrutural da árvore splay e da lista de clientes
  */
+
+/* Definição da árvore splay */
 
 typedef
 	struct NodeTree {
@@ -27,6 +29,20 @@ typedef
 		NodeTree * root;
 	} Tree;
 
+/* Definição da lista de clientes */
+
+typedef
+	struct NodeList {
+		Client * client;
+		struct NodeList * next;
+	} NodeList;
+
+typedef
+	struct {
+		NodeList * head,
+				 * tail;
+	} List;
+
 /* Inicializa um ponteiro para a árvore */
 Tree* createTree();
 
@@ -39,20 +55,22 @@ void freeNodeTree(NodeTree**);
 /* Libera o ponteiro de árvore */
 void freeTree(Tree**);
 
-// TODO delete if its proven unnecessary methods
-// /* Retorna a altura de um nó da árvore */
-// int height(NodeTree* root);
+/* Inicializa um ponteiro de lista */
+List* createList();
 
-// /* Retorna o fator de balanceamento da árvore */
-// int factor(NodeTree*);
+/* Inicializa um ponteiro para o nó da lista */
+NodeList* createNodeList(Client*);
 
-// /* Retorna o máximo valor entre dois inteiros */
-// int max(int, int);
+/* Insere o cliente no final da lista */
+void insertTail(List**, Client*);
 
-// /* Atualiza o valor da altura de um nó */
-// void updateHeight(NodeTree**);
+/* Insere o cliente no começo da lista */
+void insertHead(List**, Client*);
 
-// /* Pega a extrema esquerda da árvore parametrizada */
-// NodeTree* minValue(NodeTree*);
+/* Libera o ponteiro de nó de lista recursivamente */
+void freeNodeList(NodeList**);
+
+/* Libera o ponteiro de lista */
+void freeList(List**);
 
 #endif

@@ -37,39 +37,49 @@ void freeTree(Tree ** tree) {
 	free(*tree);
 }
 
-// int height(NodeTree * root) {
-// 	if (!root) {
-// 		return EMPTY_COUNT;
-// 	}
+List * createList() {
+	List * list = malloc(sizeof(List));
+	list->head = list->tail = NULL;
+	return list;
+}
 
-// 	return root->height;
-// }
+NodeList * createNodeList(Client * client) {
+	NodeList * node = malloc(sizeof(NodeList));
+	node->client = client;
+	node->next = NULL;
+	return node;
+}
 
-// int factor(NodeTree * root) {
-// 	if (!root) {
-// 		return EMPTY_COUNT;
-// 	}
+void insertTail(List ** list, Client * client) {
+	NodeList * newNode = createNodeList(client);
 
-// 	return height(root->left) - height(root->right);
-// }
+	if (!(*list)->head) {
+		(*list)->head = newNode;
+		(*list)->tail = newNode;
+		return;
+	}
 
-// int max(int a, int b) {
-// 	return (a > b) ? a : b;
-// }
+	(*list)->tail->next = newNode;
+	(*list)->tail = (*list)->tail->next;
+}
 
-// void updateHeight(NodeTree ** node) {
-// 	if (!(*node)) {
-// 		return;
-// 	}
+void insertHead(List ** list, Client * client) {
+	NodeList * newNode = createNodeList(client);
+	newNode->next = (*list)->head;
+	(*list)->head = newNode;
+}
 
-// 	(*node)->height = max(height((*node)->left), height((*node)->right)) + 1;
-// }
+void freeNodeList(NodeList ** node) {
+	if (!(*node)) {
+		return;
+	}
 
-// NodeTree* minValue(NodeTree * root) {
-// 	NodeTree * current = root;
-// 	while (current->left) {
-// 		current = current->left;
-// 	}
+	freeNodeList(&(*node)->next);
+	freeClient(&(*node)->client);
+	free(*node);
+}
 
-// 	return current;
-// }
+void freeList(List ** list) {
+	freeNodeList(&(*list)->head);
+	free(*list);
+}
