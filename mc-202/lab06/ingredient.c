@@ -10,6 +10,12 @@
 Ingredient * createIngredient(String name) {
 	Ingredient * ingredient = malloc(sizeof(Ingredient));
 	strcpy(ingredient->name, name);
+
+	for (int i = 0; i < PORTION_MAX_COUNT; i++) {
+		ingredient->portions[i].unfrozen = 0;
+		ingredient->portions[i].state = READY;
+	}
+
 	return ingredient;
 }
 

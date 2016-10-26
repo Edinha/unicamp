@@ -14,12 +14,30 @@
  * Bem como funções de comparação e criação de ingredientes
  */
 
+#define PORTION_MAX_COUNT 2
+
 /* Definição de uma String */
 typedef char String[100];
 
+/* Definição do estado da porção */
+typedef
+	enum {
+		FROZEN,
+		READY
+	} State;
+
+/* Define uma estrutura para porção. guardando o tempo até descongelamento */
+typedef
+	struct {
+		State state;
+		int unfrozen;
+	} Portion;
+
+/* Define os ingredientes e suas porções disponíveis */
 typedef
 	struct {
 		String name;
+		Portion portions[PORTION_MAX_COUNT];
 	} Ingredient;
 
 /* Cria um ponteiro para um ingrediente a partir do nome */

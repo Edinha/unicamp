@@ -15,4 +15,10 @@ NodeTree* splay(NodeTree*, String);
 /* Metodo de busca a ser chamado a partir de um ponteiro de arvore e uma chave, retornando o no procurado */
 NodeTree* search(Tree*, String);
 
+/* Insere a partir do nó de árvore parametrizado a chave */
+NodeTree* insert(NodeTree*, String);
+
+/* Insere a partir de um ponteiro de árvore */
+void insertTree(Tree*, String);
+
 #endif
