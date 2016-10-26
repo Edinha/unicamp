@@ -17,6 +17,7 @@
 #define PORTION_MAX_COUNT 2
 #define INITIAL_UNFROZEN_CLOCK 0
 #define INITIAL_PORTIONS_LIFESPAN -2
+#define UNFROZEN_COOLDOWN 2
 
 /* Definição de uma String */
 typedef char String[100];
@@ -50,6 +51,15 @@ Ingredient* createIngredient(String);
  * maior do que 0 caso ingrediente tenha nome maior e menor do que 0 caso contrário.
  */
 int compare(Ingredient*, String);
+
+/* Reabastece uma porção do ingrediente a partir do horário parametrizado */
+void refill(Portion*, int);
+
+/* Muda o estado da porção de congelado para pronto caso já seja hora */
+void unfrozenIfPossible(Portion*, int);
+
+/* Retorna verdadeiro caso o estado da porção seja congelado */
+int isFrozen(Portion*);
 
 /* Libera espaço de um ingrediente */
 void freeIngredient(Ingredient**);

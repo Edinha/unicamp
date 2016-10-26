@@ -21,7 +21,8 @@ void readAllClientRequests(Tree * ingredients) {
 
 		while (scanf("%*[ ]%[^ \r\n]", ingredientName) == 1) {
 			// TODO fazer algo com esses ingredientes da massa aqui
-			availabilityOfIngredient(ingredients, ingredientName, clockTime, &overflowTime);
+
+			overflowTime = availabilityOfIngredient(ingredients, ingredientName, clockTime);
 
 			// TODO caso os ingredientes não estejam prontos ainda, inserir na lista de espera
 			// insertHead(&list, client, overflow);

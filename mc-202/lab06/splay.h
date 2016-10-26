@@ -20,6 +20,6 @@ NodeTree* search(Tree*, String);
 NodeTree* insert(NodeTree*, String);
 
 /* Avalia as condições do ingrediente armazenado na árvore e retorna o tempo de espera a mais caso haja */
-void availabilityOfIngredient(Tree*, String, int, int*);
+int availabilityOfIngredient(Tree*, String, int);
 
 #endif

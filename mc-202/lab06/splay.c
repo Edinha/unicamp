@@ -92,13 +92,30 @@ NodeTree * insert(NodeTree * root, String key) {
 	return newNode;
 }
 
-void availabilityOfIngredient(Tree * tree, String key, int clockTime, int * overflow) {
+int availabilityOfIngredient(Tree * tree, String key, int clockTime) {
+	int untilUnfrozenTime,
+		overflowTime = 0;
+
 	Ingredient * ingredient;
 
 	tree->root = insert(tree->root, key);
 
 	ingredient = tree->root->ingredient;
+	for (int i = 0; i < PORTION_MAX_COUNT; i++) {
+		Portion * portion = &ingredient->portions[i];
 
-	// TODO fazer a avaliação da usabilidade do ingrediente aqui
-	ingredient->portions[0].state = READY;
+		unfrozenIfPossible(portion, clockTime);
+
+		if (!isFrozen(portion)) {
+			// TODO alocate portion to be refilled later on pizza makeup
+			return 0;
+		}
+
+		untilUnfrozenTime = clockTime - portion->lifespan;
+		if (untilUnfrozenTime > overflowTime) {
+			overflowTime = untilUnfrozenTime;
+		}
+	}
+
+	return overflowTime;
 }

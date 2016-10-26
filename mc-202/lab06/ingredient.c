@@ -24,6 +24,21 @@ int compare(Ingredient * ingredient, String name) {
 	return strcmp(ingredient->name, name);
 }
 
+void refill(Portion * portion, int clockTime) {
+	portion->state = FROZEN;
+	portion->lifespan = clockTime + UNFROZEN_COOLDOWN;
+}
+
+void unfrozenIfPossible(Portion * portion, int clockTime) {
+	if (isFrozen(portion) && portion->lifespan < clockTime) {
+		portion->state = READY;
+	}
+}
+
+int isFrozen(Portion * portion) {
+	return (portion->state == FROZEN);
+}
+
 void freeIngredient(Ingredient ** ingredient) {
 	free(*ingredient);
 }
