@@ -9,9 +9,10 @@
 
 void readAllClientRequests(Tree * ingredients) {
 	String ingredientName;
-	int sequential,
-		clockTime,
-		overflowTime;
+	int clockTime,
+		sequential,
+		overflowTimeTotal = 0,
+		overflowTimeIngredient = 0;
 
 	List * waitingList = createList();
 
@@ -20,18 +21,21 @@ void readAllClientRequests(Tree * ingredients) {
 		Client * client = createClient(sequential);
 
 		while (scanf("%*[ ]%[^ \r\n]", ingredientName) == 1) {
-			// TODO fazer algo com esses ingredientes da massa aqui
+			// TODO ver alocação das porções de ingredientes
 
-			overflowTime = availabilityOfIngredient(ingredients, ingredientName, clockTime);
+			overflowTimeIngredient = availabilityOfIngredient(ingredients, ingredientName, clockTime);
 
-
-			if (overflowTime) {
-				overflow(&client, overflowTime);
-				insertTail(&waitingList, client);
-				// TODO retirar alguém da lista de espera para assar
-			} else {
-
+			if (overflowTimeIngredient > overflowTimeTotal) {
+				overflowTimeTotal = overflowTimeIngredient;
 			}
+		}
+
+		if (overflowTimeTotal) {
+			overflow(&client, overflowTimeTotal);
+			insertTail(&waitingList, client);
+			// TODO retirar alguém da lista de espera para assar
+		} else {
+
 		}
 
 		sequential++;

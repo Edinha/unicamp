@@ -117,5 +117,7 @@ int availabilityOfIngredient(Tree * tree, String key, int clockTime) {
 		}
 	}
 
+	tree->root->ingredient = ingredient;
+
 	return overflowTime;
 }
