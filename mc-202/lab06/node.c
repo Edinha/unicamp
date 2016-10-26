@@ -38,7 +38,7 @@ void freeTree(Tree ** tree) {
 
 List * createList() {
 	List * list = malloc(sizeof(List));
-	list->head = NULL;
+	list->head = list->tail = NULL;
 	return list;
 }
 
@@ -49,10 +49,16 @@ NodeList * createNodeList(Client * client) {
 	return node;
 }
 
-void insertHead(List ** list, Client * client) {
+void insertTail(List ** list, Client * client) {
 	NodeList * newNode = createNodeList(client);
-	newNode->next = (*list)->head;
-	(*list)->head = newNode;
+
+	if (!(*list)->head) {
+		(*list)->head = (*list)->tail = newNode;
+		return;
+	}
+
+	(*list)->tail->next = newNode;
+	(*list)->tail = (*list)->tail->next;
 }
 
 void freeNodeList(NodeList ** node) {

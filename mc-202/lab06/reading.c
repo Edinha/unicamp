@@ -13,7 +13,7 @@ void readAllClientRequests(Tree * ingredients) {
 		clockTime,
 		overflowTime;
 
-	// List * waitingList = createList();
+	List * waitingList = createList();
 
 	sequential = 1;
 	while (scanf("%d", &clockTime) == 1) {
@@ -24,9 +24,14 @@ void readAllClientRequests(Tree * ingredients) {
 
 			overflowTime = availabilityOfIngredient(ingredients, ingredientName, clockTime);
 
-			// TODO caso os ingredientes não estejam prontos ainda, inserir na lista de espera
-			// insertHead(&list, client, overflow);
-			overflow(&client, overflowTime);
+
+			if (overflowTime) {
+				overflow(&client, overflowTime);
+				insertTail(&waitingList, client);
+				// TODO retirar alguém da lista de espera para assar
+			} else {
+
+			}
 		}
 
 		sequential++;
