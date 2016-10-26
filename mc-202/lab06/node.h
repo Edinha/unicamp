@@ -39,8 +39,7 @@ typedef
 
 typedef
 	struct {
-		NodeList * head,
-				 * tail;
+		NodeList * head;
 	} List;
 
 /* Inicializa um ponteiro para a árvore */
@@ -60,9 +59,6 @@ List* createList();
 
 /* Inicializa um ponteiro para o nó da lista */
 NodeList* createNodeList(Client*);
-
-/* Insere o cliente no final da lista */
-void insertTail(List**, Client*);
 
 /* Insere o cliente no começo da lista */
 void insertHead(List**, Client*);

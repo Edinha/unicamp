@@ -12,8 +12,9 @@ Ingredient * createIngredient(String name) {
 	strcpy(ingredient->name, name);
 
 	for (int i = 0; i < PORTION_MAX_COUNT; i++) {
-		ingredient->portions[i].unfrozen = 0;
+		ingredient->portions[i].unfrozen = INITIAL_UNFROZEN_CLOCK;
 		ingredient->portions[i].state = READY;
+		ingredient->portions[i].lifespan = INITIAL_PORTIONS_LIFESPAN;
 	}
 
 	return ingredient;

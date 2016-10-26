@@ -63,25 +63,21 @@ NodeTree * search(Tree * tree, String key) {
 
 NodeTree * insert(NodeTree * root, String key) {
 	int cmp;
-	Ingredient * i = createIngredient(key);
+
+	Ingredient * ingredient = createIngredient(key);
+	NodeTree * newNode = createNodeTree(ingredient);
 
 	if (!root) {
-		return createNodeTree(i);
+		return newNode;
 	}
 
 	root = splay(root, key);
 	cmp = compare(root->ingredient, key);
 
 	if (!cmp) {
-		freeIngredient(&i);
-		i = root->ingredient;
-
-		// TODO faz as lógica caprótica aqui pra retornar o tempo a mais do cliente
-
+		freeNodeTree(&newNode);
 		return root;
 	}
-
-	NodeTree * newNode = createNodeTree(i);
 
 	if (cmp > 0) {
 		newNode->right = root;
@@ -96,6 +92,13 @@ NodeTree * insert(NodeTree * root, String key) {
 	return newNode;
 }
 
-void insertTree(Tree * tree, String key) {
+void availabilityOfIngredient(Tree * tree, String key, int clockTime, int * overflow) {
+	Ingredient * ingredient;
+
 	tree->root = insert(tree->root, key);
+
+	ingredient = tree->root->ingredient;
+
+	// TODO fazer a avaliação da usabilidade do ingrediente aqui
+	ingredient->portions[0].state = READY;
 }

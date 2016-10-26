@@ -15,6 +15,8 @@
  */
 
 #define PORTION_MAX_COUNT 2
+#define INITIAL_UNFROZEN_CLOCK 0
+#define INITIAL_PORTIONS_LIFESPAN -2
 
 /* Definição de uma String */
 typedef char String[100];
@@ -26,11 +28,12 @@ typedef
 		READY
 	} State;
 
-/* Define uma estrutura para porção. guardando o tempo até descongelamento */
+/* Define uma estrutura para porção. guardando o tempo até descongelamento e tempo de vida do ingrediente*/
 typedef
 	struct {
 		State state;
-		int unfrozen;
+		int unfrozen,
+			lifespan;
 	} Portion;
 
 /* Define os ingredientes e suas porções disponíveis */

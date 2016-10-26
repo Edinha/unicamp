@@ -8,19 +8,24 @@
 /* Implementação dos métodos */
 
 void readAllClientRequests(Tree * ingredients) {
-	int sequential, clockTime;
 	String ingredientName;
+	int sequential,
+		clockTime,
+		overflowTime;
+
+	// List * waitingList = createList();
 
 	sequential = 1;
-
 	while (scanf("%d", &clockTime) == 1) {
 		Client * client = createClient(sequential);
-		client->sequential = sequential;
 
 		while (scanf("%*[ ]%[^ \r\n]", ingredientName) == 1) {
-			insertTree(ingredients, ingredientName);
+			// TODO fazer algo com esses ingredientes da massa aqui
+			availabilityOfIngredient(ingredients, ingredientName, clockTime, &overflowTime);
 
-			// TODO inserir lista de clients
+			// TODO caso os ingredientes não estejam prontos ainda, inserir na lista de espera
+			// insertHead(&list, client, overflow);
+			overflow(&client, overflowTime);
 		}
 
 		sequential++;

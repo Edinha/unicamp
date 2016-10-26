@@ -19,7 +19,7 @@ NodeTree* search(Tree*, String);
 /* Insere a partir do nó de árvore parametrizado a chave */
 NodeTree* insert(NodeTree*, String);
 
-/* Insere a partir de um ponteiro de árvore */
-void insertTree(Tree*, String);
+/* Avalia as condições do ingrediente armazenado na árvore e retorna o tempo de espera a mais caso haja */
+void availabilityOfIngredient(Tree*, String, int, int*);
 
 #endif

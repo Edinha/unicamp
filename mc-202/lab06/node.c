@@ -17,7 +17,6 @@ NodeTree* createNodeTree(Ingredient * ingredient) {
 	NodeTree * node = malloc(sizeof(NodeTree));
 	node->ingredient = ingredient;
 	node->left = node->right = NULL;
-	// node->height = INITIAL_COUNT;
 	return node;
 }
 
@@ -39,7 +38,7 @@ void freeTree(Tree ** tree) {
 
 List * createList() {
 	List * list = malloc(sizeof(List));
-	list->head = list->tail = NULL;
+	list->head = NULL;
 	return list;
 }
 
@@ -48,19 +47,6 @@ NodeList * createNodeList(Client * client) {
 	node->client = client;
 	node->next = NULL;
 	return node;
-}
-
-void insertTail(List ** list, Client * client) {
-	NodeList * newNode = createNodeList(client);
-
-	if (!(*list)->head) {
-		(*list)->head = newNode;
-		(*list)->tail = newNode;
-		return;
-	}
-
-	(*list)->tail->next = newNode;
-	(*list)->tail = (*list)->tail->next;
 }
 
 void insertHead(List ** list, Client * client) {
