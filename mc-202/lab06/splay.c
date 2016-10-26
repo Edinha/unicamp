@@ -74,6 +74,10 @@ NodeTree * insert(NodeTree * root, String key) {
 
 	if (!cmp) {
 		freeIngredient(&i);
+		i = root->ingredient;
+
+		// TODO faz as lógica caprótica aqui pra retornar o tempo a mais do cliente
+
 		return root;
 	}
 
