@@ -32,9 +32,9 @@ NodeList* createNodeList(Portion*);
 void insertList(List**, Portion*);
 
 /* Libera o ponteiro de nó de Lista recursivamente */
-void freeNodeList(NodeList**);
+void freeNodeList(NodeList**, int);
 
 /* Libera o ponteiro de Lista */
-void freeList(List**);
+void freeList(List**, int);
 
 #endif

@@ -20,7 +20,7 @@ typedef
 	struct {
 		List * portions;
 		int sequential,
-			overflow;
+			cookTime;
 	} Client;
 
 /* Cria um ponteiro para um cliente a partir do sequencial */
@@ -30,6 +30,6 @@ Client* createClient(int);
 void overflow(Client**, int);
 
 /* Libera espaço de um client */
-void freeClient(Client**);
+void freeClientReffilingPortions(Client**);
 
 #endif

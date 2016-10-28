@@ -61,6 +61,9 @@ void queue(Queue**, Client*);
 /* Remove o cliente da fila */
 Client* dequeue(Queue**);
 
+/* Retorna verdadeiro caso a fila esteja vazia, falso caso contrário */
+int emptyQueue(Queue**);
+
 /* Libera o ponteiro de nó de Fila recursivamente */
 void freeQueueElement(QueueElement**);
 

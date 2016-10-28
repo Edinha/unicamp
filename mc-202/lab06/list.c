@@ -26,16 +26,17 @@ void insertList(List ** list, Portion * portion) {
 	(*list)->head = newNode;
 }
 
-void freeNodeList(NodeList ** node) {
+void freeNodeList(NodeList ** node, int clockTime) {
 	if (!(*node)) {
 		return;
 	}
 
-	freeNodeList(&(*node)->next);
+	freeNodeList(&(*node)->next, clockTime);
+	refill((*node)->portion, clockTime);
 	free(*node);
 }
 
-void freeList(List ** list) {
-	freeNodeList(&(*list)->head);
+void freeList(List ** list, int clockTime) {
+	freeNodeList(&(*list)->head, clockTime);
 	free(*list);
 }

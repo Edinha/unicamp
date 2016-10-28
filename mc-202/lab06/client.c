@@ -10,16 +10,18 @@
 Client * createClient(int sequential) {
 	Client * client = malloc(sizeof(Client));
 	client->sequential = sequential;
-	client->overflow = 0;
+	client->cookTime = 0;
 	client->portions = createList();
 	return client;
 }
 
-void overflow(Client ** client, int overflow) {
-	(*client)->overflow += overflow;
+void overflow(Client ** client, int cookTime) {
+	if ((*client)->cookTime < cookTime) {
+		(*client)->cookTime = cookTime;
+	}
 }
 
-void freeClient(Client ** client) {
-	freeList(&(*client)->portions);
+void freeClientReffilingPortions(Client ** client) {
+	freeList(&(*client)->portions, (*client)->cookTime);
 	free(*client);
 }

@@ -30,17 +30,33 @@ void readAllClientRequests(Tree * ingredients) {
 		}
 
 		if (overflowTimeTotal) {
-			overflow(&client, overflowTimeTotal);
+			overflow(&client, clockTime + overflowTimeTotal);
 			queue(&waitingQueue, client);
 
 			// TODO retirar alguém da Queue de espera para assar
-			// Client * otherClient = dequeue(&waitingQueue);
+			Client * otherClient = dequeue(&waitingQueue);
+
+			if (clockTime <= otherClient->cookTime) {
+				printOrder(otherClient);
+				freeClientReffilingPortions(&otherClient);
+			}
+
 		} else {
 			// TODO fry this client pizza
+			printOrder(client);
+			freeClientReffilingPortions(&client);
 		}
 
 		sequential++;
 	}
+
+	while ( !emptyQueue(&waitingQueue) ) {
+		Client * client = dequeue(&waitingQueue);
+		printOrder(client);
+		freeClientReffilingPortions(&client);
+	}
+
+	freeQueue(&waitingQueue);
 }
 
 void printOrder(Client * client) {

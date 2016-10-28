@@ -69,13 +69,17 @@ Client * dequeue(Queue ** queue) {
 	return client;
 }
 
+int emptyQueue(Queue ** queue) {
+	return !(*queue)->head;
+}
+
 void freeQueueElement(QueueElement ** node) {
 	if (!(*node)) {
 		return;
 	}
 
 	freeQueueElement(&(*node)->next);
-	freeClient(&(*node)->client);
+	freeClientReffilingPortions(&(*node)->client);
 	free(*node);
 }
 

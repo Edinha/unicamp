@@ -13,4 +13,7 @@
 /* Lê toda a entrada e os armazena em clientes esperando por pizzas */
 void readAllClientRequests(Tree*);
 
+/* Printa o sequencial do cliente atual */
+void printOrder(Client*);
+
 #endif
