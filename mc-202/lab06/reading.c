@@ -22,8 +22,7 @@ void readAllClientRequests(Tree * ingredients) {
 
 		while (scanf("%*[ ]%[^ \r\n]", ingredientName) == 1) {
 			// TODO ver alocação das porções de ingredientes
-
-			overflowTimeIngredient = availabilityOfIngredient(ingredients, ingredientName, clockTime);
+			overflowTimeIngredient = availabilityOfIngredient(ingredients, ingredientName, clockTime, &client->portions);
 
 			if (overflowTimeIngredient > overflowTimeTotal) {
 				overflowTimeTotal = overflowTimeIngredient;
@@ -33,11 +32,17 @@ void readAllClientRequests(Tree * ingredients) {
 		if (overflowTimeTotal) {
 			overflow(&client, overflowTimeTotal);
 			queue(&waitingQueue, client);
-			// TODO retirar alguém da Queuea de espera para assar
-		} else {
 
+			// TODO retirar alguém da Queue de espera para assar
+			// Client * otherClient = dequeue(&waitingQueue);
+		} else {
+			// TODO fry this client pizza
 		}
 
 		sequential++;
 	}
+}
+
+void printOrder(Client * client) {
+	printf("%d ", client->sequential);
 }

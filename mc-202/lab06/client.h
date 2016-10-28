@@ -6,7 +6,7 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include "ingredient.h"
+#include "list.h"
 
 /* Esse arquivo conterá as definições para a estrutura de clientes que fizeram pedidos
  * guardando seu número de ordem e o tempo a mais de espera que ele terá dado os ingredientes
@@ -18,6 +18,7 @@
  */
 typedef
 	struct {
+		List * portions;
 		int sequential,
 			overflow;
 	} Client;

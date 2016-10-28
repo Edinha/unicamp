@@ -83,30 +83,3 @@ void freeQueue(Queue ** queue) {
 	freeQueueElement(&(*queue)->head);
 	free(*queue);
 }
-
-NodeList * createNodeList(Portion * portion) {
-	NodeList * node = malloc(sizeof(NodeList));
-	node->portion = portion;
-	node->next = NULL;
-	return node;
-}
-
-void insertList(List ** list, Portion * portion) {
-	NodeList * newNode = createNodeList(portion);
-	newNode->next = (*list)->head;
-	(*list)->head = newNode;
-}
-
-void freeNodeList(NodeList ** node) {
-	if (!(*node)) {
-		return;
-	}
-
-	freeNodeList(&(*node)->next);
-	free(*node);
-}
-
-void freeList(List ** list) {
-	freeNodeList(&(*list)->head);
-	free(*list);
-}

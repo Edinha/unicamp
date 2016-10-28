@@ -12,7 +12,7 @@ Ingredient * createIngredient(String name) {
 	strcpy(ingredient->name, name);
 
 	for (int i = 0; i < PORTION_MAX_COUNT; i++) {
-		ingredient->portions[i].unfrozen = INITIAL_UNFROZEN_CLOCK;
+		// ingredient->portions[i].unfrozen = INITIAL_UNFROZEN_CLOCK;
 		ingredient->portions[i].state = READY;
 		ingredient->portions[i].lifespan = INITIAL_PORTIONS_LIFESPAN;
 	}
@@ -34,13 +34,30 @@ void alocate(Portion * portion) {
 }
 
 void unfrozenIfPossible(Portion * portion, int clockTime) {
-	if (isFrozen(portion) && portion->lifespan < clockTime) {
+	if (isFrozen(portion) && portion->lifespan <= clockTime) {
 		portion->state = READY;
+	}
+}
+
+void freezeIfPossible(Portion * portion, int clockTime) {
+	int isFreezerTime = (clockTime - portion->lifespan) > FREEZER_TIME;
+
+	if (!isAlocated(portion) && isFreezerTime) {
+		portion->state = FROZEN;
+		portion->lifespan = clockTime + UNFROZEN_COOLDOWN;
 	}
 }
 
 int isFrozen(Portion * portion) {
 	return (portion->state == FROZEN);
+}
+
+int isReady(Portion * portion) {
+	return (portion->state == READY);
+}
+
+int isAlocated(Portion * portion) {
+	return (portion->state == ALOCATED);
 }
 
 void freeIngredient(Ingredient ** ingredient) {

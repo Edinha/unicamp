@@ -11,6 +11,7 @@ Client * createClient(int sequential) {
 	Client * client = malloc(sizeof(Client));
 	client->sequential = sequential;
 	client->overflow = 0;
+	client->portions = createList();
 	return client;
 }
 
@@ -19,5 +20,6 @@ void overflow(Client ** client, int overflow) {
 }
 
 void freeClient(Client ** client) {
+	freeList(&(*client)->portions);
 	free(*client);
 }

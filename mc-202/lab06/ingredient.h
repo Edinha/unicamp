@@ -15,10 +15,10 @@
  */
 
 #define PORTION_MAX_COUNT 2
-#define INITIAL_UNFROZEN_CLOCK 0
+// #define INITIAL_UNFROZEN_CLOCK 0
 #define INITIAL_PORTIONS_LIFESPAN -2
 #define UNFROZEN_COOLDOWN 2
-
+#define FREEZER_TIME 5
 
 /* Definição de uma String */
 typedef char String[100];
@@ -35,8 +35,8 @@ typedef
 typedef
 	struct {
 		State state;
-		int unfrozen,
-			lifespan;
+		int lifespan;
+			// unfrozen;
 	} Portion;
 
 /* Define os ingredientes e suas porções disponíveis */
@@ -63,8 +63,17 @@ void alocate(Portion*);
 /* Muda o estado da porção de congelado para pronto caso já seja hora */
 void unfrozenIfPossible(Portion*, int);
 
+/* Muda o estado da porção de pronto para congelado caso já seja hora e o ingrediente não esteja alocado */
+void freezeIfPossible(Portion*, int);
+
 /* Retorna verdadeiro caso o estado da porção seja congelado */
 int isFrozen(Portion*);
+
+/* Retorna verdadeiro caso o estado da porção seja pronto para uso */
+int isReady(Portion*);
+
+/* Retorna verdadeiro caso o estado da porção seja alocado em alguma outra pizza */
+int isAlocated(Portion*);
 
 /* Libera espaço de um ingrediente */
 void freeIngredient(Ingredient**);

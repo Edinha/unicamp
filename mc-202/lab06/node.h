@@ -13,12 +13,8 @@
  */
 
 /* Definição da árvore splay */
-
 typedef
 	struct NodeTree {
-		// TODO maybe useless
-		//int height;
-
 		Ingredient * ingredient;
 		struct NodeTree * left;
 		struct NodeTree * right;
@@ -30,7 +26,6 @@ typedef
 	} Tree;
 
 /* Definição da Fila de clientes */
-
 typedef
 	struct QueueElement {
 		Client * client;
@@ -41,17 +36,6 @@ typedef
 	struct {
 		QueueElement * head, * tail;
 	} Queue;
-
-typedef
-	struct NodeList {
-		Portion * portion;
-		struct NodeList * next;
-	} NodeList;
-
-typedef
-	struct{
-		NodeList * head;
-	} List;
 
 /* Inicializa um ponteiro para a árvore */
 Tree* createTree();
@@ -82,17 +66,5 @@ void freeQueueElement(QueueElement**);
 
 /* Libera o ponteiro de Fila */
 void freeQueue(Queue**);
-
-/* Inicializa um ponteiro para o nó da Lista */
-NodeList* createNodeList(Portion*);
-
-/* Insere no começo da lista */
-void insertList(List**, Portion*);
-
-/* Libera o ponteiro de nó de Lista recursivamente */
-void freeNodeList(NodeList**);
-
-/* Libera o ponteiro de Lista */
-void freeList(List**);
 
 #endif
