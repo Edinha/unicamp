@@ -7,5 +7,11 @@
 
 int main() {
 
+	Tree * ingredients = createTree();
+
+	readAllClientRequests(ingredients);
+
+	freeTree(&ingredients);
+
 	return 0;
 }

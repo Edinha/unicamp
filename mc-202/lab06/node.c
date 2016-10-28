@@ -43,22 +43,28 @@ Queue * createQueue() {
 }
 
 QueueElement * createQueueElement(Client * client) {
-	QueueElement * node = malloc(sizeof(QueueElement));
-	node->client = client;
-	node->next = NULL;
-	return node;
+	QueueElement * element = malloc(sizeof(QueueElement));
+	element->client = client;
+	element->next = NULL;
+	return element;
 }
 
 void queue(Queue ** queue, Client * client) {
-	QueueElement * newNode = createQueueElement(client);
+	QueueElement * element = createQueueElement(client);
 
 	if (!(*queue)->head) {
-		(*queue)->head = (*queue)->tail = newNode;
+		(*queue)->head = (*queue)->tail = element;
 		return;
 	}
 
-	(*queue)->tail->next = newNode;
+	(*queue)->tail->next = element;
 	(*queue)->tail = (*queue)->tail->next;
+}
+
+void headQueue(Queue ** queue, Client * client) {
+	QueueElement * element = createQueueElement(client);
+	element->next = (*queue)->head;
+	(*queue)->head = element;
 }
 
 Client * dequeue(Queue ** queue) {

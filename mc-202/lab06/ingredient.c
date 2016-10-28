@@ -9,12 +9,13 @@
 
 Ingredient * createIngredient(String name) {
 	Ingredient * ingredient = malloc(sizeof(Ingredient));
+	memset(ingredient->name, 0, MAX_STRING_SIZE);
 	strcpy(ingredient->name, name);
 
 	for (int i = 0; i < PORTION_MAX_COUNT; i++) {
-		// ingredient->portions[i].unfrozen = INITIAL_UNFROZEN_CLOCK;
-		ingredient->portions[i].state = READY;
-		ingredient->portions[i].lifespan = INITIAL_PORTIONS_LIFESPAN;
+		ingredient->portions[i] = malloc(sizeof(Portion));
+		ingredient->portions[i]->state = READY;
+		ingredient->portions[i]->lifespan = INITIAL_PORTIONS_LIFESPAN;
 	}
 
 	return ingredient;
@@ -61,5 +62,9 @@ int isAlocated(Portion * portion) {
 }
 
 void freeIngredient(Ingredient ** ingredient) {
+	for (int i = 0; i < PORTION_MAX_COUNT; i++) {
+		free((*ingredient)->portions[i]);
+	}
+
 	free(*ingredient);
 }

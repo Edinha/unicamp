@@ -58,6 +58,9 @@ QueueElement* createQueueElement(Client*);
 /* Insere o cliente no final da Queue */
 void queue(Queue**, Client*);
 
+/* Insere no começo da fila, "furando" a fila já existente */
+void headQueue(Queue**, Client*);
+
 /* Remove o cliente da fila */
 Client* dequeue(Queue**);
 

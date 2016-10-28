@@ -14,36 +14,36 @@
  * Bem como funções de comparação e criação de ingredientes
  */
 
-#define PORTION_MAX_COUNT 2
-// #define INITIAL_UNFROZEN_CLOCK 0
-#define INITIAL_PORTIONS_LIFESPAN -2
-#define UNFROZEN_COOLDOWN 2
 #define FREEZER_TIME 5
+#define MAX_STRING_SIZE 100
+#define PORTION_MAX_COUNT 2
+#define UNFROZEN_COOLDOWN 2
+#define INITIAL_PORTIONS_LIFESPAN -2
+
 
 /* Definição de uma String */
-typedef char String[100];
+typedef char String[MAX_STRING_SIZE];
 
 /* Definição do estado da porção (Alocado para uma pizza, congelado ou pronto para ser usado) */
 typedef
 	enum {
-		ALOCATED,
+		READY,
 		FROZEN,
-		READY
+		ALOCATED
 	} State;
 
 /* Define uma estrutura para porção. guardando o tempo até descongelamento e tempo de vida do ingrediente*/
 typedef
 	struct {
-		State state;
 		int lifespan;
-			// unfrozen;
+		State state;
 	} Portion;
 
 /* Define os ingredientes e suas porções disponíveis */
 typedef
 	struct {
 		String name;
-		Portion portions[PORTION_MAX_COUNT];
+		Portion * portions[PORTION_MAX_COUNT];
 	} Ingredient;
 
 /* Cria um ponteiro para um ingrediente a partir do nome */

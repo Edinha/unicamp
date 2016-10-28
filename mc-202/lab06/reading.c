@@ -10,48 +10,60 @@
 void readAllClientRequests(Tree * ingredients) {
 	String ingredientName;
 	int clockTime,
+		oldClockTime,
 		sequential,
 		overflowTimeTotal = 0,
-		overflowTimeIngredient = 0;
+		overflowTimeIngredient = 0,
+		cookingTime = 0;
 
+	Client * client = NULL;
 	Queue * waitingQueue = createQueue();
 
 	sequential = 1;
 	while (scanf("%d", &clockTime) == 1) {
-		Client * client = createClient(sequential);
+		client = createClient(sequential);
+
+		// Mais de um pedido ao mesmo tempo, adicionar tempo de forno
+		if (oldClockTime == clockTime) {
+			cookingTime++;
+		}
 
 		while (scanf("%*[ ]%[^ \r\n]", ingredientName) == 1) {
 			// TODO ver alocação das porções de ingredientes
-			overflowTimeIngredient = availabilityOfIngredient(ingredients, ingredientName, clockTime, &client->portions);
+			overflowTimeIngredient = availabilityOfIngredient(ingredients, ingredientName, clockTime + cookingTime, &client->portions);
 
 			if (overflowTimeIngredient > overflowTimeTotal) {
 				overflowTimeTotal = overflowTimeIngredient;
 			}
+
+			memset(ingredientName, 0, MAX_STRING_SIZE);
 		}
 
-		if (overflowTimeTotal) {
-			overflow(&client, clockTime + overflowTimeTotal);
-			queue(&waitingQueue, client);
+		overflow(&client, clockTime, overflowTimeTotal + cookingTime);
 
-			// TODO retirar alguém da Queue de espera para assar
-			Client * otherClient = dequeue(&waitingQueue);
-
-			if (clockTime <= otherClient->cookTime) {
-				printOrder(otherClient);
-				freeClientReffilingPortions(&otherClient);
-			}
-
-		} else {
-			// TODO fry this client pizza
+		if (client->cookTime <= clockTime + cookingTime) {
 			printOrder(client);
 			freeClientReffilingPortions(&client);
+		} else {
+			queue(&waitingQueue, client);
+			client = dequeue(&waitingQueue);
+
+			if (client->cookTime <= clockTime + cookingTime) {
+				printOrder(client);
+				freeClientReffilingPortions(&client);
+			} else {
+				headQueue(&waitingQueue, client);
+			}
 		}
 
+		overflowTimeTotal = 0;
+		oldClockTime = clockTime;
 		sequential++;
 	}
 
+	// TODO see cooking time of clients int this loop for personal reasons
 	while ( !emptyQueue(&waitingQueue) ) {
-		Client * client = dequeue(&waitingQueue);
+		client = dequeue(&waitingQueue);
 		printOrder(client);
 		freeClientReffilingPortions(&client);
 	}

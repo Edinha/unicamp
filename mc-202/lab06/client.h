@@ -19,15 +19,16 @@
 typedef
 	struct {
 		List * portions;
-		int sequential,
-			cookTime;
+		int cookTime,
+			sequential,
+			overflowTime;
 	} Client;
 
 /* Cria um ponteiro para um cliente a partir do sequencial */
 Client* createClient(int);
 
-/* Aumenta o tempo de overflow dado o ingrediente de sua pizza */
-void overflow(Client**, int);
+/* Aumenta o tempo de forno do cliente dado */
+void overflow(Client**, int, int);
 
 /* Libera espaço de um client */
 void freeClientReffilingPortions(Client**);
