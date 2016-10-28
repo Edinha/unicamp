@@ -14,7 +14,7 @@ void readAllClientRequests(Tree * ingredients) {
 		overflowTimeTotal = 0,
 		overflowTimeIngredient = 0;
 
-	List * waitingList = createList();
+	Queue * waitingQueue = createQueue();
 
 	sequential = 1;
 	while (scanf("%d", &clockTime) == 1) {
@@ -32,8 +32,8 @@ void readAllClientRequests(Tree * ingredients) {
 
 		if (overflowTimeTotal) {
 			overflow(&client, overflowTimeTotal);
-			insertTail(&waitingList, client);
-			// TODO retirar alguém da lista de espera para assar
+			queue(&waitingQueue, client);
+			// TODO retirar alguém da Queuea de espera para assar
 		} else {
 
 		}

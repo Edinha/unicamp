@@ -36,29 +36,65 @@ void freeTree(Tree ** tree) {
 	free(*tree);
 }
 
-List * createList() {
-	List * list = malloc(sizeof(List));
-	list->head = list->tail = NULL;
-	return list;
+Queue * createQueue() {
+	Queue * Queue = malloc(sizeof(Queue));
+	Queue->head = Queue->tail = NULL;
+	return Queue;
 }
 
-NodeList * createNodeList(Client * client) {
-	NodeList * node = malloc(sizeof(NodeList));
+QueueElement * createQueueElement(Client * client) {
+	QueueElement * node = malloc(sizeof(QueueElement));
 	node->client = client;
 	node->next = NULL;
 	return node;
 }
 
-void insertTail(List ** list, Client * client) {
-	NodeList * newNode = createNodeList(client);
+void queue(Queue ** queue, Client * client) {
+	QueueElement * newNode = createQueueElement(client);
 
-	if (!(*list)->head) {
-		(*list)->head = (*list)->tail = newNode;
+	if (!(*queue)->head) {
+		(*queue)->head = (*queue)->tail = newNode;
 		return;
 	}
 
-	(*list)->tail->next = newNode;
-	(*list)->tail = (*list)->tail->next;
+	(*queue)->tail->next = newNode;
+	(*queue)->tail = (*queue)->tail->next;
+}
+
+Client * dequeue(Queue ** queue) {
+	QueueElement * oldStart = (*queue)->head;
+	Client * client = oldStart->client;
+	(*queue)->head = oldStart->next;
+	free(oldStart);
+	return client;
+}
+
+void freeQueueElement(QueueElement ** node) {
+	if (!(*node)) {
+		return;
+	}
+
+	freeQueueElement(&(*node)->next);
+	freeClient(&(*node)->client);
+	free(*node);
+}
+
+void freeQueue(Queue ** queue) {
+	freeQueueElement(&(*queue)->head);
+	free(*queue);
+}
+
+NodeList * createNodeList(Portion * portion) {
+	NodeList * node = malloc(sizeof(NodeList));
+	node->portion = portion;
+	node->next = NULL;
+	return node;
+}
+
+void insertList(List ** list, Portion * portion) {
+	NodeList * newNode = createNodeList(portion);
+	newNode->next = (*list)->head;
+	(*list)->head = newNode;
 }
 
 void freeNodeList(NodeList ** node) {
@@ -67,7 +103,6 @@ void freeNodeList(NodeList ** node) {
 	}
 
 	freeNodeList(&(*node)->next);
-	freeClient(&(*node)->client);
 	free(*node);
 }
 

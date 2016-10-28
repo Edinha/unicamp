@@ -9,7 +9,7 @@
 #include "client.h"
 
 /* Esse arquivo conterá as definições para a estrutura de nós do programa
- * usadas na implementação da base estrutural da árvore splay e da lista de clientes
+ * usadas na implementação da base estrutural da árvore splay e da Fila de clientes
  */
 
 /* Definição da árvore splay */
@@ -29,18 +29,28 @@ typedef
 		NodeTree * root;
 	} Tree;
 
-/* Definição da lista de clientes */
+/* Definição da Fila de clientes */
+
+typedef
+	struct QueueElement {
+		Client * client;
+		struct QueueElement * next;
+	} QueueElement;
+
+typedef
+	struct {
+		QueueElement * head, * tail;
+	} Queue;
 
 typedef
 	struct NodeList {
-		Client * client;
+		Portion * portion;
 		struct NodeList * next;
 	} NodeList;
 
 typedef
-	struct {
-		NodeList * head,
-				 * tail;
+	struct{
+		NodeList * head;
 	} List;
 
 /* Inicializa um ponteiro para a árvore */
@@ -55,19 +65,34 @@ void freeNodeTree(NodeTree**);
 /* Libera o ponteiro de árvore */
 void freeTree(Tree**);
 
-/* Inicializa um ponteiro de lista */
-List* createList();
+/* Inicializa um ponteiro de Fila */
+Queue* createQueue();
 
-/* Inicializa um ponteiro para o nó da lista */
-NodeList* createNodeList(Client*);
+/* Inicializa um ponteiro para o nó da Fila */
+QueueElement* createQueueElement(Client*);
 
-/* Insere o cliente no final da lista */
-void insertTail(List**, Client*);
+/* Insere o cliente no final da Queue */
+void queue(Queue**, Client*);
 
-/* Libera o ponteiro de nó de lista recursivamente */
+/* Remove o cliente da fila */
+Client* dequeue(Queue**);
+
+/* Libera o ponteiro de nó de Fila recursivamente */
+void freeQueueElement(QueueElement**);
+
+/* Libera o ponteiro de Fila */
+void freeQueue(Queue**);
+
+/* Inicializa um ponteiro para o nó da Lista */
+NodeList* createNodeList(Portion*);
+
+/* Insere no começo da lista */
+void insertList(List**, Portion*);
+
+/* Libera o ponteiro de nó de Lista recursivamente */
 void freeNodeList(NodeList**);
 
-/* Libera o ponteiro de lista */
+/* Libera o ponteiro de Lista */
 void freeList(List**);
 
 #endif

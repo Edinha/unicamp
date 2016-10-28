@@ -19,12 +19,14 @@
 #define INITIAL_PORTIONS_LIFESPAN -2
 #define UNFROZEN_COOLDOWN 2
 
+
 /* Definição de uma String */
 typedef char String[100];
 
-/* Definição do estado da porção */
+/* Definição do estado da porção (Alocado para uma pizza, congelado ou pronto para ser usado) */
 typedef
 	enum {
+		ALOCATED,
 		FROZEN,
 		READY
 	} State;
@@ -54,6 +56,9 @@ int compare(Ingredient*, String);
 
 /* Reabastece uma porção do ingrediente a partir do horário parametrizado */
 void refill(Portion*, int);
+
+/* Aloca um ponteiro de porção de ingrediente */
+void alocate(Portion*);
 
 /* Muda o estado da porção de congelado para pronto caso já seja hora */
 void unfrozenIfPossible(Portion*, int);

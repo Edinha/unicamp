@@ -29,6 +29,10 @@ void refill(Portion * portion, int clockTime) {
 	portion->lifespan = clockTime + UNFROZEN_COOLDOWN;
 }
 
+void alocate(Portion * portion) {
+	portion->state = ALOCATED;
+}
+
 void unfrozenIfPossible(Portion * portion, int clockTime) {
 	if (isFrozen(portion) && portion->lifespan < clockTime) {
 		portion->state = READY;
