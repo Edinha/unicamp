@@ -28,6 +28,18 @@ Cache createCache(int number) {
 	return cache;
 }
 
+int compare(Cache first, Cache second) {
+	if (first.priority < second.priority) {
+		return LESSER;
+	}
+
+	if (first.priority > second.priority) {
+		return GREATER;
+	}
+
+	return EQUALS;
+}
+
 int isFull(Heap * heap) {
 	return (heap->actualSize == heap->maxSize);
 }
@@ -44,22 +56,60 @@ int parent(int position) {
 	return (position - 1) / 2;
 }
 
-int positionExists(Heap * heap, int position) {
+int exists(Heap * heap, int position) {
 	return (position < heap->actualSize);
 }
 
 void insert(Heap * heap, int cacheElement) {
-	Cache cache = createCache(cacheElement);
-
 	if (isFull(heap)) {
-		// TODO remover o ultimo lugar do cache em prioridade
+		// TODO remover o ultimo lugar do cache em prioridade e alocar mais novo
 	}
 
-	add(heap, cache, 0);
+	// TODO shift up some stuff
 }
 
-void add(Heap * heap, Cache cache, int position) {
+void shiftDown(Heap * heap, int position) {
+	int higher = position,
+		comparison,
+		child;
 
+	// TODO change later for function pointer maybe
+	// int (*functions) = {&left, &right};
+
+	child = left(position);
+	comparison = compare(heap->data[higher], heap->data[child]);
+
+	if (exists(heap, child) && comparison == LESSER) {
+		higher = child;
+	}
+
+	child = right(position);
+	comparison = compare(heap->data[higher], heap->data[child]);
+
+	if (exists(heap, child) && comparison == LESSER) {
+		higher = child;
+	}
+
+	if (higher != position) {
+		exchange(heap, higher, position);
+		shiftDown(heap, higher);
+	}
+}
+
+void shiftUp(Heap * heap, int position) {
+	int parentPos = parent(position),
+		comparison = compare(heap->data[parentPos], heap->data[position]);
+
+	if (exists(heap, parentPos) && comparison == LESSER) {
+		exchange(heap, parentPos, position);
+		shiftUp(heap, parentPos);
+	}
+}
+
+void exchange(Heap * heap, int first, int second) {
+	Cache tmp = heap->data[first];
+	heap->data[first] = heap->data[second];
+	heap->data[second] = tmp;
 }
 
 void higher(Cache * cache) {

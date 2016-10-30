@@ -16,6 +16,10 @@
 #define ZERO_INIT 0
 #define INVALID_NUMBER_INIT -1
 
+#define EQUALS 0
+#define LESSER -1
+#define GREATER 1
+
 /* Define a estrutura de um dado de cache do heap */
 typedef
 	struct {
@@ -36,6 +40,9 @@ Heap* createHeap(int);
 /* Inicializa um elemento de cache a partir de seu numero */
 Cache createCache(int);
 
+/* Compara dois caches, retornando -1 caso primeiro menor, 1 caso primeiro maior e 0 se iguais */
+int compare(Cache, Cache);
+
 /* Retorna verdadeiro caso o tamanho atual seja igual ao maximo */
 int isFull(Heap*);
 
@@ -49,13 +56,19 @@ int right(int);
 int parent(int);
 
 /* Retorna verdadeiro caso a posicao inteira exista no heap */
-int positionExists(Heap*, int);
+int exists(Heap*, int);
 
 /* Insere na heap o elemento, aumentando sua prioridade caso ele esteja contido no heap */
 void insert(Heap*, int);
 
-/* Adiciona recursivamente um elemento de cache ao heap a partir de uma posicao */
-void add(Heap*, Cache, int);
+/* Conserta o heap descendo os elementos fora de ordem */
+void shiftDown(Heap*, int);
+
+/* Conserta o heap subindo os elementos fora de ordem */
+void shiftUp(Heap*, int);
+
+/* Troca os valores dos caches a partir das posicoes parametrizadas */
+void exchange(Heap*, int, int);
 
 /* Aumenta a prioridade de um elemento de cache */
 void higher(Cache*);
