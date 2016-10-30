@@ -14,30 +14,10 @@ Heap * createHeap(int size) {
 
 	heap->data = malloc(size * sizeof(Cache));
 	for (int i = 0; i < size; i++) {
-		heap->data[i].number = INVALID_NUMBER_INIT;
-		heap->data[i].priority = ZERO_INIT;
+		emptyInit(&heap->data[i]);
 	}
 
 	return heap;
-}
-
-Cache createCache(int number) {
-	Cache cache;
-	cache.number = number;
-	cache.priority = ZERO_INIT;
-	return cache;
-}
-
-int compare(Cache first, Cache second) {
-	if (first.priority < second.priority) {
-		return LESSER;
-	}
-
-	if (first.priority > second.priority) {
-		return GREATER;
-	}
-
-	return EQUALS;
 }
 
 int isFull(Heap * heap) {
@@ -110,14 +90,6 @@ void exchange(Heap * heap, int first, int second) {
 	Cache tmp = heap->data[first];
 	heap->data[first] = heap->data[second];
 	heap->data[second] = tmp;
-}
-
-void higher(Cache * cache) {
-
-}
-
-void lower(Cache * cache) {
-
 }
 
 void freeHeap(Heap ** heap) {
