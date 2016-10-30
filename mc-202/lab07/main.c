@@ -3,7 +3,11 @@
  * Turma : F
  */
 
+#include "reading.h"
+
 int main() {
+
+	readEntry();
 
 	return 0;
 }

@@ -12,6 +12,10 @@
  * a ordem de prioridade para o cache do programa
  */
 
+/* Definindo o inteiro a ser somado quando se altera o cache ou nao */
+#define CACHE_CHANGED 1
+#define NO_CACHE_CHANGE 0
+
 typedef
 	struct {
 		Cache * data;
@@ -37,11 +41,11 @@ int parent(int);
 /* Retorna verdadeiro caso a posicao inteira exista no heap */
 int exists(Heap*, int);
 
+/* Insere na heap o elemento, aumentando sua prioridade caso ele esteja contido no heap */
+int insert(Heap*, int);
+
 /* Procura pelo cache parametrizado na estrutura do heap */
 SearchElement* search(Heap*, Cache);
-
-/* Insere na heap o elemento, aumentando sua prioridade caso ele esteja contido no heap */
-void insert(Heap*, int);
 
 /* Conserta o heap descendo os elementos fora de ordem */
 void shiftDown(Heap*, int);

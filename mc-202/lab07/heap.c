@@ -40,6 +40,28 @@ int exists(Heap * heap, int position) {
 	return (position < heap->actualSize);
 }
 
+int insert(Heap * heap, int cacheElement) {
+	Cache newCache = createCache(cacheElement);
+
+	SearchElement * searched = search(heap, newCache);
+	if (searched) {
+		higher(searched->cache);
+		shiftUp(heap, searched->position);
+		freeSearchElement(&searched);
+		return NO_CACHE_CHANGE;
+	}
+
+	if (isFull(heap)) {
+		heap->data[heap->actualSize] = newCache;
+	}
+
+	heap->data[heap->actualSize] = newCache;
+	shiftUp(heap, heap->actualSize);
+	heap->actualSize++;
+
+	return CACHE_CHANGED;
+}
+
 SearchElement * search(Heap * heap, Cache searched) {
 	int i, comparison;
 	for (i = 0; i < heap->actualSize; i++) {
@@ -57,32 +79,11 @@ SearchElement * search(Heap * heap, Cache searched) {
 	return NULL;
 }
 
-void insert(Heap * heap, int cacheElement) {
-	Cache newCache = createCache(cacheElement);
-
-	SearchElement * searched = search(heap, newCache);
-	if (searched) {
-		higher(searched->cache);
-		shiftUp(heap, searched->position);
-		freeSearchElement(&searched);
-		return;
-	}
-
-	if (isFull(heap)) {
-		heap->data[heap->actualSize] = newCache;
-	}
-
-	heap->data[heap->actualSize] = newCache;
-	shiftUp(heap, heap->actualSize);
-	heap->actualSize++;
-}
-
 void shiftDown(Heap * heap, int position) {
 	int higher = position,
 		comparison,
 		child, i;
 
-	// TODO change later for function pointer maybe
 	int (*functions[2]) (int) = {&left, &right};
 
 	for (i = 0; i < 2; i++) {
@@ -106,7 +107,7 @@ void shiftUp(Heap * heap, int position) {
 	int parentPos = parent(position),
 		comparison = compare(heap->data[parentPos], heap->data[position]);
 
-	if (exists(heap, parentPos) && comparison == LESSER) {
+	if (exists(heap, parentPos) && comparison <= EQUALS) {
 		exchange(heap, parentPos, position);
 		shiftUp(heap, parentPos);
 	}
