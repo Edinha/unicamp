@@ -53,6 +53,7 @@ int insert(Heap * heap, int cacheElement) {
 
 	if (isFull(heap)) {
 		heap->data[heap->actualSize] = newCache;
+		return CACHE_CHANGED;
 	}
 
 	heap->data[heap->actualSize] = newCache;
