@@ -40,12 +40,43 @@ int exists(Heap * heap, int position) {
 	return (position < heap->actualSize);
 }
 
-void insert(Heap * heap, int cacheElement) {
-	if (isFull(heap)) {
-		// TODO remover o ultimo lugar do cache em prioridade e alocar mais novo
+SearchElement * search(Heap * heap, Cache searched, int position) {
+	if (!exists(heap, position)) {
+		return NULL;
 	}
 
-	// TODO shift up some stuff
+	Cache * actualCache = &heap->data[position];
+	int comparison = compare(*actualCache, searched);
+
+	if (!comparison) {
+		return createSearchElement(actualCache, position);
+	}
+
+	if (comparison == LESSER) {
+		return search(heap, searched, left(position));
+	}
+
+	return search(heap, searched, right(position));
+}
+
+void insert(Heap * heap, int cacheElement) {
+	Cache newCache = createCache(cacheElement);
+
+	SearchElement * searched = search(heap, newCache, 0);
+	if (searched) {
+		higher(searched->cache);
+		shiftUp(heap, searched->position);
+		freeSearchElement(&searched);
+		return;
+	}
+
+	if (isFull(heap)) {
+		heap->data[heap->actualSize] = newCache;
+	}
+
+	heap->data[heap->actualSize] = newCache;
+	shiftUp(heap, heap->actualSize);
+	heap->actualSize++;
 }
 
 void shiftDown(Heap * heap, int position) {

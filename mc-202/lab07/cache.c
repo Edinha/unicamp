@@ -7,6 +7,13 @@
 
 /* Implementacao dos metodos */
 
+SearchElement * createSearchElement(Cache * cache, int position) {
+	SearchElement * element = malloc(sizeof(SearchElement));
+	element->cache = cache;
+	element->position = position;
+	return element;
+}
+
 Cache createCache(int number) {
 	Cache cache;
 	cache.number = number;
@@ -32,9 +39,13 @@ void emptyInit(Cache * cache) {
 }
 
 void higher(Cache * cache) {
-
+	cache->priority++;
 }
 
 void lower(Cache * cache) {
+	cache->priority--;
+}
 
+void freeSearchElement(SearchElement ** element) {
+	free(*element);
 }

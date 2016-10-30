@@ -27,6 +27,15 @@ typedef
 			priority;
 	} Cache;
 
+typedef
+	struct {
+		int position;
+		Cache * cache;
+	} SearchElement;
+
+/* Inicializa um ponteiro para retorno de elemento de busca */
+SearchElement* createSearchElement(Cache*, int);
+
 /* Inicializa um elemento de cache a partir de seu numero */
 Cache createCache(int);
 
@@ -41,5 +50,8 @@ void higher(Cache*);
 
 /* Diminue a prioridade de um elemento de cache */
 void lower(Cache*);
+
+/* Libera um ponteiro de elemento de busca */
+void freeSearchElement(SearchElement**);
 
 #endif
