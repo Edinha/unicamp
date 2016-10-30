@@ -40,29 +40,27 @@ int exists(Heap * heap, int position) {
 	return (position < heap->actualSize);
 }
 
-SearchElement * search(Heap * heap, Cache searched, int position) {
-	if (!exists(heap, position)) {
-		return NULL;
+SearchElement * search(Heap * heap, Cache searched) {
+	int i, comparison;
+	for (i = 0; i < heap->actualSize; i++) {
+		comparison = compare(heap->data[i], searched);
+
+		if (!comparison) {
+			return createSearchElement(&heap->data[i], i);
+		}
+
+		if (comparison == LESSER) {
+			return NULL;
+		}
 	}
 
-	Cache * actualCache = &heap->data[position];
-	int comparison = compare(*actualCache, searched);
-
-	if (!comparison) {
-		return createSearchElement(actualCache, position);
-	}
-
-	if (comparison == LESSER) {
-		return search(heap, searched, left(position));
-	}
-
-	return search(heap, searched, right(position));
+	return NULL;
 }
 
 void insert(Heap * heap, int cacheElement) {
 	Cache newCache = createCache(cacheElement);
 
-	SearchElement * searched = search(heap, newCache, 0);
+	SearchElement * searched = search(heap, newCache);
 	if (searched) {
 		higher(searched->cache);
 		shiftUp(heap, searched->position);
