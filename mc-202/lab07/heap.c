@@ -80,23 +80,20 @@ void insert(Heap * heap, int cacheElement) {
 void shiftDown(Heap * heap, int position) {
 	int higher = position,
 		comparison,
-		child;
+		child, i;
 
 	// TODO change later for function pointer maybe
-	// int (*functions) = {&left, &right};
+	int (*functions[2]) (int) = {&left, &right};
 
-	child = left(position);
-	comparison = compare(heap->data[higher], heap->data[child]);
+	for (i = 0; i < 2; i++) {
+		int (*side) (int) = functions[i];
 
-	if (exists(heap, child) && comparison == LESSER) {
-		higher = child;
-	}
+		child = side(position);
+		comparison = compare(heap->data[higher], heap->data[child]);
 
-	child = right(position);
-	comparison = compare(heap->data[higher], heap->data[child]);
-
-	if (exists(heap, child) && comparison == LESSER) {
-		higher = child;
+		if (exists(heap, child) && comparison == LESSER) {
+			higher = child;
+		}
 	}
 
 	if (higher != position) {
