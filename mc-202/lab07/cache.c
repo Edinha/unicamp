@@ -22,15 +22,15 @@ Cache createCache(int number, int priority) {
 }
 
 int compare(Cache first, Cache second) {
-	if (first.number == second.number) {
-		return EQUALS;
-	}
-
 	if (first.priority < second.priority) {
 		return LESSER;
 	}
 
 	return GREATER;
+}
+
+int sameNumber(Cache first, Cache second) {
+	return (first.number == second.number);
 }
 
 void emptyInit(Cache * cache) {

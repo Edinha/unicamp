@@ -16,7 +16,6 @@
 #define ZERO_INIT 0
 #define INVALID_NUMBER_INIT -1
 
-#define EQUALS 0
 #define LESSER -1
 #define GREATER 1
 
@@ -39,8 +38,11 @@ SearchElement* createSearchElement(Cache*, int);
 /* Inicializa um elemento de cache a partir de seu número e de sua prioridade na entrada */
 Cache createCache(int, int);
 
-/* Compara dois caches, retornando -1 caso primeiro menor, 1 caso primeiro maior e 0 se iguais */
+/* Compara dois caches, retornando LESSER caso primeiro menor e GREATER caso primeiro maior */
 int compare(Cache, Cache);
+
+/* Retorna verdadeiro caso os caches tenham o mesmo numero, falso caso contrario */
+int sameNumber(Cache, Cache);
 
 /* Inicializa um cache vazio */
 void emptyInit(Cache*);

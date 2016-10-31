@@ -61,11 +61,8 @@ int insert(Heap * heap, Cache newCache) {
 }
 
 SearchElement * search(Heap * heap, Cache searched) {
-	int i, comparison;
-	for (i = 0; i < heap->actualSize; i++) {
-		comparison = compare(heap->data[i], searched);
-
-		if (!comparison) {
+	for (int i = 0; i < heap->actualSize; i++) {
+		if (sameNumber(heap->data[i], searched)) {
 			return createSearchElement(&heap->data[i], i);
 		}
 	}
