@@ -1,6 +1,6 @@
 // Place your settings in this file to overwrite the default settings
 {
-	"editor.cursorBlinking": "smooth",
+	"editor.cursorBlinking": "expand",
 	"editor.renderWhitespace": true,
 	"editor.insertSpaces": false,
 	"files.trimTrailingWhitespace": true
