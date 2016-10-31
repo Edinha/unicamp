@@ -14,23 +14,23 @@ SearchElement * createSearchElement(Cache * cache, int position) {
 	return element;
 }
 
-Cache createCache(int number) {
+Cache createCache(int number, int priority) {
 	Cache cache;
 	cache.number = number;
-	cache.priority = ZERO_INIT;
+	cache.priority = priority;
 	return cache;
 }
 
 int compare(Cache first, Cache second) {
+	if (first.number == second.number) {
+		return EQUALS;
+	}
+
 	if (first.priority < second.priority) {
 		return LESSER;
 	}
 
-	if (first.priority > second.priority) {
-		return GREATER;
-	}
-
-	return EQUALS;
+	return GREATER;
 }
 
 void emptyInit(Cache * cache) {
@@ -38,12 +38,8 @@ void emptyInit(Cache * cache) {
 	cache->priority = ZERO_INIT;
 }
 
-void higher(Cache * cache) {
-	cache->priority++;
-}
-
-void lower(Cache * cache) {
-	cache->priority--;
+void updatePriority(Cache * cache, int newPriority) {
+	cache->priority = newPriority;
 }
 
 void freeSearchElement(SearchElement ** element) {

@@ -24,13 +24,14 @@ void readEntry() {
 	readFirstLine(&maxSize, &accesses);
 
 	Heap * heap = createHeap(maxSize);
+	Cache newCache;
 
 	cacheAccessCount = ZERO_INIT;
 
 	for (int i = 0; i < accesses; i++) {
 		readInt(&actualElement);
-
-		cacheAccessCount += insert(heap, actualElement);
+		newCache = createCache(actualElement, i);
+		cacheAccessCount += insert(heap, newCache);
 	}
 
 	printResponse(cacheAccessCount);

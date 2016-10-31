@@ -40,25 +40,22 @@ int exists(Heap * heap, int position) {
 	return (position < heap->actualSize);
 }
 
-int insert(Heap * heap, int cacheElement) {
-	Cache newCache = createCache(cacheElement);
-
+int insert(Heap * heap, Cache newCache) {
 	SearchElement * searched = search(heap, newCache);
+
 	if (searched) {
-		higher(searched->cache);
+		updatePriority(searched->cache, newCache.priority);
 		shiftUp(heap, searched->position);
 		freeSearchElement(&searched);
 		return NO_CACHE_CHANGE;
 	}
 
-	if (isFull(heap)) {
-		heap->data[heap->actualSize - 1] = newCache;
-		return CACHE_CHANGED;
+	if (!isFull(heap)) {
+		heap->actualSize++;
 	}
 
-	heap->data[heap->actualSize] = newCache;
-	shiftUp(heap, heap->actualSize);
-	heap->actualSize++;
+	heap->data[heap->actualSize - 1] = newCache;
+	shiftUp(heap, heap->actualSize - 1);
 
 	return CACHE_CHANGED;
 }
@@ -70,10 +67,6 @@ SearchElement * search(Heap * heap, Cache searched) {
 
 		if (!comparison) {
 			return createSearchElement(&heap->data[i], i);
-		}
-
-		if (comparison == LESSER) {
-			return NULL;
 		}
 	}
 
@@ -111,10 +104,10 @@ void shiftUp(Heap * heap, int position) {
 	int comparison,
 		parentPos = parent(position);
 
-	if (exists(heap, parentPos)) {
+	if (exists(heap, parentPos) && parentPos != position) {
 		comparison = compare(heap->data[parentPos], heap->data[position]);
 
-		if (comparison <= EQUALS && parentPos != position) {
+		if (comparison == LESSER) {
 			exchange(heap, parentPos, position);
 			shiftUp(heap, parentPos);
 		}

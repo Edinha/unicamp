@@ -41,8 +41,8 @@ int parent(int);
 /* Retorna verdadeiro caso a posicao inteira exista no heap */
 int exists(Heap*, int);
 
-/* Insere na heap o elemento, aumentando sua prioridade caso ele esteja contido no heap */
-int insert(Heap*, int);
+/* Insere na heap o elemento de cache parametriza, caso exista apenas atualiza seu valor */
+int insert(Heap*, Cache);
 
 /* Procura pelo cache parametrizado na estrutura do heap */
 SearchElement* search(Heap*, Cache);

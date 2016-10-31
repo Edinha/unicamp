@@ -36,8 +36,8 @@ typedef
 /* Inicializa um ponteiro para retorno de elemento de busca */
 SearchElement* createSearchElement(Cache*, int);
 
-/* Inicializa um elemento de cache a partir de seu numero */
-Cache createCache(int);
+/* Inicializa um elemento de cache a partir de seu número e de sua prioridade na entrada */
+Cache createCache(int, int);
 
 /* Compara dois caches, retornando -1 caso primeiro menor, 1 caso primeiro maior e 0 se iguais */
 int compare(Cache, Cache);
@@ -45,11 +45,8 @@ int compare(Cache, Cache);
 /* Inicializa um cache vazio */
 void emptyInit(Cache*);
 
-/* Aumenta a prioridade de um elemento de cache */
-void higher(Cache*);
-
-/* Diminue a prioridade de um elemento de cache */
-void lower(Cache*);
+/* Remova a prioridade do ponteiro de cache */
+void updatePriority(Cache*, int);
 
 /* Libera um ponteiro de elemento de busca */
 void freeSearchElement(SearchElement**);
