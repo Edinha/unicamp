@@ -52,7 +52,7 @@ int insert(Heap * heap, int cacheElement) {
 	}
 
 	if (isFull(heap)) {
-		heap->data[heap->actualSize] = newCache;
+		heap->data[heap->actualSize - 1] = newCache;
 		return CACHE_CHANGED;
 	}
 
@@ -91,10 +91,13 @@ void shiftDown(Heap * heap, int position) {
 		int (*side) (int) = functions[i];
 
 		child = side(position);
-		comparison = compare(heap->data[higher], heap->data[child]);
 
-		if (exists(heap, child) && comparison == LESSER) {
-			higher = child;
+		if (exists(heap, child)) {
+			comparison = compare(heap->data[higher], heap->data[child]);
+
+			if (comparison == LESSER) {
+				higher = child;
+			}
 		}
 	}
 
@@ -105,12 +108,16 @@ void shiftDown(Heap * heap, int position) {
 }
 
 void shiftUp(Heap * heap, int position) {
-	int parentPos = parent(position),
+	int comparison,
+		parentPos = parent(position);
+
+	if (exists(heap, parentPos)) {
 		comparison = compare(heap->data[parentPos], heap->data[position]);
 
-	if (exists(heap, parentPos) && comparison <= EQUALS) {
-		exchange(heap, parentPos, position);
-		shiftUp(heap, parentPos);
+		if (comparison <= EQUALS && parentPos != position) {
+			exchange(heap, parentPos, position);
+			shiftUp(heap, parentPos);
+		}
 	}
 }
 
