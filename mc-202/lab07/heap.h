@@ -12,7 +12,7 @@
  * a ordem de prioridade para o cache do programa
  */
 
-/* Definindo o inteiro a ser somado quando se altera o cache ou nao */
+/* Definindo o inteiro a ser somado quando há alterações no cache */
 #define CACHE_CHANGED 1
 #define NO_CACHE_CHANGE 0
 
@@ -23,25 +23,25 @@ typedef
 			actualSize;
 	} Heap;
 
-/* Inicializa um ponteiro de heap a partir de um tamanho maximo para o vetor */
+/* Inicializa um ponteiro de heap a partir de um tamanho máximo para o vetor */
 Heap* createHeap(int);
 
 /* Retorna verdadeiro caso o tamanho atual seja igual ao maximo */
 int isFull(Heap*);
 
-/* Retorna a esquerda de uma posicao parametrizada */
+/* Retorna a esquerda de uma posição parametrizada */
 int left(int);
 
-/* Retorna a direita de uma posicao parametrizada */
+/* Retorna a direita de uma posição parametrizada */
 int right(int);
 
-/* Retorna o pai de uma posicao parametrizada */
+/* Retorna o pai de uma posição parametrizada */
 int parent(int);
 
-/* Retorna verdadeiro caso a posicao inteira exista no heap */
+/* Retorna verdadeiro caso a posição exista no heap */
 int exists(Heap*, int);
 
-/* Insere na heap o elemento de cache parametriza, caso exista apenas atualiza seu valor */
+/* Insere na heap o elemento de cache parametrizado, caso exista atualiza seu valor, retornando caso haja mudanças no heap */
 int insert(Heap*, Cache);
 
 /* Procura pelo cache parametrizado na estrutura do heap */
@@ -53,7 +53,7 @@ void shiftDown(Heap*, int);
 /* Conserta o heap subindo os elementos fora de ordem */
 void shiftUp(Heap*, int);
 
-/* Troca os valores dos caches a partir das posicoes parametrizadas */
+/* Troca os valores dos caches a partir das posições parametrizadas */
 void exchange(Heap*, int, int);
 
 /* Libera um ponteiro de heap */

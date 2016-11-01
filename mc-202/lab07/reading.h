@@ -8,19 +8,19 @@
 
 #include "heap.h"
 
-/* Esse arquivo conterá as definições para as funcoes de leitura do programa
+/* Esse arquivo conterá as definições para as funções de leitura do programa
  */
 
-/* Le uma entrada de um inteiro e armazena no ponteiro parametrizado */
+/* Lê uma entrada de um inteiro e armazena no ponteiro parametrizado */
 void readInt(int*);
 
-/* Le a primeira linha da entrada nas variaveis parametrizadas */
+/* Lê a primeira linha da entrada nas variáveis parametrizadas */
 void readFirstLine(int*, int*);
 
-/* Le as entradas e as aplica no heap */
+/* Lê as entradas e as aplica no heap alocado dentro da função */
 void readEntry();
 
 /* Printa a resposta a partir da contagem */
-void printResponse();
+void printResponse(int);
 
 #endif

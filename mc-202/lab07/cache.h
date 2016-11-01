@@ -10,7 +10,7 @@
 #include <stdlib.h>
 
 /* Esse arquivo conterá as definições para a estrutura de cache do programa, com
- * as informacoes sobre a prioriade do cache e seu numero de identificacao
+ * as informações sobre a prioriade do cache e seu número de identificação
  */
 
 #define ZERO_INIT 0
@@ -26,6 +26,7 @@ typedef
 			priority;
 	} Cache;
 
+/* Define a estrutura de um elemento de busca, que retorna o cache buscado a partir do número e sua posição no heap */
 typedef
 	struct {
 		int position;
@@ -41,13 +42,13 @@ Cache createCache(int, int);
 /* Compara dois caches, retornando LESSER caso primeiro menor e GREATER caso primeiro maior */
 int compare(Cache, Cache);
 
-/* Retorna verdadeiro caso os caches tenham o mesmo numero, falso caso contrario */
+/* Retorna verdadeiro caso os caches tenham o mesmo número, falso caso contrário */
 int sameNumber(Cache, Cache);
 
 /* Inicializa um cache vazio */
 void emptyInit(Cache*);
 
-/* Remova a prioridade do ponteiro de cache */
+/* Remove a prioridade do ponteiro de cache */
 void updatePriority(Cache*, int);
 
 /* Libera um ponteiro de elemento de busca */

@@ -5,7 +5,7 @@
 
 #include "cache.h"
 
-/* Implementacao dos metodos */
+/* Implementação dos métodos */
 
 SearchElement * createSearchElement(Cache * cache, int position) {
 	SearchElement * element = malloc(sizeof(SearchElement));

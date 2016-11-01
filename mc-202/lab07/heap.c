@@ -5,15 +5,16 @@
 
 #include "heap.h"
 
-/* Implementacao dos metodos */
+/* Implementação dos métodos */
 
 Heap * createHeap(int size) {
 	Heap * heap = malloc(sizeof(Heap));
 	heap->maxSize = size;
 	heap->actualSize = ZERO_INIT;
 
+	// Inicializa o vetor de cache com elementos vazios
 	heap->data = malloc(size * sizeof(Cache));
-	for (int i = 0; i < size; i++) {
+	for (int i = ZERO_INIT; i < size; i++) {
 		emptyInit(&heap->data[i]);
 	}
 
@@ -43,6 +44,8 @@ int exists(Heap * heap, int position) {
 int insert(Heap * heap, Cache newCache) {
 	SearchElement * searched = search(heap, newCache);
 
+	/* Caso o elemento tenha sido encontrado, altera sua prioridade e conserta o heap após alteração,
+		retornando que o vetor de cache não teve alterações */
 	if (searched) {
 		updatePriority(searched->cache, newCache.priority);
 		shiftUp(heap, searched->position);
@@ -50,10 +53,14 @@ int insert(Heap * heap, Cache newCache) {
 		return NO_CACHE_CHANGE;
 	}
 
+	// Caso o heap não esteja cheio, é possível aumentar seu tamanho
 	if (!isFull(heap)) {
 		heap->actualSize++;
 	}
 
+	// TODO maybe change this to put new element on 0 and former 0 on last position of heap and rebalance
+
+	// Coloca o novo elemento na última posição possível, conserta o heap e retorna que houve alterações
 	heap->data[heap->actualSize - 1] = newCache;
 	shiftUp(heap, heap->actualSize - 1);
 
@@ -61,7 +68,7 @@ int insert(Heap * heap, Cache newCache) {
 }
 
 SearchElement * search(Heap * heap, Cache searched) {
-	for (int i = 0; i < heap->actualSize; i++) {
+	for (int i = ZERO_INIT; i < heap->actualSize; i++) {
 		if (sameNumber(heap->data[i], searched)) {
 			return createSearchElement(&heap->data[i], i);
 		}
@@ -75,9 +82,12 @@ void shiftDown(Heap * heap, int position) {
 		comparison,
 		child, i;
 
+	/* A partir das funções de esquera ou direita, decide qual lado possui o maior elemento para ser
+		trocado com a raiz no rebalanceamento do heap */
+
 	int (*functions[2]) (int) = {&left, &right};
 
-	for (i = 0; i < 2; i++) {
+	for (i = ZERO_INIT; i < 2; i++) {
 		int (*side) (int) = functions[i];
 
 		child = side(position);
@@ -91,6 +101,7 @@ void shiftDown(Heap * heap, int position) {
 		}
 	}
 
+	// Caso tenha sido encontrado um maior, é trocad com a posição atual e continua a recursão
 	if (higher != position) {
 		exchange(heap, higher, position);
 		shiftDown(heap, higher);
@@ -100,6 +111,8 @@ void shiftDown(Heap * heap, int position) {
 void shiftUp(Heap * heap, int position) {
 	int comparison,
 		parentPos = parent(position);
+
+	// Compara a posição atual com seu pai e os troca caso o pai seja menor do que o filho
 
 	if (exists(heap, parentPos) && parentPos != position) {
 		comparison = compare(heap->data[parentPos], heap->data[position]);

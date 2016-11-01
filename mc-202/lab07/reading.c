@@ -5,7 +5,7 @@
 
 #include "reading.h"
 
-/* Implementacao dos metodos */
+/* Implementação dos métodos */
 
 void readInt(int * i) {
 	scanf("%d ", i);
@@ -28,7 +28,8 @@ void readEntry() {
 
 	cacheAccessCount = ZERO_INIT;
 
-	for (int i = 0; i < accesses; i++) {
+	// Aplica para todas as entradas a inserção, somando os retornos em um contador de resposta
+	for (int i = ZERO_INIT; i < accesses; i++) {
 		readInt(&actualElement);
 		newCache = createCache(actualElement, i);
 		cacheAccessCount += insert(heap, newCache);
