@@ -77,37 +77,6 @@ SearchElement * search(Heap * heap, Cache searched) {
 	return NULL;
 }
 
-void shiftDown(Heap * heap, int position) {
-	int higher = position,
-		comparison,
-		child, i;
-
-	/* A partir das funções de esquera ou direita, decide qual lado possui o maior elemento para ser
-		trocado com a raiz no rebalanceamento do heap */
-
-	int (*functions[2]) (int) = {&left, &right};
-
-	for (i = ZERO_INIT; i < 2; i++) {
-		int (*side) (int) = functions[i];
-
-		child = side(position);
-
-		if (exists(heap, child)) {
-			comparison = compare(heap->data[higher], heap->data[child]);
-
-			if (comparison == LESSER) {
-				higher = child;
-			}
-		}
-	}
-
-	// Caso tenha sido encontrado um maior, é trocad com a posição atual e continua a recursão
-	if (higher != position) {
-		exchange(heap, higher, position);
-		shiftDown(heap, higher);
-	}
-}
-
 void shiftUp(Heap * heap, int position) {
 	int comparison,
 		parentPos = parent(position);

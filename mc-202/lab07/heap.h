@@ -47,9 +47,6 @@ int insert(Heap*, Cache);
 /* Procura pelo cache parametrizado na estrutura do heap */
 SearchElement* search(Heap*, Cache);
 
-/* Conserta o heap descendo os elementos fora de ordem */
-void shiftDown(Heap*, int);
-
 /* Conserta o heap subindo os elementos fora de ordem */
 void shiftUp(Heap*, int);
 
