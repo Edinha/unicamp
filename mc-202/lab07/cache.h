@@ -17,6 +17,7 @@
 #define INVALID_NUMBER_INIT -1
 
 #define LESSER -1
+#define EQUALS 0
 #define GREATER 1
 
 /* Define a estrutura de um dado de cache do heap */
@@ -44,6 +45,9 @@ int compare(Cache, Cache);
 
 /* Retorna verdadeiro caso os caches tenham o mesmo número, falso caso contrário */
 int sameNumber(Cache, Cache);
+
+/* Compara os números de dois caches, retornando LESSER, GREATER ou EQUALS de acordo com a relação do primeiro com o segundo */
+int compareNumber(Cache*, Cache*);
 
 /* Inicializa um cache vazio */
 void emptyInit(Cache*);

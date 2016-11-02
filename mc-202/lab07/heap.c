@@ -94,6 +94,7 @@ void shiftUp(Heap * heap, int position) {
 }
 
 void exchange(Heap * heap, int first, int second) {
+	// TODO change positions on tree too from nodes
 	Cache tmp = heap->data[first];
 	heap->data[first] = heap->data[second];
 	heap->data[second] = tmp;

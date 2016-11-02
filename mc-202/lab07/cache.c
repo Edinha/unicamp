@@ -29,6 +29,18 @@ int compare(Cache first, Cache second) {
 	return GREATER;
 }
 
+int compareNumber(Cache * first, Cache * second) {
+	if (first->number > second->number) {
+		return GREATER;
+	}
+
+	if (first->number < second->number) {
+		return LESSER;
+	}
+
+	return EQUALS;
+}
+
 int sameNumber(Cache first, Cache second) {
 	return (first.number == second.number);
 }
