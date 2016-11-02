@@ -47,15 +47,6 @@ int compareNumber(Cache * first, Cache * second) {
 	return EQUALS;
 }
 
-int sameNumber(Cache first, Cache second) {
-	return (first.number == second.number);
-}
-
-void emptyInit(Cache * cache) {
-	cache->number = INVALID_NUMBER_INIT;
-	cache->priority = ZERO_INIT;
-}
-
 void updatePriority(Cache * cache, int position) {
 	cache->priority = findNextAppearance(&cache->appearances, position);
 }

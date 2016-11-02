@@ -36,13 +36,14 @@ void readEntry() {
 		entries[i] = actualElement;
 		tree->root = insertTree(tree->root, newCache);
 
+		// Caso tenha sido encontrado na arvore, libera espaco para novo cache
 		if (newCache->number == INVALID_NUMBER_INIT) {
 			freeCache(&newCache);
 		}
 	}
 
 	// A partir de todas as entradas, insere os elementos no cache e soma o retorno
-	// dessa operação repetidamente
+	// dessa operação repetidamente para dizer o minimo resultado possivel
 
 	cacheAccessCount = ZERO_INIT;
 	for (int i = ZERO_INIT; i < accesses; i++) {

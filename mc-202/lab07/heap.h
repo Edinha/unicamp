@@ -30,12 +30,6 @@ Heap* createHeap(int);
 /* Retorna verdadeiro caso o tamanho atual seja igual ao maximo */
 int isFull(Heap*);
 
-/* Retorna a esquerda de uma posição parametrizada */
-int left(int);
-
-/* Retorna a direita de uma posição parametrizada */
-int right(int);
-
 /* Retorna o pai de uma posição parametrizada */
 int parent(int);
 
@@ -45,10 +39,8 @@ int exists(Heap*, int);
 /* Insere na heap o elemento de cache parametrizado, caso exista atualiza seu valor, retornando caso haja mudanças no heap */
 int insert(Heap*, Tree*, int, int);
 
-void test(Heap*, int);
-
-/* Conserta o heap descendo os elementos fora de ordem */
-void shiftDown(Heap*, int);
+/* Recria o heap a partir de um progresso de avanco nas leituras */
+void recreateHeap(Heap*, int);
 
 /* Conserta o heap subindo os elementos fora de ordem */
 void shiftUp(Heap*, int);

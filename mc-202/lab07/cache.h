@@ -34,14 +34,8 @@ Cache * createCache(int, int);
 /* Compara dois caches, retornando LESSER caso primeiro menor e GREATER caso primeiro maior em sua prioridade */
 int compare(Cache*, Cache*);
 
-/* Retorna verdadeiro caso os caches tenham o mesmo número, falso caso contrário */
-int sameNumber(Cache, Cache);
-
 /* Compara os números de dois caches, retornando LESSER, GREATER ou EQUALS de acordo com a relação do primeiro com o segundo */
 int compareNumber(Cache*, Cache*);
-
-/* Inicializa um cache vazio */
-void emptyInit(Cache*);
 
 /* Remove a prioridade do ponteiro de cache */
 void updatePriority(Cache*, int);
