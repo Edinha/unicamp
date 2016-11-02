@@ -19,7 +19,7 @@
 
 typedef
 	struct {
-		Cache * data;
+		Cache ** data;
 		int maxSize,
 			actualSize;
 	} Heap;
@@ -43,7 +43,12 @@ int parent(int);
 int exists(Heap*, int);
 
 /* Insere na heap o elemento de cache parametrizado, caso exista atualiza seu valor, retornando caso haja mudanças no heap */
-int insert(Heap*, Tree*, Cache);
+int insert(Heap*, Tree*, int, int);
+
+void test(Heap*, int);
+
+/* Conserta o heap descendo os elementos fora de ordem */
+void shiftDown(Heap*, int);
 
 /* Conserta o heap subindo os elementos fora de ordem */
 void shiftUp(Heap*, int);

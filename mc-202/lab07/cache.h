@@ -29,10 +29,10 @@ typedef
 	} Cache;
 
 /* Inicializa um elemento de cache a partir de seu número e de sua prioridade na entrada */
-Cache * createCache(int, int, int);
+Cache * createCache(int, int);
 
-/* Compara dois caches, retornando LESSER caso primeiro menor e GREATER caso primeiro maior */
-int compare(Cache, Cache);
+/* Compara dois caches, retornando LESSER caso primeiro menor e GREATER caso primeiro maior em sua prioridade */
+int compare(Cache*, Cache*);
 
 /* Retorna verdadeiro caso os caches tenham o mesmo número, falso caso contrário */
 int sameNumber(Cache, Cache);

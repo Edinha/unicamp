@@ -24,9 +24,9 @@ NodeTree * insertTree(NodeTree * root, Cache * cache) {
 		return root;
 	}
 
-	if (comparison > 0) {
+	if (comparison < 0) {
 		root->left = insertTree(root->left, cache);
-	} else if (comparison < 0) {
+	} else {
 		root->right = insertTree(root->right, cache);
 	}
 
@@ -35,20 +35,18 @@ NodeTree * insertTree(NodeTree * root, Cache * cache) {
 	return insertRotationCases(root, cache);
 }
 
-Cache * look(NodeTree * root, Cache * cache) {
+Cache * search(NodeTree * root, int number) {
 	if (!root) {
 		return NULL;
 	}
 
-	int comparison = compareNumber(root->cache, cache);
-
-	if (!comparison) {
+	if (root->cache->number == number) {
 		return root->cache;
 	}
 
-	if (comparison > 0) {
-		return look(root->left, cache);
+	if (root->cache->number < number) {
+		return search(root->left, number);
 	}
 
-	return look(root->right, cache);
+	return search(root->right, number);
 }

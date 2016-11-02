@@ -18,7 +18,7 @@ void insertCache(Tree*, Cache*);
 /* Recursivo para inserir um nó em uma árvore */
 NodeTree* insertTree(NodeTree*, Cache*);
 
-/* Procura pelo elemento de busca na árvore a partir de um cache */
-Cache* look(NodeTree*, Cache*);
+/* Procura pelo elemento de busca na árvore a partir de um númer de cache */
+Cache* search(NodeTree*, int);
 
 #endif

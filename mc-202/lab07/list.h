@@ -13,6 +13,8 @@
  * A próxima aparição do elemento (inteiro) e o próximo nó
  */
 
+#define NO_NEXT_APPEARANCE -1
+
 typedef
 	struct NodeList {
 		int appearance;

@@ -32,7 +32,7 @@ void readEntry() {
 	// Lê todas as entradas de acessos, criando uma árvore com os possíveis elementos de cache
 	for (int i = ZERO_INIT; i < accesses; i++) {
 		readInt(&actualElement);
-		newCache = createCache(actualElement, i, 1);
+		newCache = createCache(actualElement, i);
 		entries[i] = actualElement;
 		tree->root = insertTree(tree->root, newCache);
 
@@ -46,9 +46,7 @@ void readEntry() {
 
 	cacheAccessCount = ZERO_INIT;
 	for (int i = ZERO_INIT; i < accesses; i++) {
-		newCache = createCache(entries[i], i, 0);
-		cacheAccessCount += insert(heap, tree, *newCache);
-		freeCache(&newCache);
+		cacheAccessCount += insert(heap, tree, entries[i], i);
 	}
 
 	printResponse(cacheAccessCount);

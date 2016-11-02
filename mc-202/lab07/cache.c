@@ -7,16 +7,11 @@
 
 /* Implementação dos métodos */
 
-Cache * createCache(int number, int priority, int initList) {
+Cache * createCache(int number, int priority) {
 	Cache * cache = malloc(sizeof(Cache));
 	cache->number = number;
 	cache->priority = priority;
 	cache->heapPosition = INVALID_NUMBER_INIT;
-
-	if (!initList) {
-		cache->appearances = NULL;
-		return cache;
-	}
 
 	cache->appearances = createList();
 	cache->appearances->head = cache->appearances->tail = createNodeList(priority);
@@ -24,8 +19,16 @@ Cache * createCache(int number, int priority, int initList) {
 	return cache;
 }
 
-int compare(Cache first, Cache second) {
-	if (first.priority < second.priority) {
+int compare(Cache * first, Cache * second) {
+	if (first->priority == NO_NEXT_APPEARANCE) {
+		return GREATER;
+	}
+
+	if (second->priority == NO_NEXT_APPEARANCE) {
+		return LESSER;
+	}
+
+	if (first->priority <= second->priority) {
 		return LESSER;
 	}
 

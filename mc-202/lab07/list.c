@@ -26,8 +26,8 @@ void insertList(List ** list, int appearance) {
 }
 
 int findNextAppearance(List ** list, int position) {
-	if (!(*list)) {
-		return -1;
+	if (!list || !(*list)) {
+		return NO_NEXT_APPEARANCE;
 	}
 
 	NodeList * node = (*list)->head;
@@ -42,7 +42,7 @@ int findNextAppearance(List ** list, int position) {
 		node = (*list)->head;
 	}
 
-	return -1;
+	return NO_NEXT_APPEARANCE;
 }
 
 void freeNodeList(NodeList ** node) {
@@ -55,7 +55,7 @@ void freeNodeList(NodeList ** node) {
 }
 
 void freeList(List ** list) {
-	if (!(*list)) {
+	if (!list || !(*list)) {
 		return;
 	}
 
