@@ -19,30 +19,17 @@
 #define EQUALS 0
 #define GREATER 1
 
-/* Define a estrutura de um elemento de busca, com o cache e sua lista de aparições */
-// typedef
-// 	struct {
-// 		bool heaped;
-// 		Cache * cache;
-// 	} SearchElement;
-
 /* Define a estrutura de um dado de cache do heap */
 typedef
 	struct {
 		List * appearances;
 		int number,
-			priority;
+			priority,
+			heapPosition;
 	} Cache;
 
-
-// TODO remove maybe
-/* Inicializa um ponteiro para retorno de elemento de busca */
-// SearchElement* createSearchElement(Cache*, int);
-/* Libera um ponteiro de elemento de busca */
-// void freeSearchElement(SearchElement**);
-
 /* Inicializa um elemento de cache a partir de seu número e de sua prioridade na entrada */
-Cache createCache(int, int);
+Cache * createCache(int, int, int);
 
 /* Compara dois caches, retornando LESSER caso primeiro menor e GREATER caso primeiro maior */
 int compare(Cache, Cache);
@@ -59,5 +46,7 @@ void emptyInit(Cache*);
 /* Remove a prioridade do ponteiro de cache */
 void updatePriority(Cache*, int);
 
+/* Libera memória para um ponteiro de cache */
+void freeCache(Cache**);
 
 #endif

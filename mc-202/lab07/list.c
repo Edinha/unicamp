@@ -20,12 +20,6 @@ NodeList * createNodeList(int appearance) {
 }
 
 void insertList(List ** list, int appearance) {
-	// TODO remove maybe useless
-	// if (!(*list)->head) {
-	// 	(*list)->head = (*list)->tail = node;
-	// 	return;
-	// }
-
 	NodeList * node = createNodeList(appearance);
 	(*list)->tail->next = node;
 	(*list)->tail = node;
@@ -61,6 +55,10 @@ void freeNodeList(NodeList ** node) {
 }
 
 void freeList(List ** list) {
+	if (!(*list)) {
+		return;
+	}
+
 	freeNodeList(&(*list)->head);
 	free(*list);
 }

@@ -7,29 +7,19 @@
 
 /* Implementação dos métodos */
 
-// TODO remove maybe
-// SearchElement * createSearchElement(Cache * cache, int position) {
-// 	SearchElement * element = malloc(sizeof(SearchElement));
-// 	element->cache = cache;
-// 	element->heaped = false;
+Cache * createCache(int number, int priority, int initList) {
+	Cache * cache = malloc(sizeof(Cache));
+	cache->number = number;
+	cache->priority = priority;
+	cache->heapPosition = INVALID_NUMBER_INIT;
 
-// 	element->appearances = createList();
-// 	insertList(&element->appearances, position);
+	if (!initList) {
+		cache->appearances = NULL;
+		return cache;
+	}
 
-// 	return element;
-// }
-// void freeSearchElement(SearchElement ** element) {
-// 	freeList((*element)->appearances);
-// 	free(*element);
-// }
-
-Cache createCache(int number, int priority) {
-	Cache cache;
-	cache.number = number;
-	cache.priority = priority;
-
-	cache.appearances = createList();
-	cache.appearances->head = cache.appearances->tail = createNodeList(priority);
+	cache->appearances = createList();
+	cache->appearances->head = cache->appearances->tail = createNodeList(priority);
 
 	return cache;
 }
@@ -65,4 +55,9 @@ void emptyInit(Cache * cache) {
 
 void updatePriority(Cache * cache, int position) {
 	cache->priority = findNextAppearance(&cache->appearances, position);
+}
+
+void freeCache(Cache ** cache) {
+	freeList(&(*cache)->appearances);
+	free(*cache);
 }

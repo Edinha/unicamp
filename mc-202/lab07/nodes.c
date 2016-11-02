@@ -65,7 +65,7 @@ void freeNodeTree(NodeTree ** node) {
 
 	freeNodeTree(&(*node)->left);
 	freeNodeTree(&(*node)->right);
-	// freeSearchElement(&(*node)->element);
+	freeCache(&(*node)->cache);
 	free(*node);
 }
 

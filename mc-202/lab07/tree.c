@@ -20,6 +20,7 @@ NodeTree * insertTree(NodeTree * root, Cache * cache) {
 
 	if (!comparison) {
 		insertList(&root->cache->appearances, cache->priority);
+		cache->number = INVALID_NUMBER_INIT;
 		return root;
 	}
 

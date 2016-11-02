@@ -42,46 +42,37 @@ int exists(Heap * heap, int position) {
 }
 
 int insert(Heap * heap, Tree * tree, Cache newCache) {
-	// TODO again this shit
-	return 0;
+	Cache * removed, * inserted;
 
-	// SearchElement * searched = look(tree, &newCache);
+	inserted = look(tree->root, &newCache);
 
-	// /* Caso o elemento tenha sido encontrado, altera sua prioridade e conserta o heap após alteração,
-	// 	retornando que o vetor de cache não teve alterações */
-	// if (searched->heaped) {
-	// 	int newPriority = findNextAppearance(&searched->appearances, newCache.priority);
+	// Caso o elemento exista na heap
+	if (inserted->heapPosition > INVALID_NUMBER_INIT) {
+		updatePriority(&heap->data[inserted->heapPosition], newCache.priority);
+		shiftUp(heap, inserted->heapPosition);
 
-	// 	updatePriority(searched->cache, newPriority);
-	// 	shiftUp(heap, searched->position);
+		return NO_CACHE_CHANGE;
+	}
 
-	// 	freeSearchElement(&searched);
-	// 	return NO_CACHE_CHANGE;
-	// }
+	// Se o heap não estiver cheio, aumente seu tamanho para inserção
+	if (!isFull(heap)) {
+		heap->actualSize++;
+	}
 
-	// // Caso o heap não esteja cheio, é possível aumentar seu tamanho
-	// if (!isFull(heap)) {
-	// 	heap->actualSize++;
-	// }
+	// Procura pelo elemento de menor prioridade no heap e o remove
+	removed = look(tree->root, &heap->data[heap->actualSize - 1]);
+	if (removed) {
+		removed->heapPosition = INVALID_NUMBER_INIT;
+	}
 
-	// // TODO maybe change this to put new element on 0 and former 0 on last position of heap and rebalance
+	heap->data[heap->actualSize - 1] = newCache;
+	shiftUp(heap, heap->actualSize - 1);
 
-	// // Coloca o novo elemento na última posição possível, conserta o heap e retorna que houve alterações
-	// heap->data[heap->actualSize - 1] = newCache;
-	// shiftUp(heap, heap->actualSize - 1);
+	// Coloca a flag para dizer que o elemento está na heap
+	inserted->heapPosition = ZERO_INIT;
 
-	// return CACHE_CHANGED;
+	return CACHE_CHANGED;
 }
-
-// SearchElement * search(Heap * heap, Cache searched) {
-// 	for (int i = ZERO_INIT; i < heap->actualSize; i++) {
-// 		if (sameNumber(heap->data[i], searched)) {
-// 			return createSearchElement(&heap->data[i], i);
-// 		}
-// 	}
-
-// 	return NULL;
-// }
 
 void shiftUp(Heap * heap, int position) {
 	int comparison,
@@ -100,10 +91,12 @@ void shiftUp(Heap * heap, int position) {
 }
 
 void exchange(Heap * heap, int first, int second) {
-	// TODO change positions on tree too from nodes
 	Cache tmp = heap->data[first];
 	heap->data[first] = heap->data[second];
 	heap->data[second] = tmp;
+
+	heap->data[first].heapPosition = first;
+	heap->data[second].heapPosition = second;
 }
 
 void freeHeap(Heap ** heap) {
