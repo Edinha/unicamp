@@ -7,6 +7,7 @@
 #define HEAP_H
 
 #include "tree.h"
+#include "list.h"
 
 /* Esse arquivo conterá as definições para a estrutura de max heap do programa, fazendo
  * a ordem de prioridade para o cache do programa

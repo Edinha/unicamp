@@ -8,8 +8,8 @@
 
 #include "cache.h"
 
-/* Esse arquivo conterá as definições para a estrutura de nós do programa
- * usadas na implementação da base estrutural da árvore AVL
+/* Esse arquivo conterá as definições para a estrutura de nós usadas na implementação da
+ * base estrutural da árvore AVL
  */
 
 #define EMPTY_COUNT 0
