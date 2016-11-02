@@ -6,8 +6,7 @@
 #ifndef CACHE_H
 #define CACHE_H
 
-#include <stdio.h>
-#include <stdlib.h>
+#include "list.h"
 
 /* Esse arquivo conterá as definições para a estrutura de cache do programa, com
  * as informações sobre a prioriade do cache e seu número de identificação
@@ -20,22 +19,27 @@
 #define EQUALS 0
 #define GREATER 1
 
+/* Define a estrutura de um elemento de busca, com o cache e sua lista de aparições */
+// typedef
+// 	struct {
+// 		bool heaped;
+// 		Cache * cache;
+// 	} SearchElement;
+
 /* Define a estrutura de um dado de cache do heap */
 typedef
 	struct {
+		List * appearances;
 		int number,
 			priority;
 	} Cache;
 
-/* Define a estrutura de um elemento de busca, que retorna o cache buscado a partir do número e sua posição no heap */
-typedef
-	struct {
-		int position;
-		Cache * cache;
-	} SearchElement;
 
+// TODO remove maybe
 /* Inicializa um ponteiro para retorno de elemento de busca */
-SearchElement* createSearchElement(Cache*, int);
+// SearchElement* createSearchElement(Cache*, int);
+/* Libera um ponteiro de elemento de busca */
+// void freeSearchElement(SearchElement**);
 
 /* Inicializa um elemento de cache a partir de seu número e de sua prioridade na entrada */
 Cache createCache(int, int);
@@ -55,7 +59,5 @@ void emptyInit(Cache*);
 /* Remove a prioridade do ponteiro de cache */
 void updatePriority(Cache*, int);
 
-/* Libera um ponteiro de elemento de busca */
-void freeSearchElement(SearchElement**);
 
 #endif

@@ -7,21 +7,21 @@
 
 /* Implementação dos métodos */
 
-Tree* createTree() {
+Tree * createTree() {
 	Tree * tree = malloc(sizeof(Tree));
 	tree->root = NULL;
 	return tree;
 }
 
-NodeTree* createNodeTree(SearchElement * element) {
+NodeTree * createNodeTree(Cache * cache) {
 	NodeTree * node = malloc(sizeof(NodeTree));
-	node->element = element;
+	node->cache = cache;
 	node->left = node->right = NULL;
 	node->height = INITIAL_COUNT;
 	return node;
 }
 
-NodeTree* minValue(NodeTree * root) {
+NodeTree * minValue(NodeTree * root) {
 	NodeTree * current = root;
 	while (current->left) {
 		current = current->left;
@@ -65,7 +65,7 @@ void freeNodeTree(NodeTree ** node) {
 
 	freeNodeTree(&(*node)->left);
 	freeNodeTree(&(*node)->right);
-	freeSearchElement(&(*node)->element);
+	// freeSearchElement(&(*node)->element);
 	free(*node);
 }
 

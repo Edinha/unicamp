@@ -43,10 +43,10 @@ int parent(int);
 int exists(Heap*, int);
 
 /* Insere na heap o elemento de cache parametrizado, caso exista atualiza seu valor, retornando caso haja mudanças no heap */
-int insert(Heap*, Cache);
+int insert(Heap*, Tree*, Cache);
 
 /* Procura pelo cache parametrizado na estrutura do heap */
-SearchElement* search(Heap*, Cache);
+// SearchElement* search(Heap*, Cache);
 
 /* Conserta o heap subindo os elementos fora de ordem */
 void shiftUp(Heap*, int);

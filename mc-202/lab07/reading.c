@@ -24,20 +24,28 @@ void readEntry() {
 	readFirstLine(&maxSize, &accesses);
 
 	Heap * heap = createHeap(maxSize);
-	Cache newCache;
+	Tree * tree = createTree();
+	int * entries = malloc(accesses * sizeof(int));
 
-	cacheAccessCount = ZERO_INIT;
-
-	// Aplica para todas as entradas a inserção, somando os retornos em um contador de resposta
+	// Lê todas as entradas de acessos, criando uma árvore com os possíveis elementos de cache
 	for (int i = ZERO_INIT; i < accesses; i++) {
 		readInt(&actualElement);
-		newCache = createCache(actualElement, i);
-		cacheAccessCount += insert(heap, newCache);
+		Cache newCache = createCache(actualElement, i);
+		entries[i] = actualElement;
+		tree->root = insertTree(tree->root, &newCache);
+	}
+
+	cacheAccessCount = ZERO_INIT;
+	for (int i = ZERO_INIT; i < accesses; i++) {
+		// TODO do somenthing with the entries array and cache access count
+		Cache newCache = createCache(entries[i], i);
+		cacheAccessCount += insert(heap, tree, newCache);
 	}
 
 	printResponse(cacheAccessCount);
 
 	freeHeap(&heap);
+	freeTree(&tree);
 }
 
 void printResponse(int count) {

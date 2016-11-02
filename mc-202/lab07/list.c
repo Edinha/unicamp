@@ -20,15 +20,35 @@ NodeList * createNodeList(int appearance) {
 }
 
 void insertList(List ** list, int appearance) {
+	// TODO remove maybe useless
+	// if (!(*list)->head) {
+	// 	(*list)->head = (*list)->tail = node;
+	// 	return;
+	// }
+
 	NodeList * node = createNodeList(appearance);
-
-	if (!(*list)->head) {
-		(*list)->head = (*list)->tail = node;
-		return;
-	}
-
 	(*list)->tail->next = node;
 	(*list)->tail = node;
+}
+
+int findNextAppearance(List ** list, int position) {
+	if (!(*list)) {
+		return -1;
+	}
+
+	NodeList * node = (*list)->head;
+
+	for (; node ;) {
+		if (node->appearance > position) {
+			return node->appearance;
+		}
+
+		(*list)->head = (*list)->head->next;
+		free(node);
+		node = (*list)->head;
+	}
+
+	return -1;
 }
 
 void freeNodeList(NodeList ** node) {

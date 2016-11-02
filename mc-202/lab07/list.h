@@ -6,7 +6,8 @@
 #ifndef LIST_H
 #define LIST_H
 
-#include "cache.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 /* Esse arquivo conterá as definições para a estrutura de nós de lista, guardando
  * A próxima aparição do elemento (inteiro) e o próximo nó
@@ -32,6 +33,9 @@ NodeList* createNodeList(int);
 
 /* Insere o próximo inteiro na lista */
 void insertList(List**, int);
+
+/* Encontra a próxima aparição do cache a partir de uma posição, retorna -1 caso não haja */
+int findNextAppearance(List**, int);
 
 /* Libera recursivamente os nós da lista */
 void freeNodeList(NodeList**);

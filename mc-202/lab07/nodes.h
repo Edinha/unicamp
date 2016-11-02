@@ -18,7 +18,7 @@
 typedef
 	struct NodeTree {
 		int height;
-		SearchElement * element;
+		Cache * cache;
 		struct NodeTree * left;
 		struct NodeTree * right;
 	} NodeTree;
@@ -32,7 +32,7 @@ typedef
 Tree* createTree();
 
 /* Cria um nó da árvore a partir da informação de um arquivo */
-NodeTree* createNodeTree(SearchElement*);
+NodeTree* createNodeTree(Cache*);
 
 /* Pega a extrema esquerda da árvore parametrizada */
 NodeTree* minValue(NodeTree*);

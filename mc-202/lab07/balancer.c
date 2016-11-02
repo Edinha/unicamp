@@ -7,14 +7,14 @@
 
 /* Implementação dos métodos */
 
-NodeTree * insertRotationCases(NodeTree * root, SearchElement * element) {
+NodeTree * insertRotationCases(NodeTree * root, Cache * cache) {
 	int comparison,
 		balanceFactor;
 
 	balanceFactor = factor(root);
 
 	if (root->left) {
-		comparison = compareNumber(root->left->element->cache, element->cache);
+		comparison = compareNumber(root->left->cache, cache);
 
 		// Fator maior que 1, desbalanceado para a esquerda
 		if (balanceFactor > 1) {
@@ -32,7 +32,7 @@ NodeTree * insertRotationCases(NodeTree * root, SearchElement * element) {
 	}
 
 	if (root->right) {
-		comparison = compareNumber(root->right->element->cache, element->cache);
+		comparison = compareNumber(root->right->cache, cache);
 
 		// Fator menor que -1, desbalanceado para a direita
 		if (balanceFactor < -1) {
@@ -43,51 +43,6 @@ NodeTree * insertRotationCases(NodeTree * root, SearchElement * element) {
 
 			// Caso em que o nome do arquivo é menor, dupla rotação direita-esquerda
 			if (comparison > 0) {
-				root->right = rightRotate(root->right);
-				return leftRotate(root);
-			}
-		}
-	}
-
-	return root;
-}
-
-NodeTree * deleteRotationCases(NodeTree * root) {
-	int simbilingFactor,
-		balanceFactor;
-
-	balanceFactor = factor(root);
-
-	if (root->left) {
-		simbilingFactor = factor(root->left);
-
-		// Fator maior que 1, desbalanceado para a esquerda
-		if (balanceFactor > 1) {
-			// A esquerda possui desbalanceamento para a esquerda, rotacionar a direita
-			if (simbilingFactor >= 0) {
-				return rightRotate(root);
-			}
-
-			// A esquerda possui desbalanceamento para a direita, dupla rotação esquerda-direita
-			if (simbilingFactor < 0) {
-				root->left = leftRotate(root->left);
-				return rightRotate(root);
-			}
-		}
-	}
-
-	if (root->right) {
-		simbilingFactor = factor(root->right);
-
-		// Fator menor que -1, desbalanceado para a direita
-		if (balanceFactor < -1) {
-			// A direita possui desbalanceamento para a direita, rotacionar a esquerda
-			if (simbilingFactor <= 0) {
-				return leftRotate(root);
-			}
-
-			// A direita possui desbalanceamento para a esquerda, dupla rotação direita-esquerda
-			if (simbilingFactor > 0) {
 				root->right = rightRotate(root->right);
 				return leftRotate(root);
 			}

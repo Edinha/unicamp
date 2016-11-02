@@ -13,10 +13,7 @@
  */
 
 /* Verifica e aplica os casos de rotação da árvore para o método de insert */
-NodeTree* insertRotationCases(NodeTree*, SearchElement*);
-
-/* Verifica e aplica os casos de rotação da árvore para o método de insert */
-NodeTree* deleteRotationCases(NodeTree*);
+NodeTree* insertRotationCases(NodeTree*, Cache*);
 
 /* Realiza a rotação a direita do nó */
 NodeTree* rightRotate(NodeTree*);

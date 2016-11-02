@@ -41,41 +41,47 @@ int exists(Heap * heap, int position) {
 	return (position < heap->actualSize);
 }
 
-int insert(Heap * heap, Cache newCache) {
-	SearchElement * searched = search(heap, newCache);
+int insert(Heap * heap, Tree * tree, Cache newCache) {
+	// TODO again this shit
+	return 0;
 
-	/* Caso o elemento tenha sido encontrado, altera sua prioridade e conserta o heap após alteração,
-		retornando que o vetor de cache não teve alterações */
-	if (searched) {
-		updatePriority(searched->cache, newCache.priority);
-		shiftUp(heap, searched->position);
-		freeSearchElement(&searched);
-		return NO_CACHE_CHANGE;
-	}
+	// SearchElement * searched = look(tree, &newCache);
 
-	// Caso o heap não esteja cheio, é possível aumentar seu tamanho
-	if (!isFull(heap)) {
-		heap->actualSize++;
-	}
+	// /* Caso o elemento tenha sido encontrado, altera sua prioridade e conserta o heap após alteração,
+	// 	retornando que o vetor de cache não teve alterações */
+	// if (searched->heaped) {
+	// 	int newPriority = findNextAppearance(&searched->appearances, newCache.priority);
 
-	// TODO maybe change this to put new element on 0 and former 0 on last position of heap and rebalance
+	// 	updatePriority(searched->cache, newPriority);
+	// 	shiftUp(heap, searched->position);
 
-	// Coloca o novo elemento na última posição possível, conserta o heap e retorna que houve alterações
-	heap->data[heap->actualSize - 1] = newCache;
-	shiftUp(heap, heap->actualSize - 1);
+	// 	freeSearchElement(&searched);
+	// 	return NO_CACHE_CHANGE;
+	// }
 
-	return CACHE_CHANGED;
+	// // Caso o heap não esteja cheio, é possível aumentar seu tamanho
+	// if (!isFull(heap)) {
+	// 	heap->actualSize++;
+	// }
+
+	// // TODO maybe change this to put new element on 0 and former 0 on last position of heap and rebalance
+
+	// // Coloca o novo elemento na última posição possível, conserta o heap e retorna que houve alterações
+	// heap->data[heap->actualSize - 1] = newCache;
+	// shiftUp(heap, heap->actualSize - 1);
+
+	// return CACHE_CHANGED;
 }
 
-SearchElement * search(Heap * heap, Cache searched) {
-	for (int i = ZERO_INIT; i < heap->actualSize; i++) {
-		if (sameNumber(heap->data[i], searched)) {
-			return createSearchElement(&heap->data[i], i);
-		}
-	}
+// SearchElement * search(Heap * heap, Cache searched) {
+// 	for (int i = ZERO_INIT; i < heap->actualSize; i++) {
+// 		if (sameNumber(heap->data[i], searched)) {
+// 			return createSearchElement(&heap->data[i], i);
+// 		}
+// 	}
 
-	return NULL;
-}
+// 	return NULL;
+// }
 
 void shiftUp(Heap * heap, int position) {
 	int comparison,
