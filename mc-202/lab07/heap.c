@@ -29,15 +29,11 @@ int parent(int position) {
 	return (position - 1) / 2;
 }
 
-int exists(Heap * heap, int position) {
-	return (position < heap->actualSize);
-}
-
-void recreateHeap(Heap * heap, int progress) {
+void heapify(Heap * heap, int progress) {
 	Heap * newHeap = malloc(sizeof(newHeap));
 	newHeap->data = malloc(heap->actualSize * sizeof(Cache*));
 
-	// Aplica a alteracao de prioridade e rebalanceamento para cada elemento
+	// Aplica a alteração de prioridade e rebalanceamento para cada elemento
 	for (int i = 0; i < heap->actualSize; i++) {
 		newHeap->data[i] = heap->data[i];
 		updatePriority(newHeap->data[i], progress);
@@ -50,25 +46,25 @@ void recreateHeap(Heap * heap, int progress) {
 	free(newHeap);
 }
 
-int insert(Heap * heap, Tree * tree, int cacheNumber, int progress) {
+int storeCache(Heap * heap, Tree * tree, int cacheNumber, int progress) {
 	Cache * searched = search(tree->root, cacheNumber);
 
-	// Caso o elemento esteja na heap
-	if (searched->heapPosition != INVALID_NUMBER_INIT) {
+	// Caso o elemento já esteja na heap, retorna que não houve alterações
+	if (searched->isCached) {
 		return NO_CACHE_CHANGE;
 	}
 
-	searched->heapPosition = ZERO_INIT;
+	searched->isCached = IS_CACHED;
 
-	// Caso o heap esteja cheio, remove o maior da raiz e diminue o tamanho, rebalanceado para baixo
+	// Caso o heap esteja cheio, remove o maior (raiz) e diminue o tamanho
 	if (isFull(heap)) {
-		recreateHeap(heap, progress);
-		heap->data[0]->heapPosition = INVALID_NUMBER_INIT;
+		heapify(heap, progress);
+		heap->data[0]->isCached = NOT_CACHED;
 		heap->data[0] = heap->data[heap->actualSize - 1];
 		heap->actualSize--;
 	}
 
-	// Caso geral, insere na ultima posicao possivel e rebalanceia para cima
+	// Caso geral, insere na última posição possível
 	heap->actualSize++;
 	heap->data[heap->actualSize - 1] = searched;
 
@@ -79,7 +75,7 @@ void shiftUp(Heap * heap, int position) {
 	int comparison,
 		parentPos = parent(position);
 
-	// Caso seja a raiz, nao possue pai
+	// Caso seja a raiz, não possue pai
 	if (!position) {
 		return;
 	}

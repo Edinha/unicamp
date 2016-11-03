@@ -19,25 +19,28 @@
 #define EQUALS 0
 #define GREATER 1
 
+#define IS_CACHED 1
+#define NOT_CACHED 0
+
 /* Define a estrutura de um dado de cache do heap */
 typedef
 	struct {
 		List * appearances;
 		int number,
 			priority,
-			heapPosition;
+			isCached;
 	} Cache;
 
 /* Inicializa um elemento de cache a partir de seu número e de sua prioridade na entrada */
-Cache * createCache(int, int);
+Cache* createCache(int, int);
 
 /* Compara dois caches, retornando LESSER caso primeiro menor e GREATER caso primeiro maior em sua prioridade */
 int compare(Cache*, Cache*);
 
-/* Compara os números de dois caches, retornando LESSER, GREATER ou EQUALS de acordo com a relação do primeiro com o segundo */
+/* Compara os números de dois caches, retornando LESSER, GREATER ou EQUALS de acordo com a relação do primeiro com o segundo cache */
 int compareNumber(Cache*, Cache*);
 
-/* Remove a prioridade do ponteiro de cache */
+/* Altera a prioridade do cache para a próxima aparição do elemento a partir da posição parametrizada */
 void updatePriority(Cache*, int);
 
 /* Libera memória para um ponteiro de cache */

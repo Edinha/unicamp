@@ -11,7 +11,7 @@ Cache * createCache(int number, int priority) {
 	Cache * cache = malloc(sizeof(Cache));
 	cache->number = number;
 	cache->priority = priority;
-	cache->heapPosition = INVALID_NUMBER_INIT;
+	cache->isCached = NOT_CACHED;
 
 	cache->appearances = createList();
 	cache->appearances->head = cache->appearances->tail = createNodeList(priority);

@@ -18,6 +18,7 @@ NodeTree * insertTree(NodeTree * root, Cache * cache) {
 
 	int comparison = compareNumber(root->cache, cache);
 
+	// Caso o cache já esteja na árvore, marca o ponteiro do parâmetro para ser desalocado
 	if (!comparison) {
 		insertList(&root->cache->appearances, cache->priority);
 		cache->number = INVALID_NUMBER_INIT;

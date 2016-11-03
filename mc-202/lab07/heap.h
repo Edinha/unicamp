@@ -33,14 +33,11 @@ int isFull(Heap*);
 /* Retorna o pai de uma posição parametrizada */
 int parent(int);
 
-/* Retorna verdadeiro caso a posição exista no heap */
-int exists(Heap*, int);
-
 /* Insere na heap o elemento de cache parametrizado, caso exista atualiza seu valor, retornando caso haja mudanças no heap */
-int insert(Heap*, Tree*, int, int);
+int storeCache(Heap*, Tree*, int, int);
 
-/* Recria o heap a partir de um progresso de avanco nas leituras */
-void recreateHeap(Heap*, int);
+/* Recria o heap a partir de um progresso de avanço nas leituras */
+void heapify(Heap*, int);
 
 /* Conserta o heap subindo os elementos fora de ordem */
 void shiftUp(Heap*, int);

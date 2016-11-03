@@ -6,6 +6,7 @@
 #include "list.h"
 
 /* Implementação dos métodos */
+
 List * createList() {
 	List * list = malloc(sizeof(List));
 	list->head = list->tail = NULL;
@@ -29,6 +30,9 @@ int findNextAppearance(List ** list, int position) {
 	if (!list || !(*list)) {
 		return NO_NEXT_APPEARANCE;
 	}
+
+	/* Percorre a lista até encontrar uma apariçõ que esteja a frente da posição parametrizada
+	 * Não sendo encontrada, retorna NO_NEXT_APPEARANCE */
 
 	NodeList * node = (*list)->head;
 

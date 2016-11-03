@@ -12,6 +12,7 @@
  * base estrutural da árvore AVL
  */
 
+/* Define valores para contagem de altura */
 #define EMPTY_COUNT 0
 #define INITIAL_COUNT 1
 
@@ -31,11 +32,8 @@ typedef
 /* Inicializa um ponteiro para a árvore */
 Tree* createTree();
 
-/* Cria um nó da árvore a partir da informação de um arquivo */
+/* Cria um nó da árvore a partir da informação de um cache */
 NodeTree* createNodeTree(Cache*);
-
-/* Pega a extrema esquerda da árvore parametrizada */
-NodeTree* minValue(NodeTree*);
 
 /* Retorna a altura de um nó da árvore */
 int height(NodeTree* root);

@@ -10,9 +10,10 @@
 #include <stdlib.h>
 
 /* Esse arquivo conterá as definições para a estrutura de nós de lista, guardando
- * A próxima aparição do elemento (inteiro) e o próximo nó
+ * A próxima aparição do elemento (inteiro) e o nó seguinte
  */
 
+// Definiçao para o valor da aparição quando não há mais valores na lista
 #define NO_NEXT_APPEARANCE -1
 
 typedef
@@ -36,7 +37,7 @@ NodeList* createNodeList(int);
 /* Insere o próximo inteiro na lista */
 void insertList(List**, int);
 
-/* Encontra a próxima aparição do cache a partir de uma posição, retorna -1 caso não haja */
+/* Encontra a próxima aparição do cache a partir de uma posição, retorna NO_NEXT_APPEARANCE caso não exista */
 int findNextAppearance(List**, int);
 
 /* Libera recursivamente os nós da lista */

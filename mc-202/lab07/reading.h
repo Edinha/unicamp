@@ -8,8 +8,7 @@
 
 #include "heap.h"
 
-/* Esse arquivo conterá as definições para as funções de leitura do programa
- */
+/* Esse arquivo conterá as definições para as funções de leitura do programa */
 
 /* Lê uma entrada de um inteiro e armazena no ponteiro parametrizado */
 void readInt(int*);

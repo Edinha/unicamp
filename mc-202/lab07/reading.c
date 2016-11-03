@@ -47,7 +47,7 @@ void readEntry() {
 
 	cacheAccessCount = ZERO_INIT;
 	for (int i = ZERO_INIT; i < accesses; i++) {
-		cacheAccessCount += insert(heap, tree, entries[i], i);
+		cacheAccessCount += storeCache(heap, tree, entries[i], i);
 	}
 
 	printResponse(cacheAccessCount);

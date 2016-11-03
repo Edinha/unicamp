@@ -21,15 +21,6 @@ NodeTree * createNodeTree(Cache * cache) {
 	return node;
 }
 
-NodeTree * minValue(NodeTree * root) {
-	NodeTree * current = root;
-	while (current->left) {
-		current = current->left;
-	}
-
-	return current;
-}
-
 int height(NodeTree * root) {
 	if (!root) {
 		return EMPTY_COUNT;
