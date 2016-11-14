@@ -34,8 +34,8 @@ Word* createWord(String);
 /* Auemnta a contagem para uma palavra */
 void raise(Word**);
 
-/* Compara duas palavras a partir de suas strings */
-int compare(Word*, Word*);
+/* Compara duas palavras com retornando igual(0) maior(1) ou menor(-1) */
+int compare(String, String);
 
 /* Libera um ponteiro de palavra */
 void freeWord(Word**);

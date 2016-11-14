@@ -19,8 +19,8 @@ void raise(Word ** word) {
 	(*word)->count++;
 }
 
-int compare(Word * first, Word * second) {
-	return strcmp(first->id, second->id);
+int compare(String first, String second) {
+	return strcmp(first, second);
 }
 
 void freeWord(Word ** word) {

@@ -28,11 +28,11 @@ HashTable* createHashTable(unsigned long);
 /* Insere na hash table uma nova palavra */
 void insert(HashTable*, Word*);
 
+/* Retorna o ponteiro de palavra da hash table a partir de uma String */
+Word* search(HashTable*, String);
+
 /* Calcula o numero de hash a partir de uma String de entrada */
 unsigned long hash(String);
-
-/* Retorna o ponteiro de palavra da hash table a partir de uma String */
-Word* search(String);
 
 /* Libera um ponteiro de hash table */
 void freeHashTable(HashTable**);

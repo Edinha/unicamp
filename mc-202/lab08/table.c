@@ -20,9 +20,7 @@ HashTable* createHashTable(unsigned long size) {
 }
 
 void insert(HashTable * table, Word * word) {
-	// TODO calculate hash for element and positionate it on data
-
-	int position = hash(word->id) % table->size;
+	unsigned long position = hash(word->id) % table->size;
 
 	while (table->data[position] != NULL) {
 		position = (position + 1) % table->size;
@@ -31,8 +29,22 @@ void insert(HashTable * table, Word * word) {
 	table->data[position] = word;
 }
 
+Word* search(HashTable * table, String id) {
+	unsigned long position = hash(id) % table->size;
+
+	while (table->data[position] != NULL) {
+		if (!compare(table->data[position]->id, id)) {
+			return table->data[position];
+		}
+
+		position = (position + 1) % table->size;
+	}
+
+	return NULL;
+}
+
 unsigned long hash(String id) {
-	int c;
+	char c;
 	unsigned long key = PRIME;
 
 	while ((c = *id++)) {
@@ -42,13 +54,13 @@ unsigned long hash(String id) {
 	return key;
 }
 
-Word* search(String id) {
-	// TODO search for the man
-	return NULL;
-}
-
 void freeHashTable(HashTable ** table) {
-	// Maybe free all words on table ...
+	for (unsigned long i = 0; i < (*table)->size; i++) {
+		if ((*table)->data[i]) {
+			free((*table)->data[i]);
+		}
+	}
+
 	free((*table)->data);
 	free(*table);
 }
