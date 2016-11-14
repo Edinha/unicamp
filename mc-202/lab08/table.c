@@ -26,6 +26,7 @@ void insert(HashTable * table, Word * word) {
 		position = (position + 1) % table->size;
 	}
 
+	word->hash = position;
 	table->data[position] = word;
 }
 
@@ -57,7 +58,7 @@ unsigned long hash(String id) {
 void freeHashTable(HashTable ** table) {
 	for (unsigned long i = 0; i < (*table)->size; i++) {
 		if ((*table)->data[i]) {
-			free((*table)->data[i]);
+			freeWord(&(*table)->data[i]);
 		}
 	}
 
