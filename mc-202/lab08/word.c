@@ -14,23 +14,8 @@ Word* createWord(String id) {
 	return word;
 }
 
-Continuation* createContinuation(Word * word) {
-	Continuation * continuation = malloc(sizeof(Continuation));
-	continuation->count = ZERO_INIT;
-	continuation->next = word;
-	return continuation;
-}
-
-void raise(Continuation ** continuation) {
-	(*continuation)->count++;
-}
-
 int compare(String first, String second) {
 	return strcmp(first, second);
-}
-
-void freeContinuation(Continuation ** continuation) {
-	free(*continuation);
 }
 
 void freeWord(Word ** word) {
