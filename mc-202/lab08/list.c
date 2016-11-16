@@ -26,13 +26,13 @@ void freeContinuation(Continuation ** continuation) {
 	free(*continuation);
 }
 
-List * createList() {
+List* createList() {
 	List * list = malloc(sizeof(List));
 	list->head = NULL;
 	return list;
 }
 
-NodeList * createNodeList(Continuation * continuation) {
+NodeList* createNodeList(Continuation * continuation) {
 	NodeList * node = malloc(sizeof(NodeList));
 	node->continuation = continuation;
 	node->next = NULL;

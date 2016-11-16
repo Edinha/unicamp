@@ -48,6 +48,7 @@ unsigned long hash(String id) {
 	char c;
 	unsigned long key = PRIME;
 
+	// Enquanto existem caractéres na string, aplica a função
 	while ((c = *id++)) {
 		key = ((key << 5)) + c;
 	}

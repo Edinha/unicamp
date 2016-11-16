@@ -9,6 +9,7 @@
 
 Word* createWord(String id) {
 	Word * word = malloc(sizeof(Word));
+	word->continuations = createList();
 	word->hash = ZERO_INIT;
 	strcpy(word->id, id);
 	return word;

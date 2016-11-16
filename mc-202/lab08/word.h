@@ -26,7 +26,7 @@ typedef struct Word Word;
 	struct Word {
 		int hash;
 		String id;
-		List continuations;
+		List * continuations;
 	};
 
 /* Inicializa uma palavra a partir de uma string */

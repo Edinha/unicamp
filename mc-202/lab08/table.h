@@ -12,7 +12,7 @@
  * Com as funcoes de hash, insercao e busca a partir de chaves String.
  */
 
-/* Define o numero primo para calculo do hsah */
+/* Define o numero primo para calculo do hash */
 #define PRIME 5831
 
 /* Define a estrutura de hash table, com o vetor para ponteiros de palavras e seu tamanho */
