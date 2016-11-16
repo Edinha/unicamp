@@ -29,7 +29,7 @@ void readInt(int*);
 void readLongInt(unsigned long*);
 
 /* Monta a hash table a partir da leitura do texto */
-void readEntryText(HashTable*);
+void readEntryText(HashTable*, unsigned long);
 
 // TODO
 /* Lê as jogadas da entrada e calcula os pontos */
@@ -37,6 +37,6 @@ void readPlays(HashTable*);
 
 // TODO
 /* Printa a situação atual do jogo */
-void printRound();
+void printRound(int, Player*);
 
 #endif

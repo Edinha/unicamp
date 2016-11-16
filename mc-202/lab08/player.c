@@ -7,10 +7,20 @@
 
 /* Implementação dos métodos */
 
-Player createPlayer() {
+Player initPlayer() {
 	Player player;
 	player.score = ZERO_INIT;
 	return player;
+}
+
+Player* createPlayers(int playerCount) {
+	Player * players = malloc(playerCount * sizeof(Player));
+
+	for (int i = 0; i < playerCount; i++) {
+		players[i] = initPlayer();
+	}
+
+	return players;
 }
 
 void hit(Player * player, int count) {

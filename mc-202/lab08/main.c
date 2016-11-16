@@ -6,16 +6,15 @@
 #include "reading.h"
 
 int main() {
-	unsigned long size;
+	unsigned long wordCount;
 
-	readLongInt(&size);
+	readLongInt(&wordCount);
 
-	// TODO review this motherfucker
-	// size = (2.4 * size) % 1;
+	HashTable * table = createHashTable(wordCount);
 
-	HashTable * table = createHashTable(size);
+	readEntryText(table, wordCount);
 
-	readEntryText(table);
+	readPlays(table);
 
 	freeHashTable(&table);
 

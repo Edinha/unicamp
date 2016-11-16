@@ -12,8 +12,9 @@
  * Com as funcoes de hash, insercao e busca a partir de chaves String.
  */
 
-/* Define o numero primo para calculo do hash */
+/* Define o número primo para cálculo do hash e o multiplicador de tamanho da tabela*/
 #define PRIME 5831
+#define SIZE_MULTIPLIER 2
 
 /* Define a estrutura de hash table, com o vetor para ponteiros de palavras e seu tamanho */
 typedef

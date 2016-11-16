@@ -7,12 +7,12 @@
 
 /* Implementacao dos metodos */
 
-HashTable* createHashTable(unsigned long size) {
+HashTable* createHashTable(unsigned long wordCount) {
 	HashTable * table = malloc(sizeof(HashTable));
-	table->size = size;
+	table->size = SIZE_MULTIPLIER * wordCount;
 
-	table->data = malloc(size * sizeof(Word*));
-	for (unsigned long i = 0; i < size; i++) {
+	table->data = malloc(table->size * sizeof(Word*));
+	for (unsigned long i = 0; i < table->size; i++) {
 		table->data[i] = NULL;
 	}
 

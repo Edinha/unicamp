@@ -23,7 +23,10 @@ typedef
 	} Player;
 
 /* Inicializa um jogador com uma pontuação */
-Player createPlayer();
+Player initPlayer();
+
+/* Cria um vetor de jogadores a partir de um tamanho */
+Player* createPlayers(int);
 
 /* Aumenta a pontuação do jogador de acordo com a contagem parametrizada */
 void hit(Player*, int);
