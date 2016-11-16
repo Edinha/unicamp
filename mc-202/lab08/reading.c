@@ -12,16 +12,29 @@ int isEmptyString(String s) {
 }
 
 void readEntryText(HashTable * table, unsigned long wordCount) {
+	Word * oldWord = NULL;
+	Continuation * continuation = NULL;
+
 	for (unsigned long i = 0; i < wordCount;) {
 		String actual;
 		clearString(actual);
 		readString(actual);
 
-		// TODO create word and alocate on table, using the older one to do the job
-
-		if (!isEmptyString(actual)) {
-			i++;
+		// Caso seja uma String vazia, continua o for sem contar como uma palavra do texto
+		if (isEmptyString(actual)) {
+			continue;
 		}
+
+		// TODO create word and alocate on table, using the older one to do the job
+		Word * word = insert(table, actual);
+
+		if (oldWord) {
+			continuation = createContinuation(word);
+			insertList(&oldWord->continuations, continuation);
+		}
+
+		oldWord = word;
+		i++;
 	}
 }
 

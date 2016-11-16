@@ -14,7 +14,7 @@
 
 /* Define o número primo para cálculo do hash e o multiplicador de tamanho da tabela */
 #define PRIME 5831
-#define SIZE_MULTIPLIER 2
+#define SIZE_MULTIPLIER 1
 
 /* Define a estrutura de hash table, com o vetor para ponteiros de palavras e seu tamanho */
 typedef
@@ -26,8 +26,8 @@ typedef
 /* Inicializa uma hash table a partir de um tamanho */
 HashTable* createHashTable(unsigned long);
 
-/* Insere na hash table uma nova palavra */
-void insert(HashTable*, Word*);
+/* Insere na hash table uma nova palavra, alterando-a com os valores necessários */
+Word* insert(HashTable*, String);
 
 /* Retorna o ponteiro de palavra da hash table a partir de uma String */
 Word* search(HashTable*, String);

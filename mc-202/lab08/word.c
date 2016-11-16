@@ -5,7 +5,7 @@
 
 #include "word.h"
 
-/* Implementacao dos metodos */
+/* Implementação dos métodos */
 
 Word* createWord(String id) {
 	Word * word = malloc(sizeof(Word));
@@ -17,10 +17,6 @@ Word* createWord(String id) {
 
 int compare(String first, String second) {
 	return strcmp(first, second);
-}
-
-int compareWord(Word * first, Word * second) {
-	return compare(first->id, second->id);
 }
 
 void freeWord(Word ** word) {

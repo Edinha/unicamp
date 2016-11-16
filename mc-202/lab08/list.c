@@ -50,8 +50,9 @@ void insertList(List ** list, Continuation * continuation) {
 
 	for (;;) {
 		if (equals(node->continuation, continuation)) {
-			free(continuation);
+			freeContinuation(&continuation);
 			raise(&node->continuation);
+			return;
 		}
 
 		if (!node->next) {

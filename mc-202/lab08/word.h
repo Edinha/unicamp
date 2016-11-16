@@ -24,9 +24,9 @@ typedef struct Word Word;
 
 /* Define a estrutura de palavra da tabela */
 	struct Word {
-		int hash;
 		String id;
 		List * continuations;
+		unsigned long hash;
 	};
 
 /* Inicializa uma palavra a partir de uma string */
@@ -34,9 +34,6 @@ Word* createWord(String);
 
 /* Compara duas palavras com retornando igual(0) maior(1) ou menor(-1) */
 int compare(String, String);
-
-/* Compara os ids de dois ponteiros de palavra */
-int compareWord(Word*, Word*);
 
 /* Libera um ponteiro de palavra */
 void freeWord(Word**);

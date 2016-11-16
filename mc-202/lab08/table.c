@@ -19,21 +19,23 @@ HashTable* createHashTable(unsigned long wordCount) {
 	return table;
 }
 
-void insert(HashTable * table, Word * word) {
-	unsigned long position = hash(word->id) % table->size;
+Word* insert(HashTable * table, String id) {
+	unsigned long position = hash(id) % table->size;
 
 	while (table->data[position] != NULL) {
-		position = (position + 1) % table->size;
-
 		// Caso a palavra já exista na tabela, não a coloca denovo
-		if (!compareWord(table->data[position], word)) {
-			freeWord(&word);
-			return;
+		if (!compare(table->data[position]->id, id)) {
+			return table->data[position];
 		}
+
+		position = (position + 1) % table->size;
 	}
 
+	Word * word = createWord(id);
 	word->hash = position;
 	table->data[position] = word;
+
+	return word;
 }
 
 Word* search(HashTable * table, String id) {
