@@ -12,7 +12,7 @@
  * Com as funcoes de hash, insercao e busca a partir de chaves String.
  */
 
-/* Define o número primo para cálculo do hash e o multiplicador de tamanho da tabela*/
+/* Define o número primo para cálculo do hash e o multiplicador de tamanho da tabela */
 #define PRIME 5831
 #define SIZE_MULTIPLIER 2
 

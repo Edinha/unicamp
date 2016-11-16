@@ -10,32 +10,17 @@
  * e aplicação do jogo
  */
 
-#include "table.h"
-#include "player.h"
+#include "game.h"
 
-/* Verifica se o final de uma palavra é espaço vazio ou pulo de linha */
-int isStringEnd(char);
-
-/* Limpa o conteúdo de uma variável String */
-void clearString(String);
-
-/* Lê uma String de entrada do programa */
-void readString(String);
-
-/* Lê um inteiro do programa */
-void readInt(int*);
-
-/* Lê um número grande do programa */
-void readLongInt(unsigned long*);
+/* Retorna verdadeiro caso a String seja vazia */
+int isEmptyString(String);
 
 /* Monta a hash table a partir da leitura do texto */
 void readEntryText(HashTable*, unsigned long);
 
-// TODO
-/* Lê as jogadas da entrada e calcula os pontos */
-void readPlays(HashTable*);
+/* Faz a leitura de entradas para jogadores a aplica loop do jogo */
+void readGame(HashTable*);
 
-// TODO
 /* Printa a situação atual do jogo */
 void printRound(int, Player*);
 

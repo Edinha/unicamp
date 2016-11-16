@@ -19,6 +19,11 @@ int compare(String first, String second) {
 	return strcmp(first, second);
 }
 
+int compareWord(Word * first, Word * second) {
+	return compare(first->id, second->id);
+}
+
 void freeWord(Word ** word) {
+	freeList(&(*word)->continuations);
 	free(*word);
 }

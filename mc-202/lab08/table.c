@@ -24,6 +24,12 @@ void insert(HashTable * table, Word * word) {
 
 	while (table->data[position] != NULL) {
 		position = (position + 1) % table->size;
+
+		// Caso a palavra já exista na tabela, não a coloca denovo
+		if (!compareWord(table->data[position], word)) {
+			freeWord(&word);
+			return;
+		}
 	}
 
 	word->hash = position;

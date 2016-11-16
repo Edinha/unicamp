@@ -14,7 +14,7 @@ int main() {
 
 	readEntryText(table, wordCount);
 
-	readPlays(table);
+	readGame(table);
 
 	freeHashTable(&table);
 
