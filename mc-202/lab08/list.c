@@ -64,6 +64,24 @@ void insertList(List ** list, Continuation * continuation) {
 	}
 }
 
+Continuation* find(List * list, String id) {
+	if (!list) {
+		return NULL;
+	}
+
+	NodeList * node = list->head;
+	Continuation * continuation = NULL;
+
+	for (; node ; node = node->next) {
+		continuation = node->continuation;
+		if (!compare(continuation->word->id, id)) {
+			return continuation;
+		}
+	}
+
+	return NULL;
+}
+
 void freeNodeList(NodeList ** node) {
 	if (!(*node)) {
 		return;

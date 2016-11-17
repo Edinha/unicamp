@@ -36,27 +36,54 @@ void readLongInt(unsigned long * ul) {
 	scanf("%lu ", ul);
 }
 
+int min(int a, int b) {
+	return (a > b) ? b : a;
+}
+
 void applyPlay(HashTable * table, Player * players, int playerCount) {
-	int j, phraseCount;
+	int j, phraseCount,
+		minimum,
+		score;
+
+	Continuation * continuation;
 
 	readInt(&phraseCount);
 
+	String actual;
+	clearString(actual);
+	readString(actual);
+
+	Word * word = search(table, actual);
+	minimum = table->size;
+
 	// Leitura da frase da rodada e procura na tabela
-	for (j = 0; j < phraseCount; j++) {
-		String actual;
+	for (j = 1; j < phraseCount; j++) {
 		clearString(actual);
 		readString(actual);
 
-		// TODO look for word on table and get the next occurence of some stuff
+		/* Encontra a continuação para a sentença base, atualizando
+		 * a contagem com o minímo de aparições das palavras subsequentes */
+		continuation = find(word->continuations, actual);
+		minimum = min(minimum, continuation->count);
+
+		// TODO continuation here should never be null, but who knows...
+		word = continuation->word;
 	}
 
 	// Leitura de cada palpite do jogador para essa rodada
 	for (j = 0; j < playerCount; j++) {
-		String actual;
+		// TODO check the hit or miss of participants
 		clearString(actual);
 		readString(actual);
 
-		// TODO check the hit or miss of participants
+		continuation = find(word->continuations, actual);
+		if (continuation) {
+			// TODO gain some points
+			score = min(minimum, continuation->count);
+			hit(&players[j], score);
+		} else {
+			// TODO lose points if all of them lose too
+		}
 	}
 
 }

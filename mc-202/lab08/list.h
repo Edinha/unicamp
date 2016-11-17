@@ -51,6 +51,9 @@ NodeList* createNodeList(Continuation*);
 /* Insere o próximo inteiro na lista */
 void insertList(List**, Continuation*);
 
+/* Retorna o ponteiro de continuação que possui a String parametrizada em um nó da lista */
+Continuation* find(List*, String);
+
 /* Libera recursivamente os nós da lista */
 void freeNodeList(NodeList**);
 
