@@ -31,6 +31,7 @@ void readEntryText(HashTable * table, unsigned long wordCount) {
 		if (oldWord) {
 			continuation = createContinuation(word);
 			insertList(&oldWord->continuations, continuation);
+			raiseAfterCount(&oldWord);
 		}
 
 		oldWord = word;
@@ -49,7 +50,7 @@ void readGame(HashTable * table) {
 
 	for (int i = 0; i < roundCount; i++) {
 		applyPlay(table, players, playerCount);
-		printRound(i, players);
+		printRound(players, playerCount, i);
 	}
 
 	free(players);
@@ -57,6 +58,12 @@ void readGame(HashTable * table) {
 
 // TODO
 /* Printa a situação atual do jogo */
-void printRound(int round, Player * players) {
+void printRound(Player * players, int playerCount, int round) {
+	printf("Rodada%2d:", (round + 1));
 
+	for (int i = 0; i < playerCount; i++) {
+		printf(" %4lu", players[i].score);
+	}
+
+	printf("\n");
 }

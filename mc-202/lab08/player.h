@@ -13,7 +13,7 @@
 #include "word.h"
 
 /* Definindo constantes de multiplicação em caso de acerto ou erro */
-#define MISS_BASE_SCORE -10
+#define MISS_BASE_SCORE 10
 #define HIT_BASE_SCORE 100
 
 /* Define a estrutura de jogador */
@@ -33,5 +33,11 @@ void hit(Player*, int);
 
 /* Diminue a pontuação do jogador de acordo com a contagem parametrizada */
 void miss(Player*, int);
+
+/* Copia o placar do jogo para um vetor auxiliar */
+void backup(unsigned long[], Player*, int);
+
+/* Retorna a pontuação dos jogadores a seu estado inicial antes da rodada */
+void restore(unsigned long[], Player*, int);
 
 #endif

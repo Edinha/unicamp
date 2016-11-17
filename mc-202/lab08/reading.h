@@ -22,6 +22,6 @@ void readEntryText(HashTable*, unsigned long);
 void readGame(HashTable*);
 
 /* Printa a situação atual do jogo */
-void printRound(int, Player*);
+void printRound(Player*, int, int);
 
 #endif

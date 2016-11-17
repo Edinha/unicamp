@@ -13,6 +13,9 @@
 #include "table.h"
 #include "player.h"
 
+#define HIT 1
+#define NO_HIT 0
+
 /* Verifica se o final de uma palavra é espaço vazio ou pulo de linha */
 int isStringEnd(char);
 

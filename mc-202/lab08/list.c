@@ -9,7 +9,7 @@
 
 Continuation* createContinuation(Word * word) {
 	Continuation * continuation = malloc(sizeof(Continuation));
-	continuation->count = ZERO_INIT;
+	continuation->count = COUNT_INIT;
 	continuation->word = word;
 	return continuation;
 }

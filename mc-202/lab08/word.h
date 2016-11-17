@@ -15,6 +15,7 @@
  */
 
 #define ZERO_INIT 0
+#define COUNT_INIT 1
 #define MAX_WORD_SIZE 50
 
 typedef char String[MAX_WORD_SIZE];
@@ -26,7 +27,7 @@ typedef struct Word Word;
 	struct Word {
 		String id;
 		List * continuations;
-		unsigned long hash;
+		unsigned long hash, afterCount;
 	};
 
 /* Inicializa uma palavra a partir de uma string */
@@ -34,6 +35,9 @@ Word* createWord(String);
 
 /* Compara duas palavras com retornando igual(0) maior(1) ou menor(-1) */
 int compare(String, String);
+
+/* Incrementa a contagem de continuações que vem logo após a palavra parametrizada */
+void raiseAfterCount(Word**);
 
 /* Libera um ponteiro de palavra */
 void freeWord(Word**);
