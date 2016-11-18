@@ -36,13 +36,10 @@ void readEntryText(HashTable * table, unsigned long wordCount) {
 			adjacency = createAdjacency(word, previousToPreviousWord);
 			addAdjacency(&previousWord->adjacencies, adjacency);
 			previousWord->afterCount++;
-			// TODO count some stuff maybe ?
 		}
 
-		if (previousWord) {
-			previousToPreviousWord = previousWord;
-		}
-
+		// Atualiza a continuidade do texto
+		previousToPreviousWord = previousWord;
 		previousWord = word;
 		i++;
 	}
@@ -70,7 +67,7 @@ void printRound(Player * players, int playerCount, int round) {
 
 	// Printa espaço caso o número tenha duas casas
 	round++;
-	if ((round / 10) > 1) {
+	if ((round / 10) > 0) {
 		printf(" ");
 	}
 

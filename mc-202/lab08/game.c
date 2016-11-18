@@ -43,12 +43,11 @@ void applyPlay(HashTable * table, Player * players, int playerCount) {
 	int phraseCount,
 		phraseSequenceCount,
 		score,
-		hasHit;
+		hasHit,
+		count;
 
 	long oldScores[playerCount];
 	String actual;
-
-	Adjacency * adjacency = NULL;
 
 	Word * word = NULL,
 		 * playerTry = NULL,
@@ -63,8 +62,6 @@ void applyPlay(HashTable * table, Player * players, int playerCount) {
 
 	/* Aloca o começo da frase e inicializa a variável de miníma ocorrência */
 	word = search(table, actual);
-
-	// TODO do a find maybe ?
 	phraseSequenceCount = table->size;
 
 	for (phraseCount--; phraseCount > 0; phraseCount--) {
@@ -75,10 +72,10 @@ void applyPlay(HashTable * table, Player * players, int playerCount) {
 
 		// Find ajdacency on next and previous words
 		word = search(table, actual);
-		adjacency = find(&word->adjacencies, previous, NULL);
+		count = find(&word->adjacencies, previous, NULL);
 
 		// Atualiza a contagem da frase com a contagem da adjacência entre as palavras
-		phraseSequenceCount = min(phraseSequenceCount, adjacency->count);
+		phraseSequenceCount = min(phraseSequenceCount, count);
 	}
 
 	hasHit = NO_HIT;
@@ -89,16 +86,23 @@ void applyPlay(HashTable * table, Player * players, int playerCount) {
 		readString(actual);
 
 		playerTry = search(table, actual);
-		adjacency = find(&word->adjacencies, previous, playerTry);
 
-		// TODO hit and miss logic and count for words
-		if (adjacency) {
+		// Caso foi um palpite errado do jogador, e a palavra nem existe no texto, logo ele perde pontos
+		if (!playerTry) {
+			score = min(phraseSequenceCount, word->afterCount);
+			miss(&players[i], score);
+			continue;
+		}
+
+		count = find(&word->adjacencies, previous, playerTry);
+
+		if (count) {
 			// Caso haja adjacência, o palpite foi correto e o jogador deve marcar pontos
-			score = min(phraseSequenceCount, adjacency->count);
+			score = min(phraseSequenceCount, count);
 			hit(&players[i], score);
 			hasHit = HIT;
 		} else {
-			// Caso contrário, foi um palpite errado do jogador, logo ele perde pontos
+			// Caso contrário, foi um palpite errado do jogador, a palavra existe no texto logo ele perde pontos
 			score = min(phraseSequenceCount, word->afterCount);
 			miss(&players[i], score);
 		}

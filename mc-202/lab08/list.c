@@ -20,11 +20,9 @@ void raise(Adjacency ** adjacency) {
 }
 
 int equals(Adjacency * first, Adjacency * second) {
-	// Maybe compare pointers of words is the way... or maybe they hashs
-
-	// TODO please kill me, look at this method
 	int nextCmp = -1, previousCmp = -1;
 
+	// Faz uma comparação entre todas as possibilidades de adjacência para dizer se os pares são iguais
 	if (first->next) {
 		if (!second->next) {
 			nextCmp =  0;
@@ -50,16 +48,13 @@ int equals(Adjacency * first, Adjacency * second) {
 	}
 
 	return nextCmp && previousCmp;
-	// Certain to work but slow as f..
-	// int nextEquals = !compare(first->next->id, second->next->id),
-	// 	previousEquals = !compare(first->previous->id, second->previous->id);
-
-	// return nextEquals && previousEquals;
 }
 
-Adjacency* find(List ** adjacencies, Word * previous, Word * next) {
+int find(List ** adjacencies, Word * previous, Word * next) {
+	int count = ZERO_INIT;
+
 	if (!adjacencies || !(*adjacencies)) {
-		return NULL;
+		return ZERO_INIT;
 	}
 
 	Word * looked = NULL;
@@ -67,32 +62,31 @@ Adjacency* find(List ** adjacencies, Word * previous, Word * next) {
 	NodeList * node = (*adjacencies)->head;
 
 	if (!previous && !next) {
-		return NULL;
+		return ZERO_INIT;
 	}
 
 	// Faz a busca apenas comparando os próximos como não há anterior
 	if (!previous) {
 		for (; node ; node = node->next) {
 			looked = node->adjacency->next;
-			// TODO count adjacencies on other nodes on this if
 			if (looked && compareWords(looked, next)) {
-				return node->adjacency;
+				count++;
 			}
 		}
 
-		return NULL;
+		return count;
 	}
 
-	// TODO maybe function pointers for this
+	// Faz a busca apenas comparando os anteriores como não há próximo
 	if (!next) {
 		for (; node ; node = node->next) {
 			looked = node->adjacency->previous;
 			if (looked && compareWords(looked, previous)) {
-				return node->adjacency;
+				return node->adjacency->count;
 			}
 		}
 
-		return NULL;
+		return ZERO_INIT;
 	}
 
 	adjacency = createAdjacency(next, previous);
@@ -100,13 +94,13 @@ Adjacency* find(List ** adjacencies, Word * previous, Word * next) {
 	// Faz a busca pela adjacência completa
 	for (; node ; node = node->next) {
 		if (equals(node->adjacency, adjacency)) {
-			freeAdjacency(&adjacency);
-			return node->adjacency;
+			count = node->adjacency->count;
+			break;
 		}
 	}
 
 	freeAdjacency(&adjacency);
-	return NULL;
+	return count;
 }
 
 void freeAdjacency(Adjacency ** a) {
@@ -149,25 +143,6 @@ void addAdjacency(List ** list, Adjacency * adjacency) {
 		node = node->next;
 	}
 }
-
-// // TODO will fix this in a mean way
-// Adjacency* find(List * list, String id) {
-// 	if (!list) {
-// 		return NULL;
-// 	}
-
-// 	NodeList * node = list->head;
-// 	Continuation * continuation = NULL;
-
-// 	for (; node ; node = node->next) {
-// 		continuation = node->continuation;
-// 		if (!compare(continuation->word->id, id)) {
-// 			return continuation;
-// 		}
-// 	}
-
-// 	return NULL;
-// }
 
 void freeNodeList(NodeList ** node) {
 	if (!(*node)) {
