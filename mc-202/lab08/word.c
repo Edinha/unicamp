@@ -9,7 +9,7 @@
 
 Word* createWord(String id) {
 	Word * word = malloc(sizeof(Word));
-	word->continuations = createList();
+	word->adjacencies = createList();
 	word->hash = ZERO_INIT;
 	word->afterCount = ZERO_INIT;
 	strcpy(word->id, id);
@@ -25,6 +25,6 @@ void raiseAfterCount(Word ** word) {
 }
 
 void freeWord(Word ** word) {
-	freeList(&(*word)->continuations);
+	freeList(&(*word)->adjacencies);
 	free(*word);
 }

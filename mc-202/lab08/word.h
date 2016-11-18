@@ -26,7 +26,7 @@ typedef struct Word Word;
 /* Define a estrutura de palavra da tabela */
 	struct Word {
 		String id;
-		List * continuations;
+		List * adjacencies;
 		unsigned long hash, afterCount;
 	};
 

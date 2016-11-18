@@ -12,31 +12,30 @@ int isEmptyString(String s) {
 }
 
 void readEntryText(HashTable * table, unsigned long wordCount) {
-	Word * oldWord = NULL;
-	Continuation * continuation = NULL;
+	// TODO redo this stuff
+	// Word * previousWord = NULL;
+	// Continuation * continuation = NULL;
 
-	for (unsigned long i = 0; i < wordCount;) {
-		String actual;
-		clearString(actual);
-		readString(actual);
+	// for (unsigned long i = 0; i < wordCount; i++) {
+	// 	String actual;
+	// 	clearString(actual);
+	// 	readString(actual);
 
-		// Caso seja uma String vazia, continua o for sem contar como uma palavra do texto
-		if (isEmptyString(actual)) {
-			continue;
-		}
+	// 	// Caso seja uma String vazia, continua o for sem contar como uma palavra do texto
+	// 	if (isEmptyString(actual)) {
+	// 		continue;
+	// 	}
 
-		// TODO create word and alocate on table, using the older one to do the job
-		Word * word = insert(table, actual);
+	// 	// Insere a mais nova palavra na tabela e a aloca como continuação da palavra anterior
+	// 	Word * word = insert(table, actual);
+	// 	if (previousWord) {
+	// 		continuation = createContinuation(word);
+	// 		insertList(&previousWord->continuations, continuation);
+	// 		raiseAfterCount(&previousWord);
+	// 	}
 
-		if (oldWord) {
-			continuation = createContinuation(word);
-			insertList(&oldWord->continuations, continuation);
-			raiseAfterCount(&oldWord);
-		}
-
-		oldWord = word;
-		i++;
-	}
+	// 	previousWord = word;
+	// }
 }
 
 void readGame(HashTable * table) {
@@ -56,10 +55,16 @@ void readGame(HashTable * table) {
 	free(players);
 }
 
-// TODO
-/* Printa a situação atual do jogo */
 void printRound(Player * players, int playerCount, int round) {
-	printf("Rodada%2d:", (round + 1));
+	printf("Rodada");
+
+	// Printa espaço caso o número tenha duas casas
+	round++;
+	if ((round / 10) > 1) {
+		printf(" ");
+	}
+
+	printf("%2d:", round);
 
 	for (int i = 0; i < playerCount; i++) {
 		printf(" %4lu", players[i].score);

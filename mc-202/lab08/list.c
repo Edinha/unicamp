@@ -7,23 +7,27 @@
 
 /* Implementação dos métodos */
 
-Continuation* createContinuation(Word * word) {
-	Continuation * continuation = malloc(sizeof(Continuation));
-	continuation->count = COUNT_INIT;
-	continuation->word = word;
-	return continuation;
+Adjacency* createAdjacency(Word * next, Word * previous) {
+	Adjacency * a = malloc(sizeof(Adjacency));
+	a->count = COUNT_INIT;
+	a->next = next;
+	a->previous = previous;
+	return a;
 }
 
-void raise(Continuation ** continuation) {
-	(*continuation)->count++;
+void raise(Adjacency ** adjacency) {
+	(*adjacency)->count++;
 }
 
-int equals(Continuation * first, Continuation * second) {
-	return !compare(first->word->id, second->word->id);
+int equals(Adjacency * first, Adjacency * second) {
+	int nextEquals = !compare(first->next->id, second->next->id),
+		previousEquals = !compare(first->previous->id, second->previous->id);
+
+	return nextEquals && previousEquals;
 }
 
-void freeContinuation(Continuation ** continuation) {
-	free(*continuation);
+void freeAdjacency(Adjacency ** a) {
+	free(*a);
 }
 
 List* createList() {
@@ -32,31 +36,30 @@ List* createList() {
 	return list;
 }
 
-NodeList* createNodeList(Continuation * continuation) {
+NodeList* createNodeList(Adjacency * adjacency) {
 	NodeList * node = malloc(sizeof(NodeList));
-	node->continuation = continuation;
+	node->adjacency = adjacency;
 	node->next = NULL;
 	return node;
 }
 
-void insertList(List ** list, Continuation * continuation) {
-
+void insertList(List ** list, Adjacency * adjacency) {
 	if (!(*list)->head) {
-		(*list)->head = createNodeList(continuation);
+		(*list)->head = createNodeList(adjacency);
 		return;
 	}
 
 	NodeList * node = (*list)->head;
 
 	for (;;) {
-		if (equals(node->continuation, continuation)) {
-			freeContinuation(&continuation);
-			raise(&node->continuation);
+		if (equals(node->adjacency, adjacency)) {
+			freeAdjacency(&adjacency);
+			raise(&node->adjacency);
 			return;
 		}
 
 		if (!node->next) {
-			node->next = createNodeList(continuation);
+			node->next = createNodeList(adjacency);
 			return;
 		}
 
@@ -64,23 +67,24 @@ void insertList(List ** list, Continuation * continuation) {
 	}
 }
 
-Continuation* find(List * list, String id) {
-	if (!list) {
-		return NULL;
-	}
+// // TODO will fix this in a mean way
+// Adjacency* find(List * list, String id) {
+// 	if (!list) {
+// 		return NULL;
+// 	}
 
-	NodeList * node = list->head;
-	Continuation * continuation = NULL;
+// 	NodeList * node = list->head;
+// 	Continuation * continuation = NULL;
 
-	for (; node ; node = node->next) {
-		continuation = node->continuation;
-		if (!compare(continuation->word->id, id)) {
-			return continuation;
-		}
-	}
+// 	for (; node ; node = node->next) {
+// 		continuation = node->continuation;
+// 		if (!compare(continuation->word->id, id)) {
+// 			return continuation;
+// 		}
+// 	}
 
-	return NULL;
-}
+// 	return NULL;
+// }
 
 void freeNodeList(NodeList ** node) {
 	if (!(*node)) {
@@ -88,7 +92,7 @@ void freeNodeList(NodeList ** node) {
 	}
 
 	freeNodeList(&(*node)->next);
-	freeContinuation(&(*node)->continuation);
+	freeAdjacency(&(*node)->adjacency);
 	free(*node);
 }
 

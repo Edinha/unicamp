@@ -9,19 +9,19 @@
 #define LIST_H
 
 /* Esse arquivo conterá as definições para a estrutura de nós de lista, guardando
- * A próxima aparição da palavra e sua contagem
+ * A adjacência da palavra em questão (anterior e próxima);
  */
 
-/* Define uma estrutura para a continuacao de uma palavra no texto */
+/* Define uma estrutura de adjacência para a palavra, com seu ponteiro para anterior e próximo */
 typedef
 	struct {
 		int count;
-		Word * word;
-	} Continuation;
+		Word * next, * previous;
+	} Adjacency;
 
 typedef
 	struct NodeList {
-		Continuation * continuation;
+		Adjacency * adjacency;
 		struct NodeList * next;
 	} NodeList;
 
@@ -30,29 +30,26 @@ typedef
 		NodeList * head;
 	} List;
 
-/* Inicializa um ponteiro de continuacao para a palavra */
-Continuation* createContinuation(Word*);
+/* Inicializa um ponteiro de adjacência para a palavra */
+Adjacency* createAdjacency(Word*, Word* );
 
-/* Auemnta a contagem para uma continuacao de palavra */
-void raise(Continuation**);
+/* Auemnta a contagem para a adjacência de palavra */
+void raise(Adjacency**);
 
-/* Retorna a comparacao entre duas continuacoes de palavras */
-int equals(Continuation*, Continuation*);
+/* Compara duas adjacências retornando verdadeiro caso ambas as palavras apontadas sejam iguais */
+int equals(Adjacency*, Adjacency*);
 
-/* Libera um ponteiro de continuacao */
-void freeContinuation(Continuation**);
+/* Libera um ponteiro de adjacência */
+void freeAdjacency(Adjacency**);
 
 /* Inicializa um ponteiro para a lista */
 List* createList();
 
 /* Cria um nó de lista a partir de uma continuacao para a palavra */
-NodeList* createNodeList(Continuation*);
+NodeList* createNodeList(Adjacency*);
 
-/* Insere o próximo inteiro na lista */
-void insertList(List**, Continuation*);
-
-/* Retorna o ponteiro de continuação que possui a String parametrizada em um nó da lista */
-Continuation* find(List*, String);
+/* Insere a próxima adjacência na lista */
+void insertList(List**, Adjacency*);
 
 /* Libera recursivamente os nós da lista */
 void freeNodeList(NodeList**);

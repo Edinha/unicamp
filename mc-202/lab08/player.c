@@ -35,13 +35,13 @@ void miss(Player * player, int count) {
 	}
 }
 
-void backup(unsigned long oldScores[], Player * players, int size) {
+void backup(long oldScores[], Player * players, int size) {
 	for (int i = 0; i < size; i++) {
 		oldScores[i] = players[i].score;
 	}
 }
 
-void restore(unsigned long oldScores[], Player * players, int size) {
+void restore(long oldScores[], Player * players, int size) {
 	for (int i = 0; i < size; i++) {
 		players[i].score = oldScores[i];
 	}

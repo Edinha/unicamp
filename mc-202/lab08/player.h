@@ -19,7 +19,7 @@
 /* Define a estrutura de jogador */
 typedef
 	struct {
-		unsigned long score;
+		long score;
 	} Player;
 
 /* Inicializa um jogador com uma pontuação */
@@ -35,9 +35,9 @@ void hit(Player*, int);
 void miss(Player*, int);
 
 /* Copia o placar do jogo para um vetor auxiliar */
-void backup(unsigned long[], Player*, int);
+void backup(long[], Player*, int);
 
 /* Retorna a pontuação dos jogadores a seu estado inicial antes da rodada */
-void restore(unsigned long[], Player*, int);
+void restore(long[], Player*, int);
 
 #endif

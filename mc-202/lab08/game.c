@@ -41,68 +41,70 @@ int min(int a, int b) {
 }
 
 void applyPlay(HashTable * table, Player * players, int playerCount) {
-	int j, phraseCount,
-		minimum,
-		score,
-		hasHit;
+	// TODO redo entire game
+	// int j, phraseCount,
+	// 	phraseSequenceCount,
+	// 	score,
+	// 	hasHit;
 
-	Word * word;
-	String actual;
-	Continuation * continuation;
-	unsigned long oldScores[playerCount];
+	// long oldScores[playerCount];
 
-	backup(oldScores, players, playerCount);
+	// Word * word;
+	// String actual;
+	// Continuation * continuation;
 
-	readInt(&phraseCount);
-	clearString(actual);
-	readString(actual);
+	// backup(oldScores, players, playerCount);
 
-	/* Aloca o começo da frase e inicializa a variável de miníma ocorrência */
-	word = search(table, actual);
-	minimum = table->size;
+	// readInt(&phraseCount);
+	// clearString(actual);
+	// readString(actual);
 
-	// Leitura da frase da rodada e procura na tabela
-	for (j = 1; j < phraseCount; j++) {
-		clearString(actual);
-		readString(actual);
+	// /* Aloca o começo da frase e inicializa a variável de miníma ocorrência */
+	// word = search(table, actual);
+	// phraseSequenceCount = word->afterCount;
 
-		/* Encontra a continuação para a sentença base, atualizando
-		 * a contagem com o minímo de aparições das palavras subsequentes a fim
-		 * de obter-se o número de vezes que a frase completa e na ordem aparece */
-		continuation = find(word->continuations, actual);
-		minimum = min(minimum, continuation->count);
+	// // Leitura da frase da rodada e procura na tabela
+	// for (j = 1; j < phraseCount; j++) {
+	// 	clearString(actual);
+	// 	readString(actual);
 
-		word = continuation->word;
-	}
+	// 	/* Encontra a continuação para a sentença base, atualizando
+	// 	 * a contagem com o minímo de aparições das palavras subsequentes a fim
+	// 	 * de obter-se o número de vezes que a frase completa e na ordem aparece */
+	// 	continuation = find(word->continuations, actual);
+	// 	phraseSequenceCount = min(phraseSequenceCount, continuation->count);
 
-	hasHit = NO_HIT;
+	// 	word = continuation->word;
+	// }
 
-	// Leitura de cada palpite do jogador para essa rodada
-	for (j = 0; j < playerCount; j++) {
-		clearString(actual);
-		readString(actual);
+	// hasHit = NO_HIT;
 
-		// Encontra a continuação a partir do palpite do jogador
-		continuation = find(word->continuations, actual);
+	// // Leitura de cada palpite do jogador para essa rodada
+	// for (j = 0; j < playerCount; j++) {
+	// 	clearString(actual);
+	// 	readString(actual);
 
-		/* Para marcar a pontuação, é preciso encontrar o mínimo número de vezes em que
-		 * acontece a sequência entre a frase base e o palpite do jogador, por isso o
-		 * uso da função min em ambos os casos de acerto ou erro */
+	// 	// Encontra a continuação a partir do palpite do jogador
+	// 	continuation = find(word->continuations, actual);
 
-		// Caso a continuação exista, marca pontos para o jogador e atualiza a variável dizendo que houve um acerto
-		if (continuation) {
-			score = min(minimum, continuation->count);
-			hit(&players[j], score);
-			hasHit = HIT;
-		} else {
-			// Caso contrário, ocorreu um erro
-			score = min(word->afterCount, minimum);
-			miss(&players[j], score);
-		}
-	}
+	// 	/* Para marcar a pontuação, é preciso encontrar o mínimo número de vezes em que
+	// 	 * acontece a sequência entre a frase base e o palpite do jogador, por isso o
+	// 	 * uso da função min em ambos os casos de acerto ou erro */
 
-	// Caso ninguém tenha acertado, volta o placar para como era no começo da rodada
-	if (!hasHit) {
-		restore(oldScores, players, playerCount);
-	}
+	// 	// Caso a continuação exista, marca pontos para o jogador e atualiza a variável dizendo que houve um acerto
+	// 	if (continuation) {
+	// 		score = min(phraseSequenceCount, continuation->count);
+	// 		hit(&players[j], score);
+	// 		hasHit = HIT;
+	// 	} else {
+	// 		// Caso contrário, ocorreu um erro
+	// 		score = min(phraseSequenceCount, word->afterCount);
+	// 		miss(&players[j], score);
+	// 	}
+	// }
+
+	// // Caso ninguém tenha acertado, volta o placar para como era no começo da rodada
+	// if (!hasHit) {
+	// 	restore(oldScores, players, playerCount);
+	// }
 }
