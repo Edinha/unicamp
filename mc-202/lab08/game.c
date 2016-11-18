@@ -75,7 +75,7 @@ void applyPlay(HashTable * table, Player * players, int playerCount) {
 
 		// Find ajdacency on next and previous words
 		word = search(table, actual);
-		adjacency = find(&word->adjacencies, previous, word);
+		adjacency = find(&word->adjacencies, previous, NULL);
 
 		// Atualiza a contagem da frase com a contagem da adjacência entre as palavras
 		phraseSequenceCount = min(phraseSequenceCount, adjacency->count);
@@ -96,6 +96,7 @@ void applyPlay(HashTable * table, Player * players, int playerCount) {
 			// Caso haja adjacência, o palpite foi correto e o jogador deve marcar pontos
 			score = min(phraseSequenceCount, adjacency->count);
 			hit(&players[i], score);
+			hasHit = HIT;
 		} else {
 			// Caso contrário, foi um palpite errado do jogador, logo ele perde pontos
 			score = min(phraseSequenceCount, word->afterCount);
@@ -107,71 +108,4 @@ void applyPlay(HashTable * table, Player * players, int playerCount) {
 	if (!hasHit) {
 		restore(oldScores, players, playerCount);
 	}
-
-	// TODO redo entire game
-	// int j, phraseCount,
-	// 	phraseSequenceCount,
-	// 	score,
-	// 	hasHit;
-
-	// long oldScores[playerCount];
-
-	// Word * word;
-	// String actual;
-	// Continuation * continuation;
-
-	// backup(oldScores, players, playerCount);
-
-	// readInt(&phraseCount);
-	// clearString(actual);
-	// readString(actual);
-
-	// /* Aloca o começo da frase e inicializa a variável de miníma ocorrência */
-	// word = search(table, actual);
-	// phraseSequenceCount = word->afterCount;
-
-	// // Leitura da frase da rodada e procura na tabela
-	// for (j = 1; j < phraseCount; j++) {
-	// 	clearString(actual);
-	// 	readString(actual);
-
-	// 	/* Encontra a continuação para a sentença base, atualizando
-	// 	 * a contagem com o minímo de aparições das palavras subsequentes a fim
-	// 	 * de obter-se o número de vezes que a frase completa e na ordem aparece */
-	// 	continuation = find(word->continuations, actual);
-	// 	phraseSequenceCount = min(phraseSequenceCount, continuation->count);
-
-	// 	word = continuation->word;
-	// }
-
-	// hasHit = NO_HIT;
-
-	// // Leitura de cada palpite do jogador para essa rodada
-	// for (j = 0; j < playerCount; j++) {
-	// 	clearString(actual);
-	// 	readString(actual);
-
-	// 	// Encontra a continuação a partir do palpite do jogador
-	// 	continuation = find(word->continuations, actual);
-
-	// 	/* Para marcar a pontuação, é preciso encontrar o mínimo número de vezes em que
-	// 	 * acontece a sequência entre a frase base e o palpite do jogador, por isso o
-	// 	 * uso da função min em ambos os casos de acerto ou erro */
-
-	// 	// Caso a continuação exista, marca pontos para o jogador e atualiza a variável dizendo que houve um acerto
-	// 	if (continuation) {
-	// 		score = min(phraseSequenceCount, continuation->count);
-	// 		hit(&players[j], score);
-	// 		hasHit = HIT;
-	// 	} else {
-	// 		// Caso contrário, ocorreu um erro
-	// 		score = min(phraseSequenceCount, word->afterCount);
-	// 		miss(&players[j], score);
-	// 	}
-	// }
-
-	// // Caso ninguém tenha acertado, volta o placar para como era no começo da rodada
-	// if (!hasHit) {
-	// 	restore(oldScores, players, playerCount);
-	// }
 }

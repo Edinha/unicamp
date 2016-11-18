@@ -12,12 +12,13 @@ int isEmptyString(String s) {
 }
 
 void readEntryText(HashTable * table, unsigned long wordCount) {
-	Word * previousWord = NULL,
+	Word * word = NULL,
+		 * previousWord = NULL,
 		 * previousToPreviousWord = NULL;
 
 	Adjacency * adjacency = NULL;
 
-	for (unsigned long i = 0; i < wordCount; i++) {
+	for (unsigned long i = 0; i < wordCount;) {
 		String actual;
 		clearString(actual);
 		readString(actual);
@@ -28,10 +29,10 @@ void readEntryText(HashTable * table, unsigned long wordCount) {
 		}
 
 		// Insere a mais nova palavra na tabela e a aloca suas adjacências
-		Word * word = insert(table, actual);
+		word = insert(table, actual);
 
 		// Caso já se tenham passado duas palavras, pode começar a montar as adjacências
-		if (previousWord && previousToPreviousWord) {
+		if (previousWord) {
 			adjacency = createAdjacency(word, previousToPreviousWord);
 			addAdjacency(&previousWord->adjacencies, adjacency);
 			previousWord->afterCount++;
@@ -43,6 +44,7 @@ void readEntryText(HashTable * table, unsigned long wordCount) {
 		}
 
 		previousWord = word;
+		i++;
 	}
 }
 

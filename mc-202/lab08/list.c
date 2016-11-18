@@ -22,9 +22,34 @@ void raise(Adjacency ** adjacency) {
 int equals(Adjacency * first, Adjacency * second) {
 	// Maybe compare pointers of words is the way... or maybe they hashs
 
-	return (compareWords(first->next, second->next) && compareWords(first->previous, second->previous));
-	// return (first->next->hash == second->next->hash) && (first->previous->hash == second->previous->hash);
+	// TODO please kill me, look at this method
+	int nextCmp = -1, previousCmp = -1;
 
+	if (first->next) {
+		if (!second->next) {
+			nextCmp =  0;
+		} else {
+			nextCmp = compareWords(first->next, second->next);
+		}
+	} else {
+		if (second->next) {
+			nextCmp = 0;
+		}
+	}
+
+	if (first->previous) {
+		if (!second->previous) {
+			previousCmp = 0;
+		} else {
+			previousCmp = compareWords(first->previous, second->previous);
+		}
+	} else {
+		if (second->previous) {
+			previousCmp = 0;
+		}
+	}
+
+	return nextCmp && previousCmp;
 	// Certain to work but slow as f..
 	// int nextEquals = !compare(first->next->id, second->next->id),
 	// 	previousEquals = !compare(first->previous->id, second->previous->id);
@@ -37,12 +62,20 @@ Adjacency* find(List ** adjacencies, Word * previous, Word * next) {
 		return NULL;
 	}
 
+	Word * looked = NULL;
+	Adjacency * adjacency = NULL;
 	NodeList * node = (*adjacencies)->head;
+
+	if (!previous && !next) {
+		return NULL;
+	}
 
 	// Faz a busca apenas comparando os próximos como não há anterior
 	if (!previous) {
 		for (; node ; node = node->next) {
-			if (compareWords(node->adjacency->next, next)) {
+			looked = node->adjacency->next;
+			// TODO count adjacencies on other nodes on this if
+			if (looked && compareWords(looked, next)) {
 				return node->adjacency;
 			}
 		}
@@ -50,7 +83,19 @@ Adjacency* find(List ** adjacencies, Word * previous, Word * next) {
 		return NULL;
 	}
 
-	Adjacency * adjacency = createAdjacency(next, previous);
+	// TODO maybe function pointers for this
+	if (!next) {
+		for (; node ; node = node->next) {
+			looked = node->adjacency->previous;
+			if (looked && compareWords(looked, previous)) {
+				return node->adjacency;
+			}
+		}
+
+		return NULL;
+	}
+
+	adjacency = createAdjacency(next, previous);
 
 	// Faz a busca pela adjacência completa
 	for (; node ; node = node->next) {
