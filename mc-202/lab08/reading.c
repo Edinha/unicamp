@@ -12,30 +12,37 @@ int isEmptyString(String s) {
 }
 
 void readEntryText(HashTable * table, unsigned long wordCount) {
-	// TODO redo this stuff
-	// Word * previousWord = NULL;
-	// Continuation * continuation = NULL;
+	Word * previousWord = NULL,
+		 * previousToPreviousWord = NULL;
 
-	// for (unsigned long i = 0; i < wordCount; i++) {
-	// 	String actual;
-	// 	clearString(actual);
-	// 	readString(actual);
+	Adjacency * adjacency = NULL;
 
-	// 	// Caso seja uma String vazia, continua o for sem contar como uma palavra do texto
-	// 	if (isEmptyString(actual)) {
-	// 		continue;
-	// 	}
+	for (unsigned long i = 0; i < wordCount; i++) {
+		String actual;
+		clearString(actual);
+		readString(actual);
 
-	// 	// Insere a mais nova palavra na tabela e a aloca como continuação da palavra anterior
-	// 	Word * word = insert(table, actual);
-	// 	if (previousWord) {
-	// 		continuation = createContinuation(word);
-	// 		insertList(&previousWord->continuations, continuation);
-	// 		raiseAfterCount(&previousWord);
-	// 	}
+		// Caso seja uma String vazia, continua o for sem contar como uma palavra do texto
+		if (isEmptyString(actual)) {
+			continue;
+		}
 
-	// 	previousWord = word;
-	// }
+		// Insere a mais nova palavra na tabela e a aloca suas adjacências
+		Word * word = insert(table, actual);
+
+		// Caso já se tenham passado duas palavras, pode começar a montar as adjacências
+		if (previousWord && previousToPreviousWord) {
+			adjacency = createAdjacency(word, previousToPreviousWord);
+			addAdjacency(&previousWord->adjacencies, adjacency);
+			// TODO count some stuff maybe ?
+		}
+
+		if (previousWord) {
+			previousToPreviousWord = previousWord;
+		}
+
+		previousWord = word;
+	}
 }
 
 void readGame(HashTable * table) {

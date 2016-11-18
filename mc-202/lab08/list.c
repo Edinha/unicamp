@@ -20,6 +20,8 @@ void raise(Adjacency ** adjacency) {
 }
 
 int equals(Adjacency * first, Adjacency * second) {
+	// Maybe compare pointers of words is the way... or maybe they hashs
+
 	int nextEquals = !compare(first->next->id, second->next->id),
 		previousEquals = !compare(first->previous->id, second->previous->id);
 
@@ -43,7 +45,7 @@ NodeList* createNodeList(Adjacency * adjacency) {
 	return node;
 }
 
-void insertList(List ** list, Adjacency * adjacency) {
+void addAdjacency(List ** list, Adjacency * adjacency) {
 	if (!(*list)->head) {
 		(*list)->head = createNodeList(adjacency);
 		return;

@@ -49,7 +49,7 @@ List* createList();
 NodeList* createNodeList(Adjacency*);
 
 /* Insere a próxima adjacência na lista */
-void insertList(List**, Adjacency*);
+void addAdjacency(List**, Adjacency*);
 
 /* Libera recursivamente os nós da lista */
 void freeNodeList(NodeList**);
