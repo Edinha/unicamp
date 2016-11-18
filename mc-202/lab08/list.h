@@ -39,6 +39,9 @@ void raise(Adjacency**);
 /* Compara duas adjacências retornando verdadeiro caso ambas as palavras apontadas sejam iguais */
 int equals(Adjacency*, Adjacency*);
 
+/* Procura pela lista uma adjacência que possua ambas as palavras anterior e próxima. Caso a anterior parametrizada seja nula, procura apenas nas próximas */
+Adjacency* find(List**, Word*, Word*);
+
 /* Libera um ponteiro de adjacência */
 void freeAdjacency(Adjacency**);
 

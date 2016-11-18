@@ -36,6 +36,9 @@ Word* createWord(String);
 /* Compara duas palavras com retornando igual(0) maior(1) ou menor(-1) */
 int compare(String, String);
 
+/* Compara duas palavras a partir de seus hashs armazenados */
+int compareWords(Word*, Word*);
+
 /* Incrementa a contagem de continuações que vem logo após a palavra parametrizada */
 void raiseAfterCount(Word**);
 

@@ -20,6 +20,10 @@ int compare(String first, String second) {
 	return strcmp(first, second);
 }
 
+int compareWords(Word * first, Word * second) {
+	return (first->hash == second->hash);
+}
+
 void raiseAfterCount(Word ** word) {
 	(*word)->afterCount++;
 }

@@ -41,6 +41,55 @@ int min(int a, int b) {
 }
 
 void applyPlay(HashTable * table, Player * players, int playerCount) {
+	int phraseCount,
+		phraseSequenceCount,
+		score,
+		hasHit;
+
+	long oldScores[playerCount];
+	String actual;
+
+	Word * word = NULL,
+		 * next = NULL,
+		 * previous = NULL;
+
+	// Grava o estado do placar antes da rodada acontecer
+	backup(oldScores, players, playerCount);
+
+	readInt(&phraseCount);
+	clearString(actual);
+	readString(actual);
+
+	/* Aloca o começo da frase e inicializa a variável de miníma ocorrência */
+	word = search(table, actual);
+
+	// Do a find maybe ?
+	phraseSequenceCount = table->size;
+	for (phraseCount--; phraseCount > 0; phraseCount--) {
+		clearString(actual);
+		readString(actual);
+
+		// Find ajdacency on next and previous words
+	}
+
+	hasHit = NO_HIT;
+
+	// TODO remove once its used
+	if (word && previous && next && phraseSequenceCount && score) {}
+
+	for (int i = 0; i < playerCount; i++) {
+		// Para cada jogador, lê o palpite e avalia a jogada
+		clearString(actual);
+		readString(actual);
+
+		// TODO hit and miss logic and count for words
+	}
+
+	// Caso ninguém tenha acertado, volta o placar para como era no começo da rodada
+	if (!hasHit) {
+		restore(oldScores, players, playerCount);
+	}
+
 	// TODO redo entire game
 	// int j, phraseCount,
 	// 	phraseSequenceCount,

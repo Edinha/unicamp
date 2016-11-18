@@ -22,10 +22,46 @@ void raise(Adjacency ** adjacency) {
 int equals(Adjacency * first, Adjacency * second) {
 	// Maybe compare pointers of words is the way... or maybe they hashs
 
-	int nextEquals = !compare(first->next->id, second->next->id),
-		previousEquals = !compare(first->previous->id, second->previous->id);
+	return (compareWords(first->next, second->next) && compareWords(first->previous, second->previous));
+	// return (first->next->hash == second->next->hash) && (first->previous->hash == second->previous->hash);
 
-	return nextEquals && previousEquals;
+	// Certain to work but slow as f..
+	// int nextEquals = !compare(first->next->id, second->next->id),
+	// 	previousEquals = !compare(first->previous->id, second->previous->id);
+
+	// return nextEquals && previousEquals;
+}
+
+Adjacency* find(List ** adjacencies, Word * previous, Word * next) {
+	if (!adjacencies || !(*adjacencies)) {
+		return NULL;
+	}
+
+	NodeList * node = (*adjacencies)->head;
+
+	// Faz a busca apenas comparando os próximos como não há anterior
+	if (!previous) {
+		for (; node ; node = node->next) {
+			if (compareWords(node->adjacency->next, next)) {
+				return node->adjacency;
+			}
+		}
+
+		return NULL;
+	}
+
+	Adjacency * adjacency = createAdjacency(next, previous);
+
+	// Faz a busca pela adjacência completa
+	for (; node ; node = node->next) {
+		if (equals(node->adjacency, adjacency)) {
+			freeAdjacency(&adjacency);
+			return node->adjacency;
+		}
+	}
+
+	freeAdjacency(&adjacency);
+	return NULL;
 }
 
 void freeAdjacency(Adjacency ** a) {
