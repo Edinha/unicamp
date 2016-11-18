@@ -34,6 +34,7 @@ void readEntryText(HashTable * table, unsigned long wordCount) {
 		if (previousWord && previousToPreviousWord) {
 			adjacency = createAdjacency(word, previousToPreviousWord);
 			addAdjacency(&previousWord->adjacencies, adjacency);
+			previousWord->afterCount++;
 			// TODO count some stuff maybe ?
 		}
 
