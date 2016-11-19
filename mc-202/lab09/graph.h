@@ -13,6 +13,7 @@
  * 		- Peso 0 caso a cor entre eles seja igual
  */
 
+#include "list.h"
 #include "position.h"
 
 /* Define constantes dos pesos que uma aresta pode possuir */

@@ -32,7 +32,6 @@ Image* readImage() {
 	return img;
 }
 
-/* Libera o ponteiro de imagem */
 void freeImage(Image ** img) {
 	for (int i = 0; i < (*img)->height; i++) {
 		free((*img)->pixels[i]);

@@ -23,16 +23,19 @@ bool isValidPosition(Position*, Image*);
 /* Retorna verdadeiro caso a posição da imagem possua a cor branca (Constanste WHITE) */
 bool isWhitePosition(Position*, Image*);
 
-/* Atualiza o ponteiro de posição para acima */
-void up(Position*);
+/* Retorna o inteiro da posição da matriz na imagem parametrizada */
+int color(Image*, Position);
 
-/* Atualiza o ponteiro de posição para abaixo */
-void down(Position*);
+/* Retorna a posição logo acima */
+Position up(Position);
 
-/* Atualiza o ponteiro de posição para a sua esquerda */
-void left(Position*);
+/* Retorna a posição logo abaixo */
+Position down(Position);
 
-/* Atualiza o ponteiro de posição para a sua direita */
-void right(Position*);
+/* Retorna a posição logo a esquerda */
+Position left(Position);
+
+/* Retorna a posição logo a direita */
+Position right(Position);
 
 #endif

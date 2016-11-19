@@ -23,18 +23,26 @@ bool isWhitePosition(Position * position, Image * image) {
 	return (image->pixels[position->x][position->y] == WHITE);
 }
 
-void up(Position * position) {
-	position->y--;
+int color(Image * image, Position position) {
+	return image->pixels[position.x][position.y];
 }
 
-void down(Position * position) {
-	position->y++;
+Position up(Position position) {
+	position.y--;
+	return position;
 }
 
-void left(Position * position) {
-	position->x--;
+Position down(Position position) {
+	position.y++;
+	return position;
 }
 
-void right(Position * position) {
-	position->x++;
+Position left(Position position) {
+	position.x--;
+	return position;
+}
+
+Position right(Position position) {
+	position.x++;
+	return position;
 }
