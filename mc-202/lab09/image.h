@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
+#include <stdbool.h>
 
 /* Define constantes para cores em hexadecimal */
 #define BLACK 0
