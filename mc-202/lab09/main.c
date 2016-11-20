@@ -7,5 +7,14 @@
 
 int main() {
 
+	Image * image = readImage();
+
+	Graph * graph = buildGraph(image);
+
+	// TODO free graph pointer and remove printf
+	printf("%d", graph->size);
+
+	freeImage(&image);
+
 	return 0;
 }

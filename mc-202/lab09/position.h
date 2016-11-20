@@ -14,8 +14,11 @@
 /* Define uma estrutura de posição dentro da imagem */
 typedef
 	struct {
-		int x, y;
+		int value, x, y;
 	} Position;
+
+/* Inicializa um ponteiro de posição a partir de duas coordenadas */
+Position* createPosition(int, int, int value);
 
 /* Retorna caso a posição esteja dentro da imagem */
 bool isValidPosition(Position*, Image*);

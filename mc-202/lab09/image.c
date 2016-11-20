@@ -22,7 +22,7 @@ Image* readImage() {
 	img->pixels = malloc(sizeof(int*) * img->height);
 
 	for (i = 0; i < img->height; i++) {
-		img->pixels[i] = malloc(sizeof(int**) * img->width);
+		img->pixels[i] = malloc(sizeof(int) * img->width);
 		for (j = 0; j < img->width; j++) {
 			scanf("%d%d%d", &r, &g, &b);
 			img->pixels[i][j] = (r << RED_MASK) + (g << GREEN_MASK) + b;

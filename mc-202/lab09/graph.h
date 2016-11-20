@@ -16,9 +16,35 @@
 #include "list.h"
 #include "position.h"
 
+/* Define o máximo de vizinhança entre dois vértices (cima, baixo, esquerda, direita) */
+#define MAX_NEIGHBOURS 4
+
+#define VISITED 1
+#define NOT_VISITED 0
+
+/* Define a estrutura de um vértice, com a indicação de visitado, sua posição e a posição de seus vizinhos */
+typedef
+	struct {
+		int pixel,
+			visited,
+			xPos, yPos;
+
+		int xNeighbours[MAX_NEIGHBOURS],
+			yNeighbours[MAX_NEIGHBOURS];
+	} Vertex;
+
+typedef
+	struct {
+		int size, width;
+		Vertex ** vertexes;
+	} Graph;
+
 /* Define constantes dos pesos que uma aresta pode possuir */
 #define SAME_COLOR 0
 #define DIFFERENT_COLOR 1
+
+/* A partir de uma image, constroe um grafo */
+Graph* buildGraph(Image*);
 
 /* Encontra o caminho pela imagem que liga as duas regiões brancas passando pelo menor número de cores */
 int minimumWay(Image*);

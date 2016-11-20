@@ -18,6 +18,8 @@ void doSomeRecursion(Image * image, List ** possibilities, Position actual, int 
 		return;
 	}
 
+	// TODO check if already visited
+
 	Position adjacency;
 
 
@@ -31,6 +33,33 @@ void doSomeRecursion(Image * image, List ** possibilities, Position actual, int 
 
 	doSomeRecursion(image, possibilities, adjacency, count + colorChange);
 
+}
+
+Graph* buildGraph(Image * image) {
+	Graph * graph = malloc(sizeof(Graph));
+	graph->size = image->width * image->height;
+	graph->width = image->width;
+
+	graph->vertexes = malloc(graph->size * sizeof(Vertex*));
+
+	int pos;
+	for (int i = 0; i < image->height; i++) {
+		for (int j = 0; j < image->width; j++) {
+			pos = (i * graph->width + j);
+
+			graph->vertexes[pos] = malloc(sizeof(Vertex));
+			graph->vertexes[pos]->pixel = image->pixels[i][j];
+			graph->vertexes[pos]->xPos = i;
+			graph->vertexes[pos]->yPos = j;
+			graph->vertexes[pos]->visited = NOT_VISITED;
+
+			// TODO alocate neighbourhood here, function pointers for this to happen
+			for (int k = 0; k < MAX_NEIGHBOURS; k++) {
+			}
+		}
+	}
+
+	return graph;
 }
 
 int minimumWay(Image * image) {
