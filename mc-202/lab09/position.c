@@ -9,13 +9,6 @@
 
 // TODO remove this, replace logic later
 
-Position* createPosition(int x, int y, int value) {
-	Position * position = malloc(sizeof(Position));
-	position->x = x;
-	position->y = y;
-	return position;
-}
-
 bool isValidPosition(Position * position, Image * image) {
 	if (position->x >= image->width || position->x < 0) {
 		return false;

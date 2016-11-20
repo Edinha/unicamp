@@ -26,11 +26,10 @@
 typedef
 	struct {
 		int pixel,
-			visited,
-			xPos, yPos;
+			visited;
 
-		int xNeighbours[MAX_NEIGHBOURS],
-			yNeighbours[MAX_NEIGHBOURS];
+		Position position,
+				 neighbours[MAX_NEIGHBOURS];
 	} Vertex;
 
 typedef

@@ -42,6 +42,10 @@ Graph* buildGraph(Image * image) {
 
 	graph->vertexes = malloc(graph->size * sizeof(Vertex*));
 
+	Position actual, adjacency;
+
+	Position (*sides[MAX_NEIGHBOURS]) (Position) = {&up, &down, &left, &right};
+
 	int pos;
 	for (int i = 0; i < image->height; i++) {
 		for (int j = 0; j < image->width; j++) {
@@ -49,12 +53,18 @@ Graph* buildGraph(Image * image) {
 
 			graph->vertexes[pos] = malloc(sizeof(Vertex));
 			graph->vertexes[pos]->pixel = image->pixels[i][j];
-			graph->vertexes[pos]->xPos = i;
-			graph->vertexes[pos]->yPos = j;
 			graph->vertexes[pos]->visited = NOT_VISITED;
+
+			graph->vertexes[pos]->position.x = i;
+			graph->vertexes[pos]->position.y = j;
+
+			actual.x = i;
+			actual.y = j;
 
 			// TODO alocate neighbourhood here, function pointers for this to happen
 			for (int k = 0; k < MAX_NEIGHBOURS; k++) {
+				adjacency = (*sides[k])(actual);
+				graph->vertexes[pos]->neighbours[k] = adjacency;
 			}
 		}
 	}
