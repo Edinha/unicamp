@@ -25,10 +25,6 @@ bool isWhitePosition(Position * position, Image * image) {
 	return (image->pixels[position->x][position->y] == WHITE);
 }
 
-int color(Image * image, Position position) {
-	return image->pixels[position.x][position.y];
-}
-
 Position up(Position position) {
 	position.y--;
 	return position;

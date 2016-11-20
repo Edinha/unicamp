@@ -48,4 +48,7 @@ Graph* buildGraph(Image*);
 /* Encontra o caminho pela imagem que liga as duas regiões brancas passando pelo menor número de cores */
 int minimumWay(Image*);
 
+/* Libera um ponteiro de grafo alocado */
+void freeGraph(Graph**);
+
 #endif

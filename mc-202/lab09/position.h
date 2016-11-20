@@ -23,9 +23,6 @@ bool isValidPosition(Position*, Image*);
 /* Retorna verdadeiro caso a posição da imagem possua a cor branca (Constanste WHITE) */
 bool isWhitePosition(Position*, Image*);
 
-/* Retorna o inteiro da posição da matriz na imagem parametrizada */
-int color(Image*, Position);
-
 /* Retorna a posição logo acima */
 Position up(Position);
 
