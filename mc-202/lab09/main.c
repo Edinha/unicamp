@@ -11,9 +11,13 @@ int main() {
 
 	Graph * graph = buildGraph(image);
 
-	freeImage(&image);
+	int response = minimumWay(graph, image);
 
-	// TODO find a white spot for start and then the answer
+	// TODO printf the response here
+
+	printf("%d\n", response);
+
+	freeImage(&image);
 
 	freeGraph(&graph);
 

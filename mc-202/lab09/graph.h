@@ -2,6 +2,7 @@
  * RA    : 188671
  * Turma : F
  */
+
 #ifndef GRAPH_H
 #define GRAPH_H
 
@@ -34,7 +35,7 @@ typedef
 
 typedef
 	struct {
-		int size, width;
+		int size;
 		Vertex ** vertexes;
 	} Graph;
 
@@ -45,8 +46,11 @@ typedef
 /* A partir de uma image, constroe um grafo */
 Graph* buildGraph(Image*);
 
+/* Retorna a posição inteira do vértice no grafo a partir de uma estrutura de posição e de uma largura inteira da imagem */
+int vertexPos(int, Position);
+
 /* Encontra o caminho pela imagem que liga as duas regiões brancas passando pelo menor número de cores */
-int minimumWay(Image*);
+int minimumWay(Graph*, Image*);
 
 /* Libera um ponteiro de grafo alocado */
 void freeGraph(Graph**);
