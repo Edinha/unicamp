@@ -45,7 +45,7 @@ void doSomeRecursion(Graph * graph, Image * image, List ** possibilities, Positi
 	}
 }
 
-void queueThis(Graph * graph) {
+int queueThis(Graph * graph) {
 	int count = 0,
 		colorChange,
 		sidewayPos,
@@ -57,7 +57,7 @@ void queueThis(Graph * graph) {
 	Queue * path = createQueue();
 
 	// Procura uma posição branca dentre os vértices do grafo
-	for (i = 0; i < graph->size / 2; i++) {
+	for (i = 0; i < graph->size; i++) {
 		actual = graph->vertexes[i]->position;
 		if (graph->vertexes[i]->pixel == WHITE) {
 			break;
@@ -77,7 +77,7 @@ void queueThis(Graph * graph) {
 		// encontrar regiao branca para ele
 
 		actual = dequeue(&path, &count);
-		pos = vertexPos(graph->width, actual);
+		pos = vertexPos(graph->height, actual);
 
 		// Casos onde a posição não é válida para continuação da busca
 		// Não está dentro da imagem ou já foi visitada pelo algoritmo
@@ -98,7 +98,12 @@ void queueThis(Graph * graph) {
 			colorChange = SAME_COLOR;
 
 			sideway = graph->vertexes[pos]->neighbours[i];
-			sidewayPos = vertexPos(graph->width, sideway);
+
+			if (!isValid(graph, &sideway)) {
+				continue;
+			}
+
+			sidewayPos = vertexPos(graph->height, sideway);
 
 			if (!graph->vertexes[sidewayPos]->visited) {
 				if (graph->vertexes[pos]->pixel != graph->vertexes[sidewayPos]->pixel) {
@@ -110,10 +115,24 @@ void queueThis(Graph * graph) {
 		}
 	}
 
-	// TODO print the response for the least of the list
+	// TODO get the response for the list
+	int min = graph->size;
+	NodeList * node = list->head;
+	for (;;) {
+		if (!node) {
+			break;
+		}
+
+		count = node->count;
+		if (count && count < min) {
+			min = count;
+		}
+	}
 
 	freeList(&list);
 	freeQueue(&path);
+
+	return count;
 }
 
 Graph* buildGraph(Image * image) {
@@ -128,8 +147,8 @@ Graph* buildGraph(Image * image) {
 	Position (*sides[MAX_NEIGHBOURS]) (Position) = {&up, &down, &left, &right};
 
 	int pos;
-	for (int i = 0; i < image->height; i++) {
-		for (int j = 0; j < image->width; j++) {
+	for (int i = 0; i < graph->height; i++) {
+		for (int j = 0; j < graph->width; j++) {
 			actual.x = i;
 			actual.y = j;
 
@@ -153,7 +172,7 @@ Graph* buildGraph(Image * image) {
 }
 
 int vertexPos(int width, Position position) {
-	return position.x + (width * position.y);
+	return position.x * width + position.y;
 }
 
 bool isValid(Graph * graph, Position * position) {
@@ -170,18 +189,8 @@ bool isValid(Graph * graph, Position * position) {
 
 int minimumWay(Graph * graph, Image * image) {
 	// TODO make all the shit happen in here
-	List * list = createList();
 
-	Position actual;
-
-	// TODO find a white block for starters
-	actual.x = 0; actual.y = 0;
-
-	doSomeRecursion(graph, image, &list, actual, 0);
-
-	freeList(&list);
-
-	return 0;
+	return queueThis(graph);
 }
 
 void freeGraph(Graph ** graph) {
