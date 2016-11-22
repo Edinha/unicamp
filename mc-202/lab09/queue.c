@@ -17,7 +17,7 @@ NodeQueue* createNodeQueue(int count, Position position) {
 
 Queue* createQueue() {
 	Queue * queue = malloc(sizeof(Queue));
-	queue->head = queue->head = NULL;
+	queue->head = queue->tail = NULL;
 	return queue;
 }
 

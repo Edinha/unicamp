@@ -10,11 +10,11 @@
 // TODO remove this, replace logic later
 
 bool isValidPosition(Position * position, Image * image) {
-	if (position->x >= image->width || position->x < 0) {
+	if (position->x >= image->height || position->x < 0) {
 		return false;
 	}
 
-	if (position->y >= image->height || position->y < 0) {
+	if (position->y >= image->width || position->y < 0) {
 		return false;
 	}
 

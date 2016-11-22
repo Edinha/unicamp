@@ -45,19 +45,30 @@ void doSomeRecursion(Graph * graph, Image * image, List ** possibilities, Positi
 	}
 }
 
-void queueThis(Graph * graph, Image * image) {
+void queueThis(Graph * graph) {
 	int count = 0,
 		colorChange,
 		sidewayPos,
 		pos,
 		i;
 
-	// TODO find a inicial position, remove this sets
 	Position actual, sideway;
-	actual.x = 0; actual.y = 0;
-
 	List * list = createList();
 	Queue * path = createQueue();
+
+	// Procura uma posição branca dentre os vértices do grafo
+	for (i = 0; i < graph->size / 2; i++) {
+		actual = graph->vertexes[i]->position;
+		if (graph->vertexes[i]->pixel == WHITE) {
+			break;
+		}
+
+		pos = graph->size - i - 1;
+		actual = graph->vertexes[pos]->position;
+		if (graph->vertexes[pos]->pixel == WHITE) {
+			break;
+		}
+	}
 
 	queue(&path, count, actual);
 
@@ -66,20 +77,28 @@ void queueThis(Graph * graph, Image * image) {
 		// encontrar regiao branca para ele
 
 		actual = dequeue(&path, &count);
+		pos = vertexPos(graph->width, actual);
 
-		pos = vertexPos(image->width, actual);
-		graph->vertexes[pos]->visited = VISITED;
+		// Casos onde a posição não é válida para continuação da busca
+		// Não está dentro da imagem ou já foi visitada pelo algoritmo
+		if (!isValid(graph, &actual) || graph->vertexes[pos]->visited) {
+			continue;
+		}
 
-		if (isWhitePosition(&actual, image)) {
+		// Caso seja um vértice branco, adiciona a contagem atual na lista
+		if (graph->vertexes[pos]->pixel == WHITE) {
 			insert(&list, count);
 		}
+
+		// Marca a posição atual como visitada
+		graph->vertexes[pos]->visited = VISITED;
 
 		// Para cada um dos vizinhos, o avalia e o realoca na fila para continuar a busca
 		for (i = 0; i < MAX_NEIGHBOURS; i++) {
 			colorChange = SAME_COLOR;
 
 			sideway = graph->vertexes[pos]->neighbours[i];
-			sidewayPos = vertexPos(image->width, sideway);
+			sidewayPos = vertexPos(graph->width, sideway);
 
 			if (!graph->vertexes[sidewayPos]->visited) {
 				if (graph->vertexes[pos]->pixel != graph->vertexes[sidewayPos]->pixel) {
@@ -101,6 +120,8 @@ Graph* buildGraph(Image * image) {
 	Graph * graph = malloc(sizeof(Graph));
 
 	graph->size = image->width * image->height;
+	graph->width = image->width;
+	graph->height = image->height;
 	graph->vertexes = malloc(graph->size * sizeof(Vertex*));
 
 	Position actual, adjacency;
@@ -112,7 +133,7 @@ Graph* buildGraph(Image * image) {
 			actual.x = i;
 			actual.y = j;
 
-			pos = vertexPos(image->width, actual);
+			pos = vertexPos(graph->width, actual);
 
 			graph->vertexes[pos] = malloc(sizeof(Vertex));
 			graph->vertexes[pos]->pixel = image->pixels[i][j];
@@ -132,7 +153,19 @@ Graph* buildGraph(Image * image) {
 }
 
 int vertexPos(int width, Position position) {
-	return position.x * width + position.y;
+	return position.x + (width * position.y);
+}
+
+bool isValid(Graph * graph, Position * position) {
+	if (position->x >= graph->height || position->x < 0) {
+		return false;
+	}
+
+	if (position->y >= graph->width || position->y < 0) {
+		return false;
+	}
+
+	return true;
 }
 
 int minimumWay(Graph * graph, Image * image) {

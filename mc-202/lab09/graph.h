@@ -35,8 +35,10 @@ typedef
 
 typedef
 	struct {
-		int size;
 		Vertex ** vertexes;
+		int size,
+			width,
+			height;
 	} Graph;
 
 /* Define constantes dos pesos que uma aresta pode possuir */
@@ -48,6 +50,9 @@ Graph* buildGraph(Image*);
 
 /* Retorna a posição inteira do vértice no grafo a partir de uma estrutura de posição e de uma largura inteira da imagem */
 int vertexPos(int, Position);
+
+/* Retorna verdadeiro caso a posição esteja dentro da imagem */
+bool isValid(Graph*, Position*);
 
 /* Encontra o caminho pela imagem que liga as duas regiões brancas passando pelo menor número de cores */
 int minimumWay(Graph*, Image*);
