@@ -15,7 +15,7 @@
  */
 
 #include "list.h"
-#include "position.h"
+#include "queue.h"
 
 /* Define o máximo de vizinhança entre dois vértices (cima, baixo, esquerda, direita) */
 #define MAX_NEIGHBOURS 4

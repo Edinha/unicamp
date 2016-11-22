@@ -15,6 +15,7 @@
 /* Define a estrutura de nó da Fila, com sua posicao e referencia para o proximo elemento */
 typedef
 	struct NodeQueue {
+		int count;
 		Position position;
 		struct NodeQueue * next;
 	} NodeQueue;
@@ -26,16 +27,19 @@ typedef
 	} Queue;
 
 /* Inicializa um novo ponteiro de nó para a fila de posicoes */
-NodeQueue* createNodeQueue(Position);
+NodeQueue* createNodeQueue(int, Position);
 
 /* Inicializa um novo ponteiro de fila */
 Queue* createQueue();
 
 /* Enfileira uma posicao na fila */
-void queue(Queue**, Position);
+void queue(Queue**, int, Position);
 
 /* Desenfileira uma posicao da fila */
-Position dequeue(Queue**);
+Position dequeue(Queue**, int*);
+
+/* Retorna verdadeiro caso a lista esteja vazia */
+int isEmpty(Queue**);
 
 /* Libera o ponteiro de nos de fila recursivamente */
 void freeNodeQueue(NodeQueue**);

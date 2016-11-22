@@ -45,17 +45,68 @@ void doSomeRecursion(Graph * graph, Image * image, List ** possibilities, Positi
 	}
 }
 
+void queueThis(Graph * graph, Image * image) {
+	int count = 0,
+		colorChange,
+		sidewayPos,
+		pos,
+		i;
+
+	// TODO find a inicial position, remove this sets
+	Position actual, sideway;
+	actual.x = 0; actual.y = 0;
+
+	List * list = createList();
+	Queue * path = createQueue();
+
+	queue(&path, count, actual);
+
+	while (!isEmpty(&path)) {
+		// A partir da fila, retira o elemento que entrou primeiro e aplica a logica de
+		// encontrar regiao branca para ele
+
+		actual = dequeue(&path, &count);
+
+		pos = vertexPos(image->width, actual);
+		graph->vertexes[pos]->visited = VISITED;
+
+		if (isWhitePosition(&actual, image)) {
+			insert(&list, count);
+		}
+
+		// Para cada um dos vizinhos, o avalia e o realoca na fila para continuar a busca
+		for (i = 0; i < MAX_NEIGHBOURS; i++) {
+			colorChange = SAME_COLOR;
+
+			sideway = graph->vertexes[pos]->neighbours[i];
+			sidewayPos = vertexPos(image->width, sideway);
+
+			if (!graph->vertexes[sidewayPos]->visited) {
+				if (graph->vertexes[pos]->pixel != graph->vertexes[sidewayPos]->pixel) {
+					colorChange = DIFFERENT_COLOR;
+				}
+
+				queue(&path, count + colorChange, sideway);
+			}
+		}
+	}
+
+	// TODO print the response for the least of the list
+
+	freeList(&list);
+	freeQueue(&path);
+}
+
 Graph* buildGraph(Image * image) {
 	Graph * graph = malloc(sizeof(Graph));
 
 	graph->size = image->width * image->height;
-
 	graph->vertexes = malloc(graph->size * sizeof(Vertex*));
 
-	int pos;
 	Position actual, adjacency;
 	Position (*sides[MAX_NEIGHBOURS]) (Position) = {&up, &down, &left, &right};
 
+	int pos;
 	for (int i = 0; i < image->height; i++) {
 		for (int j = 0; j < image->width; j++) {
 			actual.x = i;

@@ -7,8 +7,9 @@
 
 /* Implementacao dos metodos */
 
-NodeQueue* createNodeQueue(Position position) {
+NodeQueue* createNodeQueue(int count, Position position) {
 	NodeQueue * node = malloc(sizeof(NodeQueue));
+	node->count = count;
 	node->position = position;
 	node->next = NULL;
 	return node;
@@ -20,8 +21,8 @@ Queue* createQueue() {
 	return queue;
 }
 
-void queue(Queue ** queue, Position position) {
-	NodeQueue * node = createNodeQueue(position);
+void queue(Queue ** queue, int count, Position position) {
+	NodeQueue * node = createNodeQueue(count, position);
 
 	if (!(*queue)->head) {
 		(*queue)->head = (*queue)->tail = node;
@@ -32,13 +33,19 @@ void queue(Queue ** queue, Position position) {
 	(*queue)->tail = (*queue)->tail->next;
 }
 
-Position dequeue(Queue ** queue) {
+Position dequeue(Queue ** queue, int * count) {
 	NodeQueue * node = (*queue)->head;
 	Position position = node->position;
+
+	*count = node->count;
 
 	(*queue)->head = (*queue)->head->next;
 	free(node);
 	return position;
+}
+
+int isEmpty(Queue ** queue) {
+	return ((*queue)->head == NULL);
 }
 
 void freeNodeQueue(NodeQueue ** node) {
