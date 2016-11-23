@@ -13,8 +13,7 @@ int main() {
 
 	int response = minimumWay(image, heap);
 
-	// TODO Print the right message for Marie
-	printf("%d\n", response);
+	printf("Maria deve memorizar %d regioes.\n", response);
 
 	freeImage(&image);
 

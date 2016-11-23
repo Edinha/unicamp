@@ -29,7 +29,7 @@ bool isAlreadyVisited(Position position, Image * image) {
 
 int compare(Position first, Position second) {
 
-	if (first.distance >= second.distance) {
+	if (first.distance > second.distance) {
 		return GREATER;
 	}
 

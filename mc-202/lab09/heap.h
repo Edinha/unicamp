@@ -26,9 +26,6 @@ typedef
 /* Inicializa um ponteiro de heap a partir de um tamanho máximo para o vetor */
 Heap* createHeap(int);
 
-/* Retorna verdadeiro caso o tamanho atual seja igual ao maximo */
-int isFull(Heap*);
-
 /* Retorna o pai de uma posição parametrizada */
 int parent(int);
 

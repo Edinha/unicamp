@@ -23,10 +23,6 @@ Heap * createHeap(int size) {
 	return heap;
 }
 
-int isFull(Heap * heap) {
-	return (heap->actualSize == heap->maxSize);
-}
-
 int parent(int position) {
 	return (position - 1) / 2;
 }
@@ -40,15 +36,15 @@ int rightChild(int position) {
 }
 
 bool validHeapPosition(Heap * heap, int position) {
-	if (position > heap->actualSize) {
+	if (position >= heap->actualSize) {
 		return false;
 	}
 
 	return true;
 }
 
-void store(Heap * heap, Position pos) {
-	heap->data[heap->actualSize] = pos;
+void store(Heap * heap, Position position) {
+	heap->data[heap->actualSize] = position;
 	heap->actualSize++;
 	shiftUp(heap, heap->actualSize - 1);
 }
@@ -57,7 +53,7 @@ Position retrieve(Heap * heap) {
 	Position pos = heap->data[0];
 	heap->actualSize--;
 	heap->data[0] = heap->data[heap->actualSize];
-	shiftDown(heap, heap->actualSize - 1);
+	shiftDown(heap, 0);
 
 	return pos;
 }
@@ -90,14 +86,21 @@ void shiftDown(Heap * heap, int position) {
 	// Para cada uma dos lados, gera a comparação com a posição atual
 	for (int i = 0; i < CHILD_SIDE_COUNT; i++) {
 		child = (*childs[i]) (position);
+
+		// Caso seja uma posição não contida no heap, pula a comparação
+		if (!validHeapPosition(heap, child)) {
+			continue;
+		}
+
 		comparison = compare(heap->data[child], heap->data[minimum]);
 
 		// Caso seja menor do que a posição de menor até agora encontrada, atualiza com o menor possível
-		if (validHeapPosition(heap, child) && comparison == LESSER) {
+		if (comparison == LESSER) {
 			minimum = child;
 		}
 	}
 
+	// Caso o mínimo tenha mudado, é preciso continuar descendo a partir do filho menor
 	if (minimum != position) {
 		exchange(heap, minimum, position);
 		shiftDown(heap, minimum);
