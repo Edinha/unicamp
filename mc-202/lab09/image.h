@@ -20,11 +20,17 @@
 #define RED_MASK 16
 #define GREEN_MASK 8
 
-/* Define a estrutura de imagem, com altura, largura e a matrix de pixels de entrada */
+/* Define as constantes para dizer se um vértice já foi visitado ou não */
+#define VISITED 1
+#define NOT_VISITED 0
+
+/* Define a estrutura de imagem, com altura, largura, a matrix de pixels de entrada
+ * e uma matriz de posições já visitadas */
 typedef
 	struct {
 		int width, height;
 		int ** pixels;
+		int ** path;
 	} Image;
 
 // função presume que não ocorrem erros e que

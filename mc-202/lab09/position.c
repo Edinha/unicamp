@@ -7,8 +7,6 @@
 
 /* Implementação dos métodos */
 
-// TODO remove this, replace logic later
-
 bool isValidPosition(Position * position, Image * image) {
 	if (position->x >= image->height || position->x < 0) {
 		return false;
