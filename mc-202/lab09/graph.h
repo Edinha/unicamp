@@ -10,7 +10,7 @@
  * a partir de uma algoritmo de busca em largura, encontra o menor caminho entre duas regiões
  */
 
-#include "position.h"
+#include "heap.h"
 
 /* Retorna uma posição branca de começo para o algortimo */
 Position findWhiteStarter(Image*);

@@ -11,10 +11,14 @@
 
 #include "image.h"
 
+/* Define os retornos para a comparação de duas posições */
+#define GREATER 1
+#define LESSER -1
+
 /* Define uma estrutura de posição dentro da imagem */
 typedef
 	struct {
-		int x, y;
+		int x, y, distance;
 	} Position;
 
 /* Retorna caso a posição esteja dentro da imagem */
@@ -22,6 +26,9 @@ bool isValidPosition(Position*, Image*);
 
 /* Retorna verdadeiro caso a posição da imagem possua a cor branca (Constanste WHITE) */
 bool isWhitePosition(Position*, Image*);
+
+/* Compara as distâncias de duas posições, retornando GREATER caso primeira maior que segunda ou LESSER caso contrário*/
+int compare(Position, Position);
 
 /* Retorna a posição logo acima */
 Position up(Position);

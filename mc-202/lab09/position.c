@@ -23,6 +23,16 @@ bool isWhitePosition(Position * position, Image * image) {
 	return (image->pixels[position->x][position->y] == WHITE);
 }
 
+// TODO comparison for position
+int compare(Position first, Position second) {
+
+	if (first.distance >= second.distance) {
+		return GREATER;
+	}
+
+	return LESSER;
+}
+
 Position up(Position position) {
 	position.y--;
 	return position;
