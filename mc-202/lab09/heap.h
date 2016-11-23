@@ -42,10 +42,10 @@ int rightChild(int);
 bool validHeapPosition(Heap*, int);
 
 /* Insere na heap a posição atual com sua distância */
-void push(Heap*, Position);
+void store(Heap*, Position);
 
 /* Retira a posição de menor distância da heap */
-Position pop(Heap*);
+Position retrieve(Heap*);
 
 /* Conserta o heap subindo os elementos fora de ordem */
 void shiftUp(Heap*, int);

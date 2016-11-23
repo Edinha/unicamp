@@ -23,6 +23,10 @@ bool isWhitePosition(Position * position, Image * image) {
 	return (image->pixels[position->x][position->y] == WHITE);
 }
 
+bool isAlreadyVisited(Position position, Image * image) {
+	return (image->path[position.x][position.y] == VISITED);
+}
+
 int compare(Position first, Position second) {
 
 	if (first.distance >= second.distance) {
@@ -30,6 +34,14 @@ int compare(Position first, Position second) {
 	}
 
 	return LESSER;
+}
+
+int color(Position position, Image * image) {
+	return (image->pixels[position.x][position.y]);
+}
+
+void visit(Position position, Image * image) {
+	image->path[position.x][position.y] = VISITED;
 }
 
 Position up(Position position) {

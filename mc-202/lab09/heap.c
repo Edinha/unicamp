@@ -47,10 +47,19 @@ bool validHeapPosition(Heap * heap, int position) {
 	return true;
 }
 
-void push(Heap * heap, Position pos) {
+void store(Heap * heap, Position pos) {
 	heap->data[heap->actualSize] = pos;
 	heap->actualSize++;
 	shiftUp(heap, heap->actualSize - 1);
+}
+
+Position retrieve(Heap * heap) {
+	Position pos = heap->data[0];
+	heap->actualSize--;
+	heap->data[0] = heap->data[heap->actualSize];
+	shiftDown(heap, heap->actualSize - 1);
+
+	return pos;
 }
 
 void shiftUp(Heap * heap, int position) {
@@ -69,15 +78,6 @@ void shiftUp(Heap * heap, int position) {
 		exchange(heap, parentPos, position);
 		shiftUp(heap, parentPos);
 	}
-}
-
-Position pop(Heap * heap) {
-	Position pos = heap->data[0];
-	heap->actualSize--;
-	heap->data[0] = heap->data[heap->actualSize];
-	shiftDown(heap, heap->actualSize - 1);
-
-	return pos;
 }
 
 void shiftDown(Heap * heap, int position) {

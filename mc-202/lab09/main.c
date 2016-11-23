@@ -3,18 +3,22 @@
  * Turma : F
  */
 
-#include "image.h"
+#include "graph.h"
 
 int main() {
 
 	Image * image = readImage();
 
+	Heap * heap = createHeap(image->width * image->height);
+
 	// TODO call method for solve and print response here
-	int response = 0; //minimumWay(graph, image);
+	int response = minimumWay(image, heap);
 
 	printf("%d\n", response);
 
 	freeImage(&image);
+
+	freeHeap(&heap);
 
 	return 0;
 }

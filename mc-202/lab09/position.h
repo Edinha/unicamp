@@ -27,8 +27,17 @@ bool isValidPosition(Position*, Image*);
 /* Retorna verdadeiro caso a posição da imagem possua a cor branca (Constanste WHITE) */
 bool isWhitePosition(Position*, Image*);
 
+/* Retorna verdadeiro caso a posição da imagem já esteja marcada como visitada */
+bool isAlreadyVisited(Position, Image*);
+
 /* Compara as distâncias de duas posições, retornando GREATER caso primeira maior que segunda ou LESSER caso contrário*/
 int compare(Position, Position);
+
+/* Retorna a cor do pixel da imagem na posição parametrizada */
+int color(Position, Image*);
+
+/* Marca como visitada a posição da imagem */
+void visit(Position, Image*);
 
 /* Retorna a posição logo acima */
 Position up(Position);

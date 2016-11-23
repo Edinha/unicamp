@@ -12,10 +12,17 @@
 
 #include "heap.h"
 
+/* Define a quantidade de vizinhos de um vértice do grafo */
+#define MAX_NEIGHBOURS 4
+
+/* Define constantes dos pesos que uma aresta pode possuir */
+#define SAME_COLOR 0
+#define DIFFERENT_COLOR 1
+
 /* Retorna uma posição branca de começo para o algortimo */
 Position findWhiteStarter(Image*);
 
 /* Retorna o inteiro representando a distância do menor caminho entre as duas regiões brancas da imagem */
-int minimumWay(Image*);
+int minimumWay(Image*, Heap*);
 
 #endif
