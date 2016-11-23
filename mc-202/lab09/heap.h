@@ -13,6 +13,8 @@
  */
 
 #define ZERO_INIT 0
+#define INVALID_INIT -1
+#define CHILD_SIDE_COUNT 2
 
 typedef
 	struct {
@@ -29,6 +31,15 @@ int isFull(Heap*);
 
 /* Retorna o pai de uma posição parametrizada */
 int parent(int);
+
+/* Retorna a esquerda de uma posição parametrizada */
+int leftChild(int);
+
+/* Retorna a direita de uma posição parametrizada */
+int rightChild(int);
+
+/* Retorna veradeiro caso a posição esteja dentro do espectro do heap e falso caso contrário */
+bool validHeapPosition(Heap*, int);
 
 /* Insere na heap a posição atual com sua distância */
 void push(Heap*, Position);
