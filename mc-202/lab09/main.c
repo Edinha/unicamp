@@ -11,9 +11,9 @@ int main() {
 
 	Heap * heap = createHeap(image->width * image->height);
 
-	// TODO call method for solve and print response here
 	int response = minimumWay(image, heap);
 
+	// TODO Print the right message for Marie
 	printf("%d\n", response);
 
 	freeImage(&image);

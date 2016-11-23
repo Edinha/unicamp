@@ -6,11 +6,13 @@
 #include "graph.h"
 
 /* Implementação dos métodos */
+
 Position findWhiteStarter(Image * image) {
 	Position starter;
 
-	for (int i = 0; i < image->height; i++) {
-		for (int j = 0; j < image->width; j++) {
+	int i, j;
+	for (i = 0; i < image->height; i++) {
+		for (j = 0; j < image->width; j++) {
 			starter.x = i;
 			starter.y = j;
 
@@ -24,9 +26,7 @@ Position findWhiteStarter(Image * image) {
 }
 
 int minimumWay(Image * image, Heap * heap) {
-	// TODO heap logic here...
-
-	int j, colorChange;
+	int i, colorChange;
 
 	Position (*sides[MAX_NEIGHBOURS]) (Position) = {&up, &down, &left, &right};
 
@@ -37,7 +37,6 @@ int minimumWay(Image * image, Heap * heap) {
 	store(heap, actual);
 
 	for (;;) {
-		// TODO logic of store neighbours and bla bla bla
 
 		actual = retrieve(heap);
 
@@ -45,8 +44,8 @@ int minimumWay(Image * image, Heap * heap) {
 			return actual.distance;
 		}
 
-		for (j = 0; j < MAX_NEIGHBOURS; j++) {
-			Position sideway = (*sides[j]) (actual);
+		for (i = 0; i < MAX_NEIGHBOURS; i++) {
+			Position sideway = (*sides[i]) (actual);
 			colorChange = SAME_COLOR;
 
 			if (!isValidPosition(&sideway, image)) {
