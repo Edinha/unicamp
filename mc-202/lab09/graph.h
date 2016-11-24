@@ -19,6 +19,9 @@
 #define SAME_COLOR 0
 #define DIFFERENT_COLOR 1
 
+/* Visita toda a regiao branca inicial a partir de uma posicao */
+void flood(Heap*, Image*, Position);
+
 /* Retorna uma posição branca de começo para o algortimo */
 Position findWhiteStarter(Image*);
 

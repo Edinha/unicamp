@@ -7,6 +7,29 @@
 
 /* Implementação dos métodos */
 
+void flood(Heap * heap, Image * image, Position position) {
+	Position (*sides[MAX_NEIGHBOURS]) (Position) = {&up, &down, &left, &right};
+	Position sideway;
+
+	for (int i = 0; i < MAX_NEIGHBOURS; i++) {
+		sideway = (*sides[i]) (position);
+
+		// Caso não seja válida ou já foi visitada, ignora a posição
+		if (!isValidPosition(&sideway, image) || isAlreadyVisited(sideway, image)) {
+			continue;
+		}
+
+		// Caso seja regiao branca ainda na vizinhanca, continua a visitando
+		if (isWhitePosition(&sideway, image)) {
+			visit(sideway, image);
+			flood(heap, image, sideway);
+		} else {
+			// Senao, enfileira uma posicao de borda
+			store(heap, position);
+		}
+	}
+}
+
 Position findWhiteStarter(Image * image) {
 	Position starter;
 
@@ -34,9 +57,8 @@ int minimumWay(Image * image, Heap * heap) {
 	Position actual = findWhiteStarter(image);
 	actual.distance = ZERO_INIT;
 
-	// Marcaa posição atual como visitidada e aloca na heap como a primeira a ser avaliada
-	visit(actual, image);
-	store(heap, actual);
+	// Marca a posição atual como visitidada bem como toda a regiao
+	flood(heap, image, actual);
 
 	for (;;) {
 
@@ -48,11 +70,7 @@ int minimumWay(Image * image, Heap * heap) {
 			Position sideway = (*sides[i]) (actual);
 
 			// Caso não seja válida ou já foi visitada, ignora a posição
-			if (!isValidPosition(&sideway, image)) {
-				continue;
-			}
-
-			if (isAlreadyVisited(sideway, image)) {
+			if (!isValidPosition(&sideway, image) || isAlreadyVisited(sideway, image)) {
 				continue;
 			}
 
@@ -69,8 +87,8 @@ int minimumWay(Image * image, Heap * heap) {
 			}
 
 			// Atualiza a distância da vizinha e aloca sua posição na fila de prioridade
-			sideway.distance = actual.distance + colorChange;
 			visit(sideway, image);
+			sideway.distance = actual.distance + colorChange;
 			store(heap, sideway);
 		}
 	}
