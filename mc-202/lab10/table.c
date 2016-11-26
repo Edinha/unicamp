@@ -9,6 +9,7 @@
 
 HashTable* createHashTable(unsigned long wordCount) {
 	HashTable * table = malloc(sizeof(HashTable));
+	table->wordCount = wordCount;
 	table->size = SIZE_MULTIPLIER * wordCount;
 
 	table->data = malloc(table->size * sizeof(Word*));
@@ -31,8 +32,7 @@ Word* insert(HashTable * table, String id) {
 		position = (position + 1) % table->size;
 	}
 
-	Word * word = createWord(id);
-	word->hash = position;
+	Word * word = createWord(id, table->wordCount);
 	table->data[position] = word;
 
 	return word;

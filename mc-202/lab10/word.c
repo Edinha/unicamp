@@ -7,11 +7,16 @@
 
 /* Implementação dos métodos */
 
-Word* createWord(String id) {
+Word* createWord(String id, int size) {
 	Word * word = malloc(sizeof(Word));
-	word->hash = ZERO_INIT;
-	word->continuation = NULL;
 	strcpy(word->id, id);
+
+	word->last = ZERO_INIT;
+	word->continuations = malloc(size * sizeof(Word*));
+	for(int i = 0; i < size; i++) {
+		word->continuations[i] = NULL;
+	}
+
 	return word;
 }
 
@@ -20,19 +25,10 @@ int compare(String first, String second) {
 }
 
 int compareWords(Word * first, Word * second) {
-	return (first->hash == second->hash);
-}
-
-void freeContinuation(Continuation ** continuation) {
-	if (!(*continuation)) {
-		return;
-	}
-
-	freeContinuation(&(*continuation)->next);
-	free(*continuation);
+	return compare(first->id, second->id);
 }
 
 void freeWord(Word ** word) {
-	freeContinuation(&(*word)->continuation);
+	free((*word)->continuations);
 	free(*word);
 }

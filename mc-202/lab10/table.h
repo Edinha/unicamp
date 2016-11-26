@@ -21,6 +21,7 @@ typedef
 	struct {
 		Word ** data;
 		unsigned long size;
+		int wordCount;
 	} HashTable;
 
 /* Inicializa uma hash table a partir de um tamanho */
