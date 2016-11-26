@@ -21,22 +21,34 @@
 typedef char String[MAX_WORD_SIZE];
 typedef struct Word Word;
 
+typedef
+	struct {
+		int count;
+		Word * word;
+	} Continuation;
+
 /* Define a estrutura de palavra da tabela, com sua identificação, vetor de continuações e a última posição de alocação */
 	struct Word {
 		String id;
 
-		int last;
-		Word ** continuations;
+		int size;
+		Continuation ** continuations;
 	};
 
 /* Inicializa uma palavra a partir de uma string e de um tamanho para o vetor de continuações */
 Word* createWord(String, int);
+
+/* Inicializa uma continuação de palavra */
+Continuation* createContinuation(Word*);
 
 /* Compara duas palavras com retornando igual(0) maior(1) ou menor(-1) */
 int compare(String, String);
 
 /* Compara duas palavras a partir de seus ids */
 int compareWords(Word*, Word*);
+
+/* Aloca a segunda palavra */
+void alocateSequence(Word*, Word*);
 
 /* Libera um ponteiro de palavra */
 void freeWord(Word**);

@@ -5,5 +5,7 @@
 
 int main() {
 
+	// TODO reading and mounting the motherfucking graph here
+
 	return 0;
 }
