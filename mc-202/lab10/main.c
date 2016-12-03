@@ -3,6 +3,8 @@
  * Turma : F
  */
 
+#include "reading.h"
+
 int main() {
 
 	// TODO reading and mounting the motherfucking graph here

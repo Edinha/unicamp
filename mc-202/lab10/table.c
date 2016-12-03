@@ -7,10 +7,11 @@
 
 /* Implementacao dos metodos */
 
-HashTable* createHashTable(unsigned long wordCount) {
+HashTable* createHashTable(unsigned long wordCount, unsigned long edgeSizeDelimiter) {
 	HashTable * table = malloc(sizeof(HashTable));
 	table->wordCount = wordCount;
 	table->size = SIZE_MULTIPLIER * wordCount;
+	table->edgeSizeDelimiter = edgeSizeDelimiter;
 
 	table->data = malloc(table->size * sizeof(Word*));
 	for (unsigned long i = 0; i < table->size; i++) {

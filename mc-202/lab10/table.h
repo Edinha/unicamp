@@ -20,12 +20,12 @@
 typedef
 	struct {
 		Word ** data;
-		unsigned long size;
 		int wordCount;
+		unsigned long size, edgeSizeDelimiter;
 	} HashTable;
 
-/* Inicializa uma hash table a partir de um tamanho */
-HashTable* createHashTable(unsigned long);
+/* Inicializa uma hash table a partir de um tamanho e de um delimitador para o tamanho da aresta*/
+HashTable* createHashTable(unsigned long, unsigned long);
 
 /* Insere na hash table uma nova palavra, alterando-a com os valores necessários */
 Word* insert(HashTable*, String);

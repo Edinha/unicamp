@@ -23,7 +23,7 @@ typedef struct Word Word;
 
 typedef
 	struct {
-		int count;
+		long weight;
 		Word * word;
 	} Continuation;
 
@@ -39,7 +39,7 @@ typedef
 Word* createWord(String, int);
 
 /* Inicializa uma continuação de palavra */
-Continuation* createContinuation(Word*);
+Continuation* createContinuation(Word*, long);
 
 /* Compara duas palavras com retornando igual(0) maior(1) ou menor(-1) */
 int compare(String, String);
@@ -47,8 +47,11 @@ int compare(String, String);
 /* Compara duas palavras a partir de seus ids */
 int compareWords(Word*, Word*);
 
-/* Aloca a segunda palavra */
-void alocateSequence(Word*, Word*);
+/* Aloca a segunda palavra como continuação da primeira */
+void alocateSequence(Word*, Word*, long);
+
+/* Diminue o peso da aresta conforme aparições */
+void heavify(Continuation*);
 
 /* Libera um ponteiro de palavra */
 void freeWord(Word**);

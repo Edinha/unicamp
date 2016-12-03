@@ -20,10 +20,10 @@ Word* createWord(String id, int size) {
 	return word;
 }
 
-Continuation* createContinuation(Word * word) {
+Continuation* createContinuation(Word * word, long weight) {
 	Continuation * continuation = malloc(sizeof(Continuation));
 	continuation->word = word;
-	continuation->count = COUNT_INIT;
+	continuation->weight = weight;
 	return continuation;
 }
 
@@ -35,21 +35,29 @@ int compareWords(Word * first, Word * second) {
 	return compare(first->id, second->id);
 }
 
-void alocateSequence(Word * tail, Word * head) {
+void alocateSequence(Word * tail, Word * head, long weight) {
 	Continuation * continuation = NULL;
 
 	for (int i = 0; i < tail->size; i++) {
 		continuation = tail->continuations[i];
 
 		if (!continuation) {
-			tail->continuations[i] = createContinuation(head);
+			tail->continuations[i] = createContinuation(head, weight);
+			tail->size++;
 			return;
 		}
 
 		if (!compareWords(continuation->word, head)) {
-			continuation->count++;
+			heavify(continuation);
 			return;
 		}
+	}
+}
+
+void heavify(Continuation * continuation) {
+	continuation->weight--;
+	if (continuation->weight < ZERO_INIT) {
+		continuation->weight = ZERO_INIT;
 	}
 }
 
