@@ -22,6 +22,7 @@
 typedef char String[MAX_WORD_SIZE];
 typedef struct Word Word;
 
+/* Define a estrutura de continuacao de uma palavra, com o peso e um ponteiro para palavra */
 typedef
 	struct {
 		long weight;
@@ -31,6 +32,10 @@ typedef
 /* Define a estrutura de palavra da tabela, com sua identificação, vetor de continuações e a última posição de alocação */
 	struct Word {
 		String id;
+
+		// Parametros visitado e pai usados na busca pelo grafo
+		bool visited;
+		Word * parent;
 
 		int size;
 		Continuation ** continuations;

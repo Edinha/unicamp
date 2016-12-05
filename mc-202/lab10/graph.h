@@ -6,8 +6,6 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#define NO_WAY "erro\n"
-
 #include "heap.h"
 #include "reading.h"
 
@@ -19,9 +17,7 @@
 HashTable* buildGraph();
 
 /* Encontra o menor caminho entre duas palavras parametrizadas */
-void minimumWay(HashTable*, String, String);
+void minimumWay(HashTable*, Heap*, String, String);
 
-// TODO print way
-void printWay();
 
 #endif

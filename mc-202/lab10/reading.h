@@ -6,6 +6,8 @@
 #ifndef READING_H
 #define READING_H
 
+#define ERROR_MESSAGE "erro\n"
+
 #include "table.h"
 
 /* Esse arquivo conterá as definições para as funções de leitura do programa */
@@ -24,5 +26,11 @@ int isStringEnd(char);
 
 /* Inicializa a String prestes a ser lida */
 void clearString(String);
+
+/* Printa a mensagem de erro caso nao haja caminho */
+void printError();
+
+// A partir da ultima palavra da busca, printa o caminho a partir de uma pilha
+void printWay(Word*);
 
 #endif

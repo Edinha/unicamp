@@ -49,6 +49,10 @@ int compareElement(HeapElement first, HeapElement second) {
 	return LESSER;
 }
 
+bool isEmptyHeap(Heap * heap) {
+	return (heap->actualSize == ZERO_INIT);
+}
+
 bool validHeapPosition(Heap * heap, int position) {
 	if (position >= heap->actualSize) {
 		return false;

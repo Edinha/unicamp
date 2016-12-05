@@ -65,6 +65,17 @@ unsigned long hash(String id) {
 	return key;
 }
 
+void initializeSearch(HashTable * table) {
+	Word * word = NULL;
+	for (unsigned long i = ZERO_INIT; i < table->size; i++) {
+		word = table->data[i];
+		if (word) {
+			word->parent = NULL;
+			word->visited = false;
+		}
+	}
+}
+
 void freeHashTable(HashTable ** table) {
 	for (unsigned long i = 0; i < (*table)->size; i++) {
 		if ((*table)->data[i]) {

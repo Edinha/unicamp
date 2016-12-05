@@ -36,6 +36,9 @@ Word* search(HashTable*, String);
 /* Calcula o numero de hash a partir de uma String de entrada */
 unsigned long hash(String);
 
+/* Inicializa as palavras da tabela para uma nova busca em largura */
+void initializeSearch(HashTable*);
+
 /* Libera um ponteiro de hash table */
 void freeHashTable(HashTable**);
 

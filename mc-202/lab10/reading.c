@@ -36,3 +36,19 @@ void readString(String s) {
 		s[i] = c;
 	}
 }
+
+void printError() {
+	printf(ERROR_MESSAGE);
+}
+
+void printWay(Word * word) {
+	// TODO print with a stack all of this
+
+	while (word) {
+		printf("%s ", word->id);
+		word = word->parent;
+	}
+
+	printf("\n");
+
+}

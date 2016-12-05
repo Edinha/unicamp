@@ -47,6 +47,9 @@ int rightChild(int);
 /* Compara dois elementos da heap */
 int compareElement(HeapElement, HeapElement);
 
+/* Retorna verdadeiro caso o heap esteja vazio e falso caso contrario */
+bool isEmptyHeap(Heap*);
+
 /* Retorna veradeiro caso a posição esteja dentro do espectro do heap e falso caso contrário */
 bool validHeapPosition(Heap*, int);
 

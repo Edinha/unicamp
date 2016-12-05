@@ -58,37 +58,45 @@ HashTable* buildGraph() {
 	return table;
 }
 
-void minimumWay(HashTable * table, String start, String end) {
-	// TODO find in hash table a way for it
-
-	Heap * heap = createHeap(table->wordCount);
+void minimumWay(HashTable * table, Heap * heap, String start, String end) {
 
 	Word * actual = search(table, start);
-
 	Continuation * continuation = NULL;
 
 	store(heap, actual, ZERO_INIT);
+	actual->visited = true;
 
 	for (;;) {
+
+		// Caso o heap esteja vazio, nao existe caminho entre as duas palavras parametrizadas
+		if (isEmptyHeap(heap)) {
+			printError();
+			return;
+		}
+
 		HeapElement element = retrieve(heap);
 		actual = element.word;
 
 		for (int i = ZERO_INIT; i < actual->size; i++) {
 			continuation = actual->continuations[i];
+			continuation->word->parent = actual;
+
+			// Caso a palavra ja tenha sido visitada, continua a busca sem visita-la novamente
+			if (continuation->word->visited) {
+				continue;
+			}
 
 			// Caso a continucao seja igual a palavra final, um caminho foi encontrado
 			if (!compare(continuation->word->id, end)) {
-				break;
+				printWay(continuation->word);
+				return;
 			}
 
-			// TODO visited flag for word
-			// TODO alocate continuation on heap
+			// Aloca a palavra subsequente na heap para continuar a busca em largura
+			store(heap, continuation->word, continuation->weight + element.distance);
+			continuation->word->visited = true;
 		}
 	}
 
 	freeHeap(&heap);
-}
-
-void printWay() {
-	// TODO print with a stack all of this
 }
