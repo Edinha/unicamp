@@ -15,7 +15,7 @@
  */
 
 /* Monta um grafo a partir da entrada */
-void buildGraph(HashTable*);
+HashTable* buildGraph();
 
 /* Encontra o menor caminho entre duas palavras parametrizadas */
 void minimumWay(HashTable*, String, String);

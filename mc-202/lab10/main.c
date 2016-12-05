@@ -3,11 +3,15 @@
  * Turma : F
  */
 
-#include "reading.h"
+#include "graph.h"
 
 int main() {
 
 	// TODO reading and mounting the motherfucking graph here
+
+	HashTable * graph = buildGraph();
+
+	printf("%lu ", graph->size);
 
 	return 0;
 }

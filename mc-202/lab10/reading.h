@@ -6,7 +6,7 @@
 #ifndef READING_H
 #define READING_H
 
-#include "word.h"
+#include "table.h"
 
 /* Esse arquivo conterá as definições para as funções de leitura do programa */
 

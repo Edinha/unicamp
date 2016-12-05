@@ -11,9 +11,9 @@ Word* createWord(String id, int size) {
 	Word * word = malloc(sizeof(Word));
 	strcpy(word->id, id);
 
-	word->size = size;
+	word->size = ZERO_INIT;
 	word->continuations = malloc(size * sizeof(Continuation*));
-	for(int i = 0; i < size; i++) {
+	for(int i = ZERO_INIT; i < size; i++) {
 		word->continuations[i] = NULL;
 	}
 
@@ -38,20 +38,17 @@ int compareWords(Word * first, Word * second) {
 void alocateSequence(Word * tail, Word * head, long weight) {
 	Continuation * continuation = NULL;
 
-	for (int i = 0; i < tail->size; i++) {
+	for (int i = ZERO_INIT; i < tail->size; i++) {
 		continuation = tail->continuations[i];
-
-		if (!continuation) {
-			tail->continuations[i] = createContinuation(head, weight);
-			tail->size++;
-			return;
-		}
 
 		if (!compareWords(continuation->word, head)) {
 			heavify(continuation);
 			return;
 		}
 	}
+
+	tail->continuations[tail->size] = createContinuation(head, weight);
+	tail->size++;
 }
 
 void heavify(Continuation * continuation) {
@@ -62,7 +59,7 @@ void heavify(Continuation * continuation) {
 }
 
 void freeWord(Word ** word) {
-	for (int i = 0; i < (*word)->size; i++) {
+	for (int i = ZERO_INIT; i < (*word)->size; i++) {
 		if ((*word)->continuations[i]) {
 			free((*word)->continuations[i]);
 		}
