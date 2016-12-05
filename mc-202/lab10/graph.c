@@ -60,6 +60,33 @@ HashTable* buildGraph() {
 
 void minimumWay(HashTable * table, String start, String end) {
 	// TODO find in hash table a way for it
+
+	Heap * heap = createHeap(table->wordCount);
+
+	Word * actual = search(table, start);
+
+	Continuation * continuation = NULL;
+
+	store(heap, actual, ZERO_INIT);
+
+	for (;;) {
+		HeapElement element = retrieve(heap);
+		actual = element.word;
+
+		for (int i = ZERO_INIT; i < actual->size; i++) {
+			continuation = actual->continuations[i];
+
+			// Caso a continucao seja igual a palavra final, um caminho foi encontrado
+			if (!compare(continuation->word->id, end)) {
+				break;
+			}
+
+			// TODO visited flag for word
+			// TODO alocate continuation on heap
+		}
+	}
+
+	freeHeap(&heap);
 }
 
 void printWay() {

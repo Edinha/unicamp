@@ -60,9 +60,7 @@ void heavify(Continuation * continuation) {
 
 void freeWord(Word ** word) {
 	for (int i = ZERO_INIT; i < (*word)->size; i++) {
-		if ((*word)->continuations[i]) {
-			free((*word)->continuations[i]);
-		}
+		free((*word)->continuations[i]);
 	}
 
 	free((*word)->continuations);

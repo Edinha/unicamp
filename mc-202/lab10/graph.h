@@ -8,6 +8,7 @@
 
 #define NO_WAY "erro\n"
 
+#include "heap.h"
 #include "reading.h"
 
 /* Esse arquivo conterá as definições para funções relacionadas ao grafo, como busca pelo menor

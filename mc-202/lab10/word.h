@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 /* Esse arquivo conterá as definições para a estrutura de palavra da tabela,
  * representativa dos vértices do grafo

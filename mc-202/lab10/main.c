@@ -11,7 +11,7 @@ int main() {
 
 	HashTable * graph = buildGraph();
 
-	printf("%lu ", graph->size);
+	freeHashTable(&graph);
 
 	return 0;
 }
