@@ -41,22 +41,33 @@ void printError() {
 	printf(ERROR_MESSAGE);
 }
 
-void printWay(Word * word) {
+void printWay(Word * start, Word * end) {
 	Stack * stack = createStack();
 
 	// Retorna todo o caminho pelos pais e empilha as palavras
-	while (word) {
-		push(stack, word);
-		word = word->parent;
+	while (end) {
+		push(stack, end);
+		end = end->parent;
 	}
+
+	end = pop(stack);
+
+	// Caso o topo da pilha não seja igual ao início da frase, não existe caminho
+	if (compareWords(start, end)) {
+		printError();
+		return;
+	}
+
+	printf("%s ", start->id);
 
 	// Desempilha as palavras e as printa na ordem correta
 	while (!isEmptyStack(stack)) {
-		word = pop(stack);
-		printf("%s ", word->id);
+		end = pop(stack);
+		printf("%s ", end->id);
 	}
 
-	word = pop(stack);
-	printf("%s\n", word->id);
+	end = pop(stack);
+	printf("%s\n", end->id);
+
 	freeStack(&stack);
 }

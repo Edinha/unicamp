@@ -17,6 +17,7 @@
 
 #define ZERO_INIT 0
 #define COUNT_INIT 1
+#define INVALID_INIT -1
 #define MAX_WORD_SIZE 50
 
 typedef char String[MAX_WORD_SIZE];
@@ -33,9 +34,9 @@ typedef
 	struct Word {
 		String id;
 
-		// Parametros visitado e pai usados na busca pelo grafo
-		bool visited;
+		// Parametros distância, pai e posição na heap usados na busca pelo grafo
 		Word * parent;
+		unsigned long position, distance;
 
 		int size;
 		Continuation ** continuations;

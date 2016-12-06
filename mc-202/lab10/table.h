@@ -6,7 +6,7 @@
 #ifndef HASH_TABLE_H
 #define HASH_TABLE_H
 
-#include "word.h"
+#include "heap.h"
 
 /* Esse arquivo conterá as definições para a estrutura de tabela de espalamento (hash table).
  * Com as funcoes de hash, insercao e busca a partir de chaves String.
@@ -21,11 +21,11 @@ typedef
 	struct {
 		Word ** data;
 		int wordCount;
-		unsigned long size, edgeSizeDelimiter;
+		unsigned long size;
 	} HashTable;
 
-/* Inicializa uma hash table a partir de um tamanho e de um delimitador para o tamanho da aresta*/
-HashTable* createHashTable(unsigned long, unsigned long);
+/* Inicializa uma hash table a partir de um contador de palavras distintas */
+HashTable* createHashTable(unsigned long);
 
 /* Insere na hash table uma nova palavra, alterando-a com os valores necessários */
 Word* insert(HashTable*, String);
@@ -37,7 +37,7 @@ Word* search(HashTable*, String);
 unsigned long hash(String);
 
 /* Inicializa as palavras da tabela para uma nova busca em largura */
-void initializeSearch(HashTable*);
+void initializeSearch(HashTable*, Heap*);
 
 /* Libera um ponteiro de hash table */
 void freeHashTable(HashTable**);

@@ -21,7 +21,7 @@ int main() {
 
 		// Inicializa as estruturas para a busca atual
 		heap->actualSize = ZERO_INIT;
-		initializeSearch(graph);
+		initializeSearch(graph, heap);
 
 		minimumWay(graph, heap, start, end);
 	}

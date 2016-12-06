@@ -53,6 +53,8 @@ void alocateSequence(Word * tail, Word * head, long weight) {
 
 void heavify(Continuation * continuation) {
 	continuation->weight--;
+
+	// Caso seja menor do que zero, volta o peso da aresta para zero
 	if (continuation->weight < ZERO_INIT) {
 		continuation->weight = ZERO_INIT;
 	}

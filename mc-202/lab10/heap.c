@@ -13,20 +13,12 @@ Heap * createHeap(int size) {
 	heap->actualSize = ZERO_INIT;
 
 	// Inicializa o vetor de posições com elementos vazios
-	heap->data = malloc(size * sizeof(HeapElement));
+	heap->data = malloc(size * sizeof(Word*));
 	for (int i = ZERO_INIT; i < size; i++) {
-		heap->data[i].word = NULL;
-		heap->data[i].distance = ZERO_INIT;
+		heap->data[i] = NULL;
 	}
 
 	return heap;
-}
-
-HeapElement createHeapElement(Word * word, unsigned long distance) {
-	HeapElement element;
-	element.word = word;
-	element.distance = distance;
-	return element;
 }
 
 int parent(int position) {
@@ -41,9 +33,13 @@ int rightChild(int position) {
 	return (position * 2 + 1);
 }
 
-int compareElement(HeapElement first, HeapElement second) {
-	if (first.distance > second.distance) {
+int compareDistance(Word * first, Word * second) {
+	if (first->distance > second->distance) {
 		return GREATER;
+	}
+
+	if (first->distance == second->distance) {
+		return EQUALS;
 	}
 
 	return LESSER;
@@ -61,19 +57,25 @@ bool validHeapPosition(Heap * heap, int position) {
 	return true;
 }
 
-void store(Heap * heap, Word * word, unsigned long distance) {
-	heap->data[heap->actualSize] = createHeapElement(word, distance);
+void store(Heap * heap, Word * word) {
+	word->position = heap->actualSize;
+	heap->data[heap->actualSize] = word;
 	heap->actualSize++;
 	shiftUp(heap, heap->actualSize - 1);
 }
 
-HeapElement retrieve(Heap * heap) {
-	HeapElement element = heap->data[0];
+Word* retrieve(Heap * heap) {
+	Word * word = heap->data[0];
 	heap->actualSize--;
 	heap->data[0] = heap->data[heap->actualSize];
+
+	// Altera os valores para as palavras trocadas ao recuperar um elemento da heap
+	heap->data[0]->position = ZERO_INIT;
+	heap->data[heap->actualSize] = NULL;
+
 	shiftDown(heap, 0);
 
-	return element;
+	return word;
 }
 
 void shiftUp(Heap * heap, int position) {
@@ -86,7 +88,7 @@ void shiftUp(Heap * heap, int position) {
 	}
 
 	// Compara a posição atual com seu pai e os troca caso o pai seja menor do que o filho
-	comparison = compareElement(heap->data[parentPos], heap->data[position]);
+	comparison = compareDistance(heap->data[parentPos], heap->data[position]);
 
 	if (comparison == GREATER) {
 		exchange(heap, parentPos, position);
@@ -102,7 +104,7 @@ void shiftDown(Heap * heap, int position) {
 	int (*childs[CHILD_SIDE_COUNT]) (int) = {&rightChild, &leftChild};
 
 	// Para cada uma dos lados, gera a comparação com a posição atual
-	for (int i = 0; i < CHILD_SIDE_COUNT; i++) {
+	for (int i = ZERO_INIT; i < CHILD_SIDE_COUNT; i++) {
 		child = (*childs[i]) (position);
 
 		// Caso seja uma posição não contida no heap, pula a comparação
@@ -110,7 +112,7 @@ void shiftDown(Heap * heap, int position) {
 			continue;
 		}
 
-		comparison = compareElement(heap->data[child], heap->data[minimum]);
+		comparison = compareDistance(heap->data[child], heap->data[minimum]);
 
 		// Caso seja menor do que a posição de menor até agora encontrada, atualiza com o menor possível
 		if (comparison == LESSER) {
@@ -125,10 +127,17 @@ void shiftDown(Heap * heap, int position) {
 	}
 }
 
+void decreasePriority(Heap * heap, Word * word) {
+	shiftUp(heap, word->position);
+}
+
 void exchange(Heap * heap, int first, int second) {
-	HeapElement tmp = heap->data[first];
+	Word * tmp = heap->data[first];
 	heap->data[first] = heap->data[second];
 	heap->data[second] = tmp;
+
+	heap->data[first]->position = second;
+	heap->data[second]->position = first;
 }
 
 void freeHeap(Heap ** heap) {

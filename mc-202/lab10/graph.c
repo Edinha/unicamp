@@ -7,20 +7,6 @@
 
 /* Implementacao dos metodos */
 
-// TODO delete
-void print(HashTable * table) {
-	Word * word;
-	for (unsigned long i = ZERO_INIT; i < table->size; i++) {
-		word = table->data[i];
-		if (word) {
-			for (int i = ZERO_INIT; i < word->size; i++) {
-				Continuation * c = word->continuations[i];
-				printf("%s -> %s (%ld)\n", word->id, c->word->id, c->weight);
-			}
-		}
-	}
-}
-
 HashTable* buildGraph() {
 	HashTable * table;
 
@@ -35,7 +21,7 @@ HashTable* buildGraph() {
 	readLong(&edgeSizeDelimiter);
 	readLong(&phraseCounter);
 
-	table = createHashTable(wordCount, edgeSizeDelimiter);
+	table = createHashTable(wordCount);
 
 	// Para cada frase do texto, le as palavras e as aloca
 	for (unsigned long i = ZERO_INIT; i < phraseCounter; i++) {
@@ -49,7 +35,7 @@ HashTable* buildGraph() {
 			readString(id);
 
 			next = insert(table, id);
-			alocateSequence(previous, next, table->edgeSizeDelimiter - 1);
+			alocateSequence(previous, next, edgeSizeDelimiter - 1);
 
 			previous = next;
 		}
@@ -60,43 +46,37 @@ HashTable* buildGraph() {
 
 void minimumWay(HashTable * table, Heap * heap, String start, String end) {
 
-	Word * actual = search(table, start);
-	Continuation * continuation = NULL;
+	int i;
+	Word * actual, * init;
+	Continuation * continuation;
 
-	store(heap, actual, ZERO_INIT);
-	actual->visited = true;
+	unsigned long distance;
 
-	for (;;) {
+	init = search(table, start);
+	init->distance = ZERO_INIT;
+	decreasePriority(heap, init);
 
-		// Caso o heap esteja vazio, nao existe caminho entre as duas palavras parametrizadas
-		if (isEmptyHeap(heap)) {
-			printError();
-			return;
-		}
+	// Enquanto existem elementos na heap, recupera o de menor prioridade
+	while (!isEmptyHeap(heap)) {
 
-		HeapElement element = retrieve(heap);
-		actual = element.word;
+		actual = retrieve(heap);
 
-		for (int i = ZERO_INIT; i < actual->size; i++) {
+		// Para cada um dos vizinhos dele, altera a distância para o nó caso o caminho seja menor do que
+		// o já previamente encontrado pelo algoritmo
+		for (i = ZERO_INIT; i < actual->size; i++) {
 			continuation = actual->continuations[i];
-			continuation->word->parent = actual;
+			distance = actual->distance + continuation->weight;
 
-			// Caso a palavra ja tenha sido visitada, continua a busca sem visita-la novamente
-			if (continuation->word->visited) {
-				continue;
+			if (distance < continuation->word->distance) {
+				continuation->word->parent = actual;
+				continuation->word->distance = distance;
+				decreasePriority(heap, continuation->word);
 			}
-
-			// Caso a continucao seja igual a palavra final, um caminho foi encontrado
-			if (!compare(continuation->word->id, end)) {
-				printWay(continuation->word);
-				return;
-			}
-
-			// Aloca a palavra subsequente na heap para continuar a busca em largura
-			store(heap, continuation->word, continuation->weight + element.distance);
-			continuation->word->visited = true;
 		}
+
 	}
 
-	freeHeap(&heap);
+	actual = search(table, end);
+
+	printWay(init, actual);
 }

@@ -31,7 +31,7 @@ void clearString(String);
 /* Printa a mensagem de erro caso nao haja caminho */
 void printError();
 
-// A partir da ultima palavra da busca, printa o caminho a partir de uma pilha
-void printWay(Word*);
+/* A partir da ultima e primeira palavras da busca, printa o caminho a partir de uma pilha ou erro caso o caminho não exista */
+void printWay(Word*, Word*);
 
 #endif

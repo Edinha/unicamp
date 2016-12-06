@@ -7,14 +7,13 @@
 
 /* Implementacao dos metodos */
 
-HashTable* createHashTable(unsigned long wordCount, unsigned long edgeSizeDelimiter) {
+HashTable* createHashTable(unsigned long wordCount) {
 	HashTable * table = malloc(sizeof(HashTable));
 	table->wordCount = wordCount;
 	table->size = SIZE_MULTIPLIER * wordCount;
-	table->edgeSizeDelimiter = edgeSizeDelimiter;
 
 	table->data = malloc(table->size * sizeof(Word*));
-	for (unsigned long i = 0; i < table->size; i++) {
+	for (unsigned long i = ZERO_INIT; i < table->size; i++) {
 		table->data[i] = NULL;
 	}
 
@@ -65,19 +64,20 @@ unsigned long hash(String id) {
 	return key;
 }
 
-void initializeSearch(HashTable * table) {
+void initializeSearch(HashTable * table, Heap * heap) {
 	Word * word = NULL;
 	for (unsigned long i = ZERO_INIT; i < table->size; i++) {
 		word = table->data[i];
 		if (word) {
 			word->parent = NULL;
-			word->visited = false;
+			word->distance = INVALID_INIT;
+			store(heap, word);
 		}
 	}
 }
 
 void freeHashTable(HashTable ** table) {
-	for (unsigned long i = 0; i < (*table)->size; i++) {
+	for (unsigned long i = ZERO_INIT; i < (*table)->size; i++) {
 		if ((*table)->data[i]) {
 			freeWord(&(*table)->data[i]);
 		}
