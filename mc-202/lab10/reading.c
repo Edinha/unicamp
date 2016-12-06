@@ -42,13 +42,21 @@ void printError() {
 }
 
 void printWay(Word * word) {
-	// TODO print with a stack all of this
+	Stack * stack = createStack();
 
+	// Retorna todo o caminho pelos pais e empilha as palavras
 	while (word) {
-		printf("%s ", word->id);
+		push(stack, word);
 		word = word->parent;
 	}
 
-	printf("\n");
+	// Desempilha as palavras e as printa na ordem correta
+	while (!isEmptyStack(stack)) {
+		word = pop(stack);
+		printf("%s ", word->id);
+	}
 
+	word = pop(stack);
+	printf("%s\n", word->id);
+	freeStack(&stack);
 }

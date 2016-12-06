@@ -9,6 +9,7 @@
 #define ERROR_MESSAGE "erro\n"
 
 #include "table.h"
+#include "stack.h"
 
 /* Esse arquivo conterá as definições para as funções de leitura do programa */
 

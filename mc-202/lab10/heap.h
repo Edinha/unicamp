@@ -9,13 +9,15 @@
 #include "word.h"
 
 /* Esse arquivo conterá as definições para a estrutura de min heap do programa, fazendo
- * a ordem de prioridade para a distância que uma posição está do começo
+ * a ordem de prioridade para a distância que uma palavra esta do comeco da frase
  */
 
+/* Definicoes para retorno da comparacao entre elementos do heap */
 #define LESSER -1
 #define GREATER 1
 #define CHILD_SIDE_COUNT 2
 
+/* Define a estrutura do elemento do heap, com a distancia e a palavra enfileirada */
 typedef
 	struct {
 		unsigned long distance;
