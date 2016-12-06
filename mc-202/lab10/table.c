@@ -71,7 +71,6 @@ void initializeSearch(HashTable * table, Heap * heap) {
 		if (word) {
 			word->parent = NULL;
 			word->distance = ULONG_MAX;
-			// store(heap, word);
 		}
 	}
 }

@@ -59,9 +59,6 @@ void shiftUp(Heap*, int);
 /* Conserta a heap descendo os elementos fora de ordem */
 void shiftDown(Heap*, int);
 
-/* Rebalanceia o heap para cima, decrementando a prioridade da palavra parametrizada */
-void decreasePriority(Heap*, Word*);
-
 /* Troca os valores dos caches a partir das posições parametrizadas */
 void exchange(Heap*, int, int);
 

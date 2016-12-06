@@ -34,9 +34,7 @@ typedef
 	struct Word {
 		String id;
 
-		// Parametros distância, pai e posição na heap usados na busca pelo grafo
-		int position;
-		// bool visited;
+		// Parametros distância e pai usados na busca pelo grafo
 		Word * parent;
 		unsigned long distance;
 

@@ -58,7 +58,6 @@ bool validHeapPosition(Heap * heap, int position) {
 }
 
 void store(Heap * heap, Word * word) {
-	word->position = heap->actualSize;
 	heap->data[heap->actualSize] = word;
 	heap->actualSize++;
 	shiftUp(heap, heap->actualSize - 1);
@@ -70,12 +69,8 @@ Word* retrieve(Heap * heap) {
 
 	// Altera os valores para as palavras trocadas ao recuperar um elemento da heap
 	heap->data[0] = heap->data[heap->actualSize];
-	heap->data[0]->position = ZERO_INIT;
 	heap->data[heap->actualSize] = NULL;
-
 	shiftDown(heap, 0);
-
-	word->position = heap->actualSize;
 
 	return word;
 }
@@ -129,17 +124,10 @@ void shiftDown(Heap * heap, int position) {
 	}
 }
 
-void decreasePriority(Heap * heap, Word * word) {
-	shiftUp(heap, word->position);
-}
-
 void exchange(Heap * heap, int first, int second) {
 	Word * tmp = heap->data[first];
 	heap->data[first] = heap->data[second];
 	heap->data[second] = tmp;
-
-	heap->data[first]->position = second;
-	heap->data[second]->position = first;
 }
 
 void freeHeap(Heap ** heap) {

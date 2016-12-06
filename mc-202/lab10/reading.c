@@ -55,6 +55,7 @@ void printWay(Word * start, Word * end) {
 	// Caso o topo da pilha não seja igual ao início da frase, não existe caminho
 	if (compareWords(start, end)) {
 		printError();
+		freeStack(&stack);
 		return;
 	}
 
