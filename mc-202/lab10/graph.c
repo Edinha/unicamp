@@ -45,38 +45,33 @@ HashTable* buildGraph() {
 }
 
 void minimumWay(HashTable * table, Heap * heap, String start, String end) {
-
-	int i;
-	Word * actual, * init;
+	unsigned long distance;
 	Continuation * continuation;
 
-	unsigned long distance;
+	Word * init = search(table, start),
+		 * finish = search(table, end);
 
-	init = search(table, start);
+	// Inicializa a primeira palavra e a aloca na heap
 	init->distance = ZERO_INIT;
-	decreasePriority(heap, init);
+	store(heap, init);
 
-	// Enquanto existem elementos na heap, recupera o de menor prioridade
+	// Enquanto a heap não está vazia, recupera o elemento de maior prioridade e avança na busca
 	while (!isEmptyHeap(heap)) {
 
-		actual = retrieve(heap);
+		Word * actual = retrieve(heap);
 
-		// Para cada um dos vizinhos dele, altera a distância para o nó caso o caminho seja menor do que
-		// o já previamente encontrado pelo algoritmo
-		for (i = ZERO_INIT; i < actual->size; i++) {
+		// Para todos os vizinhos, calcula a distância até eles e a atualiza caso for menor do que a atual
+		for (int i = ZERO_INIT; i < actual->size; i++) {
 			continuation = actual->continuations[i];
 			distance = actual->distance + continuation->weight;
 
 			if (distance < continuation->word->distance) {
 				continuation->word->parent = actual;
 				continuation->word->distance = distance;
-				decreasePriority(heap, continuation->word);
+				store(heap, continuation->word);
 			}
 		}
-
 	}
 
-	actual = search(table, end);
-
-	printWay(init, actual);
+	printWay(init, finish);
 }

@@ -70,8 +70,8 @@ void initializeSearch(HashTable * table, Heap * heap) {
 		word = table->data[i];
 		if (word) {
 			word->parent = NULL;
-			word->distance = INVALID_INIT;
-			store(heap, word);
+			word->distance = ULONG_MAX;
+			// store(heap, word);
 		}
 	}
 }

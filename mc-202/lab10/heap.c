@@ -67,13 +67,15 @@ void store(Heap * heap, Word * word) {
 Word* retrieve(Heap * heap) {
 	Word * word = heap->data[0];
 	heap->actualSize--;
-	heap->data[0] = heap->data[heap->actualSize];
 
 	// Altera os valores para as palavras trocadas ao recuperar um elemento da heap
+	heap->data[0] = heap->data[heap->actualSize];
 	heap->data[0]->position = ZERO_INIT;
 	heap->data[heap->actualSize] = NULL;
 
 	shiftDown(heap, 0);
+
+	word->position = heap->actualSize;
 
 	return word;
 }
@@ -83,7 +85,7 @@ void shiftUp(Heap * heap, int position) {
 		parentPos = parent(position);
 
 	// Caso seja a raiz, não possue pai
-	if (!position) {
+	if (!position || !validHeapPosition(heap, position)) {
 		return;
 	}
 

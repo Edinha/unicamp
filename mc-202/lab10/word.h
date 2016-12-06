@@ -7,8 +7,9 @@
 #define WORD_H
 
 #include <stdio.h>
-#include <stdlib.h>
+#include <limits.h>
 #include <string.h>
+#include <stdlib.h>
 #include <stdbool.h>
 
 /* Esse arquivo conterá as definições para a estrutura de palavra da tabela,
@@ -17,7 +18,6 @@
 
 #define ZERO_INIT 0
 #define COUNT_INIT 1
-#define INVALID_INIT -1
 #define MAX_WORD_SIZE 50
 
 typedef char String[MAX_WORD_SIZE];
@@ -35,8 +35,10 @@ typedef
 		String id;
 
 		// Parametros distância, pai e posição na heap usados na busca pelo grafo
+		int position;
+		// bool visited;
 		Word * parent;
-		unsigned long position, distance;
+		unsigned long distance;
 
 		int size;
 		Continuation ** continuations;

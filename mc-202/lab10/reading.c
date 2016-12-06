@@ -58,7 +58,7 @@ void printWay(Word * start, Word * end) {
 		return;
 	}
 
-	printf("%s ", start->id);
+	printf("%s ", end->id);
 
 	// Desempilha as palavras e as printa na ordem correta
 	while (!isEmptyStack(stack)) {
