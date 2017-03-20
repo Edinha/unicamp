@@ -1,6 +1,7 @@
 package card;
 
 public class MinionCard {
+	private static final String BUFFED_NAME_SUFFIX = " Buffed";
 
 	private int id;
 	private int attack;
@@ -109,6 +110,10 @@ public class MinionCard {
 
 	public void setManaCost(int manaCost) {
 		this.manaCost = manaCost;
+	}
+
+	public static String getBuffedNameSuffix() {
+		return BUFFED_NAME_SUFFIX;
 	}
 
 	@Override
