@@ -14,7 +14,7 @@ public class Main {
 		System.out.println("Reduzido: " + reducedDarkMagician.toString());
 		
 		// Mudando o ataque do primeiro lacaio
-		darkMagician.setAtack(blueEyesWhiteDragon.getAtack());
+		darkMagician.setAttack(blueEyesWhiteDragon.getAttack());
 		System.out.println("(Depois set) Carta 1: " + darkMagician.toString());
 		
 		// Não há diferença entre os valores dos atributos do objeto cópia e original

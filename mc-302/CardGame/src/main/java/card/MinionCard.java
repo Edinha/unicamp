@@ -19,16 +19,16 @@ public class MinionCard {
 	public MinionCard(MinionCard other) {
 		this.id = other.getId();
 		this.name = other.getName();
-		this.attack = other.getAtack();
+		this.attack = other.getAttack();
 		this.manaCost = other.getManaCost();
 		this.currentHealth = other.getCurrentHealth();
 		this.totalHealth = other.getTotalHealth();
 	}
 
-	public MinionCard(int id, String name, int atack, int currentHealth, int totalHealth, int manaCost) {
+	public MinionCard(int id, String name, int attack, int currentHealth, int totalHealth, int manaCost) {
 		this.id = id;
 		this.name = name;
-		this.attack = atack;
+		this.attack = attack;
 		this.currentHealth = currentHealth;
 		this.totalHealth = totalHealth;
 		this.manaCost = manaCost;
@@ -38,7 +38,7 @@ public class MinionCard {
 		this.buff(attackAndHealthBuff, attackAndHealthBuff);
 	}
 
-	public void buff(int attackBuff, int heathBuff) {
+	public void buff(int attackBuff, int healthBuff) {
 		int oldAttack = this.attack;
 		int oldHealth = this.currentHealth;
 
@@ -46,8 +46,8 @@ public class MinionCard {
 			this.attack += attackBuff;
 		}
 
-		if (currentHealth > 0) {
-			this.currentHealth += heathBuff;
+		if (healthBuff > 0) {
+			this.currentHealth += healthBuff;
 		}
 
 		if (this.hasAppliedBuff(oldAttack, oldHealth)) {
@@ -79,11 +79,11 @@ public class MinionCard {
 		this.name = name;
 	}
 
-	public int getAtack() {
+	public int getAttack() {
 		return attack;
 	}
 
-	public void setAtack(int atack) {
+	public void setAttack(int atack) {
 		this.attack = atack;
 	}
 
