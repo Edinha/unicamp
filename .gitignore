@@ -32,3 +32,11 @@
 *.dSYM/
 
 *.swp
+
+# java files
+target/
+*.iml
+.idea/
+*.log
+*.war
+*.jar

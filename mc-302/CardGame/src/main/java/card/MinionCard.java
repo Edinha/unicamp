@@ -8,8 +8,7 @@ public class MinionCard {
 	private int totalHealth;
 	private int currentHealth;
 
-	// Note: ;-; (Sad face)
-	public String name;
+	private String name;
 
 	public MinionCard(int id, String name, int manaCost) {
 		this.id = id;
@@ -121,5 +120,4 @@ public class MinionCard {
 		out += "Custo de Mana = " + this.manaCost + "\n";
 		return out;
 	}
-
 }
