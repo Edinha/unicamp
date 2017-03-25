@@ -1,4 +1,4 @@
-package card;
+package com.william.card;
 
 public class MagicCard {
 

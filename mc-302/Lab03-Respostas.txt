@@ -1,0 +1,17 @@
+1.
+2. O erro acusado pelo java eh ArrayIndexOutOfBoundsException
+   Isso acontece pois ocorreu a tentativa de acessar uma posicao invalida do vetor alocado.
+   (Maior que o tamanho estipulado ou a primeira posicao de um vetor vazio).
+
+3. O atributo gerador pode ser estatico pois ele independe da instancia de objeto a qual pertence, ou seja,
+ele pode ser unico para a classe (assim sendo para todos os objetos instanciados tambem).
+
+
+4. O atributo gerador nao eh inicializado no constructor pois ele independe da instancia. Assim, seu comando de inicializacao
+sera executado apenas uma vez por rodagem do programa.
+
+5.
+
+6. Quando impementamos a classe Baralho com ArrayList, estamos usando a propia API do java para controlar a lista de cartas do
+objeto instanciado. Isso me traz seguranca de que nao irei cometer error na implementacao da lista e tambem de que a implemntacao
+sera performatica e muito bem testada.

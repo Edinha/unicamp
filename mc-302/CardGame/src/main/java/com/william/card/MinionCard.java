@@ -1,4 +1,4 @@
-package card;
+package com.william.card;
 
 public class MinionCard {
 	private static final String BUFFED_NAME_SUFFIX = " Buffed";
@@ -33,35 +33,6 @@ public class MinionCard {
 		this.currentHealth = currentHealth;
 		this.totalHealth = totalHealth;
 		this.manaCost = manaCost;
-	}
-
-	public void buff(int attackAndHealthBuff) {
-		this.buff(attackAndHealthBuff, attackAndHealthBuff);
-	}
-
-	public void buff(int attackBuff, int healthBuff) {
-		int oldAttack = this.attack;
-		int oldHealth = this.currentHealth;
-
-		if (attackBuff > 0) {
-			this.attack += attackBuff;
-		}
-
-		if (healthBuff > 0) {
-			this.currentHealth += healthBuff;
-		}
-
-		if (this.hasAppliedBuff(oldAttack, oldHealth)) {
-			this.buffedName();
-		}
-	}
-
-	private boolean hasAppliedBuff(int oldAttack, int oldHealth) {
-		return (oldAttack < this.attack || oldHealth < this.currentHealth);
-	}
-
-	private void buffedName() {
-		this.name += " Buffed";
 	}
 
 	public int getId() {
