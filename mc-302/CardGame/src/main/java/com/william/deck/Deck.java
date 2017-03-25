@@ -7,12 +7,16 @@ import java.util.List;
 import com.william.card.MinionCard;
 
 public class Deck {
-	private static Integer MAX_CARDS = 30;
+	public static int MAX_CARDS = 30;
 
 	private List<MinionCard> deck;
 
 	public Deck() {
 		this.deck = new ArrayList<MinionCard>();
+	}
+
+	public List<MinionCard> getDeck() {
+		return deck;
 	}
 
 	public void addCard(MinionCard card) {
@@ -24,7 +28,7 @@ public class Deck {
 	}
 
 	public MinionCard pullCard() {
-		if (this.deck.size() == 0) {
+		if (this.deck.isEmpty()) {
 			return null;
 		}
 

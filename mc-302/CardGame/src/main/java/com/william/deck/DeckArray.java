@@ -6,13 +6,21 @@ import java.util.Random;
 
 // Decidi fazer a deck array pois prefiro manter o baralho default implementado com array list
 public class DeckArray {
-	MinionCard[] deck;
-	Integer cardCount;
-	static Random random = new Random();
+	private MinionCard[] deck;
+	private Integer cardCount;
+	private static Random random = new Random();
 
 	public DeckArray() {
 		this.deck = new MinionCard[10];
 		this.cardCount = 0;
+	}
+
+	public MinionCard[] getDeck() {
+		return deck;
+	}
+
+	public Integer getCardCount() {
+		return cardCount;
 	}
 
 	public void addCard(MinionCard card) {
@@ -27,7 +35,6 @@ public class DeckArray {
 
 	public void shuffle() {
 		int i, j;
-
 		for (i = 1; i < this.cardCount; i++) {
 			j = random.nextInt(i + 1);
 			if (i != j) {
@@ -45,29 +52,5 @@ public class DeckArray {
 		for (int i = this.cardCount - 1; i >= 0; i--) {
 			System.out.print(this.deck[i]);
 		}
-	}
-
-	public MinionCard[] getDeck() {
-		return deck;
-	}
-
-	public void setDeck(MinionCard[] deck) {
-		this.deck = deck;
-	}
-
-	public Integer getCardCount() {
-		return cardCount;
-	}
-
-	public void setCardCount(Integer cardCount) {
-		this.cardCount = cardCount;
-	}
-
-	public static Random getRandom() {
-		return random;
-	}
-
-	public static void setRandom(Random random) {
-		DeckArray.random = random;
 	}
 }
