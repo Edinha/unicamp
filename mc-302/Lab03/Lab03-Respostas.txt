@@ -10,7 +10,8 @@ ele pode ser unico para a classe (assim sendo para todos os objetos instanciados
 4. O atributo gerador nao eh inicializado no constructor pois ele independe da instancia. Assim, seu comando de inicializacao
 sera executado apenas uma vez por rodagem do programa.
 
-5.
+5. A classe util mantem o cdigo separado para buff de cartas em uma classe que independe de instancia (Util). Isso nos dah certeza 
+com relacao a alteracao do estado do ojeto, alem de manter funcoes de operacoes parecidas proximas.
 
 6. Quando impementamos a classe Baralho com ArrayList, estamos usando a propia API do java para controlar a lista de cartas do
 objeto instanciado. Isso me traz seguranca de que nao irei cometer error na implementacao da lista e tambem de que a implemntacao
