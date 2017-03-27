@@ -1,18 +1,18 @@
 1.
-2. O erro acusado pelo java eh ArrayIndexOutOfBoundsException
-   Isso acontece pois ocorreu a tentativa de acessar uma posicao invalida do vetor alocado.
-   (Maior que o tamanho estipulado ou a primeira posicao de um vetor vazio).
+2. O erro acusado pelo java é ArrayIndexOutOfBoundsException
+   Isso acontece pois houve tentativa de acessar uma posiçãoo inválida do vetor alocado.
+   (Maior que o tamanho estipulado ou a primeira posição de um vetor vazio).
 
-3. O atributo gerador pode ser estatico pois ele independe da instancia de objeto a qual pertence, ou seja,
-ele pode ser unico para a classe (assim sendo para todos os objetos instanciados tambem).
+3. O atributo gerador pode ser estático pois ele independe da instância de objeto a qual pertence, ou seja,
+ele pode ser único para a classe (assim sendo para todos os objetos instanciados também).
 
 
-4. O atributo gerador nao eh inicializado no constructor pois ele independe da instancia. Assim, seu comando de inicializacao
-sera executado apenas uma vez por rodagem do programa.
+4. O atributo gerador não é inicializado no construtor pois ele independe da instância. Assim, seu comando de inicialização
+será executado apenas uma vez por rodagem do programa.
 
-5. A classe util mantem o cdigo separado para buff de cartas em uma classe que independe de instancia (Util). Isso nos dah certeza 
-com relacao a alteracao do estado do ojeto, alem de manter funcoes de operacoes parecidas proximas.
+5. A classe Util mantem o código separado para buff de cartas em uma classe que independe de instancia (Util). Isso nos dá certeza
+com relação a alteração do estado do objeto, alem de manter funções de operações parecidas próximas.
 
 6. Quando impementamos a classe Baralho com ArrayList, estamos usando a propia API do java para controlar a lista de cartas do
-objeto instanciado. Isso me traz seguranca de que nao irei cometer error na implementacao da lista e tambem de que a implemntacao
-sera performatica e muito bem testada.
+objeto instanciado. Isso me traz segurança de que nao irei cometer error na implementacao da lista e também de que a implementação
+terá boa performance e está muito bem testada.
