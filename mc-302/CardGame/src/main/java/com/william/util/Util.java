@@ -25,6 +25,11 @@ public class Util {
 		}
 	}
 
+	public static void damage(MinionCard minion, int damage) {
+		int healthAfterDamage = minion.getCurrentHealth() - damage;
+		minion.setCurrentHealth(healthAfterDamage);
+	}
+
 	private static boolean hasAppliedBuff(int oldStat, int newStat) {
 		return (oldStat < newStat);
 	}

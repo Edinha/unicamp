@@ -1,54 +1,28 @@
 package com.william.card;
 
-public class MinionCard {
+import com.william.util.Util;
+
+import java.util.UUID;
+
+public class MinionCard extends Card {
 	private static final String BUFFED_NAME_SUFFIX = " Buffed";
 
-	private int id;
 	private int attack;
-	private int manaCost;
 	private int totalHealth;
 	private int currentHealth;
 
-	private String name;
-
-	public MinionCard(int id, String name, int manaCost) {
-		this.id = id;
-		this.name = name;
-		this.manaCost = manaCost;
-	}
-
-	public MinionCard(MinionCard other) {
-		this.id = other.getId();
-		this.name = other.getName();
-		this.attack = other.getAttack();
-		this.manaCost = other.getManaCost();
-		this.currentHealth = other.getCurrentHealth();
-		this.totalHealth = other.getTotalHealth();
-	}
-
-	public MinionCard(int id, String name, int attack, int currentHealth, int totalHealth, int manaCost) {
-		this.id = id;
-		this.name = name;
+	public MinionCard(UUID id, String name, int manaCost, int attack, int totalHealth, int currentHealth) {
+		super(id, name, manaCost);
 		this.attack = attack;
-		this.currentHealth = currentHealth;
 		this.totalHealth = totalHealth;
-		this.manaCost = manaCost;
+		this.currentHealth = currentHealth;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+	public MinionCard(String name, int manaCost, int attack, int totalHealth, int currentHealth) {
+		super(name, manaCost);
+		this.attack = attack;
+		this.totalHealth = totalHealth;
+		this.currentHealth = currentHealth;
 	}
 
 	public int getAttack() {
@@ -75,25 +49,23 @@ public class MinionCard {
 		this.totalHealth = totalHealth;
 	}
 
-	public int getManaCost() {
-		return manaCost;
-	}
-
-	public void setManaCost(int manaCost) {
-		this.manaCost = manaCost;
-	}
-
 	public static String getBuffedNameSuffix() {
 		return BUFFED_NAME_SUFFIX;
 	}
 
 	@Override
 	public String toString() {
-		String out = this.name + " (ID: " + this.id + ")\n";
+		String out = super.toString();
 		out += "Ataque = " + this.attack + "\n";
 		out += "Vida Atual = " + this.currentHealth + "\n";
 		out += "Vida Maxima = " + this.totalHealth + "\n";
-		out += "Custo de Mana = " + this.manaCost + "\n";
 		return out;
+	}
+
+	@Override
+	public void use(Card target) {
+		MinionCard minion = (MinionCard) target;
+		Util.damage(minion, this.attack);
+		Util.damage(this, minion.getAttack());
 	}
 }

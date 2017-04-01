@@ -13,7 +13,7 @@ public class UtilTest {
 
 	@Before
 	public void before() {
-		this.minionCard = new MinionCard(1, "Test card", 7, 10, 10, 10);
+		this.minionCard = new MinionCard("Test card", 7, 10, 10, 10);
 		this.attackBeforeBuff = this.minionCard.getAttack();
 		this.healthBeforeBuff = this.minionCard.getCurrentHealth();
 	}

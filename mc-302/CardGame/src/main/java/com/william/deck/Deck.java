@@ -4,22 +4,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.william.card.MinionCard;
+import com.william.card.Card;
 
 public class Deck {
 	public static int MAX_CARDS = 30;
 
-	private List<MinionCard> deck;
+	private List<Card> deck;
 
 	public Deck() {
-		this.deck = new ArrayList<MinionCard>();
+		this.deck = new ArrayList<>();
 	}
 
-	public List<MinionCard> getDeck() {
+	public List<Card> getDeck() {
 		return deck;
 	}
 
-	public void addCard(MinionCard card) {
+	public void addCard(Card card) {
 		if (this.deck.size() == MAX_CARDS) {
 			return;
 		}
@@ -27,12 +27,12 @@ public class Deck {
 		this.deck.add(card);
 	}
 
-	public MinionCard pullCard() {
+	public Card pullCard() {
 		if (this.deck.isEmpty()) {
 			return null;
 		}
 
-		MinionCard card = this.deck.get(this.deck.size() - 1);
+		Card card = this.deck.get(this.deck.size() - 1);
 		this.deck.remove(card);
 		return card;
 	}
