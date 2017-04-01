@@ -11,13 +11,13 @@ public class Buff extends Magic {
 	private int attackBuff;
 	private int healthBuff;
 
-	public Buff(UUID id, String name, int manaCost, int damage, boolean multiTarget, int attackBuff, int healthBuff) {
+	public Buff(UUID id, String name, int manaCost, int attackBuff, int healthBuff) {
 		super(id, name, manaCost);
 		this.attackBuff = attackBuff;
 		this.healthBuff = healthBuff;
 	}
 
-	public Buff(String name, int manaCost, int damage, boolean multiTarget, int attackBuff, int healthBuff) {
+	public Buff(String name, int manaCost, int attackBuff, int healthBuff) {
 		super(name, manaCost);
 		this.attackBuff = attackBuff;
 		this.healthBuff = healthBuff;

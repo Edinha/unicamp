@@ -44,7 +44,8 @@ public class Deck {
 
 	private void printReverseDeck() {
 		for (int i = this.deck.size() - 1; i >= 0; i--) {
-			System.out.print(this.deck.get(i));
+			System.out.println(this.deck.get(i));
+			System.out.println();
 		}
 	}
 }
