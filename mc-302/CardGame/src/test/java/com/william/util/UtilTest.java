@@ -1,33 +1,33 @@
 package com.william.util;
 
-import com.william.card.MinionCard;
+import com.william.card.Minion;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 public class UtilTest {
 
-	private MinionCard minionCard;
+	private Minion minion;
 	private int attackBeforeBuff;
 	private int healthBeforeBuff;
 
 	@Before
 	public void before() {
-		this.minionCard = new MinionCard("Test card", 7, 10, 10, 10);
-		this.attackBeforeBuff = this.minionCard.getAttack();
-		this.healthBeforeBuff = this.minionCard.getCurrentHealth();
+		this.minion = new Minion("Test card", 7, 10, 10, 10);
+		this.attackBeforeBuff = this.minion.getAttack();
+		this.healthBeforeBuff = this.minion.getCurrentHealth();
 	}
 
 	@Test
 	public void applyPositiveBuff() {
 		int buff = 2;
 
-		Util.buff(minionCard, buff);
-		Assert.assertEquals(attackBeforeBuff + buff, minionCard.getAttack());
-		Assert.assertEquals(healthBeforeBuff + buff, minionCard.getTotalHealth());
-		Assert.assertEquals(healthBeforeBuff + buff, minionCard.getCurrentHealth());
+		Util.buff(minion, buff);
+		Assert.assertEquals(attackBeforeBuff + buff, minion.getAttack());
+		Assert.assertEquals(healthBeforeBuff + buff, minion.getTotalHealth());
+		Assert.assertEquals(healthBeforeBuff + buff, minion.getCurrentHealth());
 
-		Assert.assertTrue(minionCard.getName().contains(MinionCard.getBuffedNameSuffix()));
+		Assert.assertTrue(minion.getName().contains(Minion.getBuffedNameSuffix()));
 	}
 
 	@Test
@@ -35,12 +35,12 @@ public class UtilTest {
 		int buff = 2;
 		int negative = -2;
 
-		Util.buff(minionCard, negative, buff);
-		Assert.assertEquals(attackBeforeBuff, minionCard.getAttack());
-		Assert.assertEquals(healthBeforeBuff + buff, minionCard.getTotalHealth());
-		Assert.assertEquals(healthBeforeBuff + buff, minionCard.getCurrentHealth());
+		Util.buff(minion, negative, buff);
+		Assert.assertEquals(attackBeforeBuff, minion.getAttack());
+		Assert.assertEquals(healthBeforeBuff + buff, minion.getTotalHealth());
+		Assert.assertEquals(healthBeforeBuff + buff, minion.getCurrentHealth());
 
-		Assert.assertTrue(minionCard.getName().contains(MinionCard.getBuffedNameSuffix()));
+		Assert.assertTrue(minion.getName().contains(Minion.getBuffedNameSuffix()));
 	}
 
 	@Test
@@ -48,24 +48,24 @@ public class UtilTest {
 		int buff = 2;
 		int negative = -2;
 
-		Util.buff(minionCard, buff, negative);
-		Assert.assertEquals(healthBeforeBuff, minionCard.getTotalHealth());
-		Assert.assertEquals(healthBeforeBuff, minionCard.getCurrentHealth());
-		Assert.assertEquals(attackBeforeBuff + buff, minionCard.getAttack());
+		Util.buff(minion, buff, negative);
+		Assert.assertEquals(healthBeforeBuff, minion.getTotalHealth());
+		Assert.assertEquals(healthBeforeBuff, minion.getCurrentHealth());
+		Assert.assertEquals(attackBeforeBuff + buff, minion.getAttack());
 
-		Assert.assertTrue(minionCard.getName().contains(MinionCard.getBuffedNameSuffix()));
+		Assert.assertTrue(minion.getName().contains(Minion.getBuffedNameSuffix()));
 	}
 
 	@Test
 	public void applyNegativeBuff() {
 		int negative = -2;
 
-		Util.buff(minionCard, negative);
-		Assert.assertEquals(attackBeforeBuff, minionCard.getAttack());
-		Assert.assertEquals(healthBeforeBuff, minionCard.getTotalHealth());
-		Assert.assertEquals(healthBeforeBuff, minionCard.getCurrentHealth());
+		Util.buff(minion, negative);
+		Assert.assertEquals(attackBeforeBuff, minion.getAttack());
+		Assert.assertEquals(healthBeforeBuff, minion.getTotalHealth());
+		Assert.assertEquals(healthBeforeBuff, minion.getCurrentHealth());
 
-		Assert.assertFalse(minionCard.getName().contains(MinionCard.getBuffedNameSuffix()));
+		Assert.assertFalse(minion.getName().contains(Minion.getBuffedNameSuffix()));
 	}
 
 }

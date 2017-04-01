@@ -41,6 +41,9 @@ public abstract class Card {
 		this.manaCost = manaCost;
 	}
 
+	public static void test() {
+	}
+
 	@Override
 	public String toString() {
 		String out = this.name + " (ID: " + this.id + ")\n";

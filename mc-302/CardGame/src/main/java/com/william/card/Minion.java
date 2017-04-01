@@ -4,21 +4,21 @@ import com.william.util.Util;
 
 import java.util.UUID;
 
-public class MinionCard extends Card {
+public class Minion extends Card {
 	private static final String BUFFED_NAME_SUFFIX = " Buffed";
 
 	private int attack;
 	private int totalHealth;
 	private int currentHealth;
 
-	public MinionCard(UUID id, String name, int manaCost, int attack, int totalHealth, int currentHealth) {
+	public Minion(UUID id, String name, int manaCost, int attack, int totalHealth, int currentHealth) {
 		super(id, name, manaCost);
 		this.attack = attack;
 		this.totalHealth = totalHealth;
 		this.currentHealth = currentHealth;
 	}
 
-	public MinionCard(String name, int manaCost, int attack, int totalHealth, int currentHealth) {
+	public Minion(String name, int manaCost, int attack, int totalHealth, int currentHealth) {
 		super(name, manaCost);
 		this.attack = attack;
 		this.totalHealth = totalHealth;
@@ -64,7 +64,7 @@ public class MinionCard extends Card {
 
 	@Override
 	public void use(Card target) {
-		MinionCard minion = (MinionCard) target;
+		Minion minion = (Minion) target;
 		Util.damage(minion, this.attack);
 		Util.damage(this, minion.getAttack());
 	}

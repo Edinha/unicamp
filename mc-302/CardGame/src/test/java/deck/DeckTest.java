@@ -1,7 +1,7 @@
 package deck;
 
 import com.william.card.Card;
-import com.william.card.MinionCard;
+import com.william.card.Minion;
 import com.william.deck.Deck;
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,13 +24,13 @@ public class DeckTest {
 
 	@Test
 	public void testPullRecentCardFromDeck() throws Exception {
-		MinionCard top = new MinionCard("Top", 6, 6, 6, 6);
-		MinionCard below = new MinionCard("Below", 3, 3, 3, 3);
+		Minion top = new Minion("Top", 6, 6, 6, 6);
+		Minion below = new Minion("Below", 3, 3, 3, 3);
 
 		this.deck.addCard(below);
 		this.deck.addCard(top);
 
-		MinionCard pullCard = (MinionCard) this.deck.pullCard();
+		Minion pullCard = (Minion) this.deck.pullCard();
 		Assert.assertNotNull(pullCard);
 		Assert.assertEquals(pullCard.getId(), top.getId());
 		Assert.assertEquals(pullCard.getName(), top.getName());
@@ -40,7 +40,7 @@ public class DeckTest {
 	@Test
 	public void testAddMoreThanMaxCards() throws Exception {
 		for (int i = 0; i < 2 * Deck.MAX_CARDS; i++) {
-			MinionCard card = new MinionCard("Card " + i,  i * 2, i, i, i);
+			Minion card = new Minion("Card " + i,  i * 2, i, i, i);
 			this.deck.addCard(card);
 		}
 

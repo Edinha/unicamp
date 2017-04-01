@@ -1,7 +1,6 @@
 package com.william.card.magic;
 
-import com.william.card.Card;
-import com.william.card.MinionCard;
+import com.william.card.Minion;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +15,7 @@ public class DamageArea extends Damage {
 		super(name, manaCost, damage);
 	}
 
-	public void use(List<MinionCard> targets) {
+	public void use(List<Minion> targets) {
 		targets.forEach(this::use);
 	}
 }

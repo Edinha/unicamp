@@ -1,12 +1,12 @@
 package com.william.card.magic;
 
 import com.william.card.Card;
-import com.william.card.MinionCard;
+import com.william.card.Minion;
 import com.william.util.Util;
 
 import java.util.UUID;
 
-public class Buff extends MagicCard {
+public class Buff extends Magic {
 
 	private int attackBuff;
 	private int healthBuff;
@@ -49,7 +49,7 @@ public class Buff extends MagicCard {
 
 	@Override
 	public void use(Card target) {
-		MinionCard minion = (MinionCard) target;
+		Minion minion = (Minion) target;
 		Util.buff(minion, this.attackBuff, this.healthBuff);
 	}
 }

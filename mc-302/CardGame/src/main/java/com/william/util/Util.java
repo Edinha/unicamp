@@ -1,13 +1,13 @@
 package com.william.util;
 
-import com.william.card.MinionCard;
+import com.william.card.Minion;
 
 public class Util {
-	public static void buff(MinionCard minion, int attackAndHealthBuff) {
+	public static void buff(Minion minion, int attackAndHealthBuff) {
 		buff(minion, attackAndHealthBuff, attackAndHealthBuff);
 	}
 
-	public static void buff(MinionCard minion, int attackBuff, int healthBuff) {
+	public static void buff(Minion minion, int attackBuff, int healthBuff) {
 		int oldAttack = minion.getAttack();
 		int oldHealth = minion.getCurrentHealth();
 
@@ -25,7 +25,7 @@ public class Util {
 		}
 	}
 
-	public static void damage(MinionCard minion, int damage) {
+	public static void damage(Minion minion, int damage) {
 		int healthAfterDamage = minion.getCurrentHealth() - damage;
 		minion.setCurrentHealth(healthAfterDamage);
 	}
@@ -34,7 +34,7 @@ public class Util {
 		return (oldStat < newStat);
 	}
 
-	private static void buffedName(MinionCard minion) {
-		minion.setName(minion.getName() + MinionCard.getBuffedNameSuffix());
+	private static void buffedName(Minion minion) {
+		minion.setName(minion.getName() + Minion.getBuffedNameSuffix());
 	}
 }
