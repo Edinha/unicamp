@@ -18,4 +18,11 @@ public class DamageArea extends Damage {
 	public void use(List<Minion> targets) {
 		targets.forEach(this::use);
 	}
+
+	@Override
+	public String toString() {
+		String out = super.toString();
+		out += "Dano aplicado em area\n";
+		return out;
+	}
 }
