@@ -1,19 +1,18 @@
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class JogadorRA188671New extends Jogador {
-
+public class JogadorRA188671Trabalho extends Jogador {
 	private List<CartaLacaio> lacaios;
 	private List<CartaLacaio> lacaiosOponente;
 
 	private int manaTurno;
 
 	/**
-	 * O método construtor do JogadorRA188671New.
+	 * O método construtor do JogadorRA188671Trabalho.
 	 *
 	 * @param maoInicial Contém a mão inicial do jogador. Deve conter o número de cartas correto
 	 *        dependendo se esta classe Jogador que está sendo construída é o primeiro ou o segundo
@@ -21,7 +20,7 @@ public class JogadorRA188671New extends Jogador {
 	 * @param primeiro Informa se esta classe Jogador que está sendo construída é o primeiro jogador
 	 *        a iniciar nesta jogada (true) ou se é o segundo jogador (false).
 	 */
-	public JogadorRA188671New(ArrayList<Carta> maoInicial, boolean primeiro) {
+	public JogadorRA188671Trabalho(ArrayList<Carta> maoInicial, boolean primeiro) {
 		primeiroJogador = primeiro;
 
 		mao = maoInicial;
@@ -76,112 +75,185 @@ public class JogadorRA188671New extends Jogador {
 		int lacaioSum = this.lacaios.stream().mapToInt(CartaLacaio::getAtaque).sum();
 
 		// Caso todos os lacaios tenham dano para derrotar o heroi
+		Stream<Jogada> ataqueDireto = this.lacaios.stream().map(lacaio -> new Jogada(TipoJogada.ATAQUE, lacaio, null));
 		if (lacaioSum >= vidaOponente) {
-			minhasJogadas.addAll(this.lacaios.stream().map(lacaio -> new Jogada(TipoJogada.ATAQUE, lacaio, null)).collect(Collectors.toList()));
+			minhasJogadas.addAll(ataqueDireto.collect(Collectors.toList()));
 			return minhasJogadas;
 		}
 
 		// Caso todos os lacaios mais o poder heroico consigam ganhar o jogo nessa rodada
 		if (lacaioSum + 1 >= vidaOponente && this.manaTurno >= 2) {
 			minhasJogadas.add(new Jogada(TipoJogada.PODER, null, null));
-			minhasJogadas.addAll(this.lacaios.stream().map(lacaio -> new Jogada(TipoJogada.ATAQUE, lacaio, null)).collect(Collectors.toList()));
+			minhasJogadas.addAll(ataqueDireto.collect(Collectors.toList()));
 			return minhasJogadas;
 		}
 
-		Map<Integer, Integer> atacados = new HashMap<>();
-		Map<CartaLacaio, CartaLacaio> ofensiva = new HashMap<>();
+		// Decide a estrategia depois de verificar se nao tem caso de vitoria certa com a mesa atual
+//		minhasJogadas.addAll(agressivo());
 
-		this.lacaios.forEach(lacaio -> {
-			CartaLacaio alvo = null;
-			for (CartaLacaio oponente : this.lacaiosOponente) {
-				if (oponente.getAtaque() >= lacaio.getVidaAtual()) {
-					continue;
-				}
-
-				if (oponente.getVidaAtual() < lacaio.getAtaque()) {
-					if (alvo == null || alvo.getAtaque() <= oponente.getAtaque()) {
-						alvo = oponente;
-					}
-				}
-			}
-
-			ofensiva.put(lacaio, alvo);
-
-			if (alvo != null) {
-				atacados.put(alvo.getID(), alvo.getVidaAtual());
-			}
-		});
-
-		for (Map.Entry<CartaLacaio, CartaLacaio> entrada : ofensiva.entrySet()) {
-			Carta alvo = entrada.getValue();
-
-			if (alvo == null) {
-				minhasJogadas.add(new Jogada(TipoJogada.ATAQUE, entrada.getKey(), alvo));
-				continue;
-			}
-
-			Integer vidaAlvo = atacados.get(alvo.getID());
-			if (vidaAlvo > 0) {
-				minhasJogadas.add(new Jogada(TipoJogada.ATAQUE, entrada.getKey(), alvo));
-				atacados.put(alvo.getID(), vidaAlvo - entrada.getKey().getAtaque());
-			}
-		}
-
-		List<Carta> remover = new ArrayList<>();
-		for (Carta carta : this.mao) {
-			if (carta instanceof CartaLacaio && temManaSuficiente(carta)) {
-				minhasJogadas.add(new Jogada(TipoJogada.LACAIO, carta, null));
-				atualizarMana(carta);
-				remover.add(carta);
-			}
-		}
-
-		Jogada jogadaMagia = usarMagia();
-		if (jogadaMagia != null) {
-			minhasJogadas.add(jogadaMagia);
-		}
-
-		descarte(remover);
+		minhasJogadas.addAll(controle());
 
 		return minhasJogadas;
 	}
 
-	/**
-	 * Metodo que realiza uma jogada envolvendo apenas uma magia
-	 *
-	 * @return Uma jogada de uma carta magia, nulo caso nao seja possivel jogar magias com a mao
-	 *         atual
-	 */
-	public Jogada usarMagia() {
-		Jogada jogada = null;
-		Carta remover = null;
+	private List<Jogada> agressivo() {
+		List<Carta> retiradas = new ArrayList<>();
+		List<Jogada> minhasJogadas = new ArrayList<>();
+		List<CartaMagia> magias = new ArrayList<>();
+		List<CartaLacaio> invocarLacaios = new ArrayList<>();
 
 		for (Carta carta : this.mao) {
+			if (carta instanceof CartaLacaio) {
+				invocarLacaios.add((CartaLacaio) carta);
+			}
+
+			if (carta instanceof CartaMagia) {
+				CartaMagia magia = (CartaMagia) carta;
+				if (magiaDano(magia)) {
+					magias.add(magia);
+				}
+
+				// TODO maybe buffs ?
+			}
+		}
+
+		Collections.sort(invocarLacaios, (o1, o2) -> {
+			if (o1.getAtaque() > o2.getAtaque()) {
+				return -1;
+			}
+
+			return 1;
+		});
+
+		Collections.sort(magias, (o1, o2) -> {
+			if (o1.getMagiaDano() > o2.getMagiaDano()) {
+				return -1;
+			}
+
+			return 1;
+		});
+
+		for (CartaLacaio lacaio : invocarLacaios) {
+			if (!temManaSuficiente(lacaio)) {
+				continue;
+			}
+
+			minhasJogadas.add(new Jogada(TipoJogada.LACAIO, lacaio, null));
+			atualizarMana(lacaio);
+			retiradas.add(lacaio);
+		}
+
+		for (CartaMagia magia : magias) {
+			if (!temManaSuficiente(magia)) {
+				continue;
+			}
+
+			minhasJogadas.add(new Jogada(TipoJogada.MAGIA, magia, null));
+			atualizarMana(magia);
+			retiradas.add(magia);
+		}
+
+		minhasJogadas.addAll(this.lacaios.stream().map(lacaio -> new Jogada(TipoJogada.ATAQUE, lacaio, null)).collect(Collectors.toList()));
+
+		descarte(retiradas);
+
+		return minhasJogadas;
+	}
+
+	private List<Jogada> controle() {
+		List<Jogada> minhasJogadas = new ArrayList<>();
+
+		List<CartaLacaio> alvos = new ArrayList<>();
+
+		List<CartaLacaio> invocarLacaios = new ArrayList<>();
+
+		List<Carta> retiradas = new ArrayList<>();
+
+		// Usar magias de controle
+		for (Carta carta : this.mao) {
+			if (carta instanceof CartaLacaio) {
+				invocarLacaios.add((CartaLacaio) carta);
+			}
+
 			if (carta instanceof CartaMagia && temManaSuficiente(carta)) {
 				CartaMagia magia = (CartaMagia) carta;
 
-				if (magiaDano(magia)) {
-					jogada = new Jogada(TipoJogada.MAGIA, carta, null);
+				if (magia.getMagiaTipo().equals(TipoMagia.AREA) && this.lacaiosOponente.size() > 1) {
+					minhasJogadas.add(new Jogada(TipoJogada.MAGIA, magia, null));
+					atualizarMana(magia);
+					retiradas.add(carta);
 				}
 
-				if (magiaBuff(magia)) {
-					for (CartaLacaio lacaio : this.lacaios) {
-						jogada = new Jogada(TipoJogada.MAGIA, carta, lacaio);
-						break;
+				if (magia.getMagiaTipo().equals(TipoMagia.ALVO)) {
+					for (CartaLacaio oponente : this.lacaiosOponente) {
+						// TODO calc diference to no waste ?
+						if (magia.getMagiaDano() >= oponente.getVidaAtual()) {
+							minhasJogadas.add(new Jogada(TipoJogada.MAGIA, magia, oponente));
+							atualizarMana(magia);
+							retiradas.add(carta);
+							break;
+						}
 					}
-				}
-
-				if (jogada != null) {
-					atualizarMana(carta);
-					remover = carta;
-					break;
 				}
 			}
 		}
 
-		descarte(remover);
+		// Passa pelos lacais e decide as jogadas por trocas favoraveis
+		this.lacaios.forEach(lacaio -> {
+			CartaLacaio alvo = null;
+			for (CartaLacaio oponente : this.lacaiosOponente) {
+				if (alvos.indexOf(oponente) > -1 && trocaFavorel(lacaio, oponente)) {
+					alvo = oponente;
+					break;
+				}
+			}
 
-		return jogada;
+			minhasJogadas.add(new Jogada(TipoJogada.ATAQUE, lacaio, alvo));
+			if (alvo != null) {
+				alvos.add(alvo);
+			}
+		});
+
+
+		for (CartaLacaio invocao : invocarLacaios) {
+			if (temManaSuficiente(invocao)) {
+				retiradas.add(invocao);
+				atualizarMana(invocao);
+				minhasJogadas.add(new Jogada(TipoJogada.LACAIO, invocao, null));
+			}
+		}
+
+		descarte(retiradas);
+
+		return minhasJogadas;
+	}
+
+	// TODO javadoc for trocaFavoravel
+	private boolean trocaFavorel(CartaLacaio atacante, CartaLacaio defensor) {
+		if (atacante.getAtaque() >= defensor.getVidaAtual()) {
+
+			// Atacante sobrevive a troca, favoravel
+			if (atacante.getVidaAtual() > defensor.getAtaque()) {
+				return true;
+			}
+
+
+			// Ataca e morre no processo, temos dois casos
+			if (atacante.getVidaAtual() <= defensor.getAtaque()) {
+
+				// Se tirou um inimigo com custo de mana maior, favorel
+				if (atacante.getMana() < defensor.getMana()) {
+					return true;
+				}
+
+				// Caso a vida do atacante esteja danificada e seja menor do que o defensor
+				if (atacante.getVidaAtual() < defensor.getVidaAtual()) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -202,16 +274,6 @@ public class JogadorRA188671New extends Jogador {
 	 */
 	private boolean magiaDano(CartaMagia magia) {
 		return (magia.getMagiaTipo().equals(TipoMagia.ALVO) || magia.getMagiaTipo().equals(TipoMagia.AREA));
-	}
-
-	/**
-	 * Verifica o tipo "Buff" para a carta magia
-	 *
-	 * @param magia que se deseja usar no turno
-	 * @return Verdadeiro caso seja um buff, faldo caso contrario
-	 */
-	private boolean magiaBuff(CartaMagia magia) {
-		return magia.getMagiaTipo().equals(TipoMagia.AREA);
 	}
 
 	/**
@@ -244,4 +306,5 @@ public class JogadorRA188671New extends Jogador {
 	public int getManaTurno() {
 		return manaTurno;
 	}
+
 }

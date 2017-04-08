@@ -211,7 +211,7 @@ public class Main {
 				
 				// Inicializa os Jogadores devidamente (com as cartas da mão e o argumento 'primeiro').
 				JogadorAleatorio jogA = new JogadorAleatorio(mao1clone, moeda);
-				JogadorRA188671New jogB = new JogadorRA188671New(mao2clone, !moeda);
+				JogadorRA188671Trabalho jogB = new JogadorRA188671Trabalho(mao2clone, !moeda);
 				
 				// O Motor é construído
 				Motor partida;

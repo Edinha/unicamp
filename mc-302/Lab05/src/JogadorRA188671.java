@@ -63,7 +63,7 @@ public class JogadorRA188671 extends Jogador {
 
 		this.setManaTurno(minhaMana);
 
-		ArrayList<Jogada> minhasJogadas = new ArrayList<Jogada>();
+		ArrayList<Jogada> minhasJogadas = new ArrayList<>();
 
 		Jogada jogadaMagia = usarMagia();
 		if (jogadaMagia != null) {
@@ -74,7 +74,7 @@ public class JogadorRA188671 extends Jogador {
 		for (Carta carta : this.mao) {
 			if (carta instanceof CartaLacaio && temManaSuficiente(carta)) {
 				minhasJogadas.add(new Jogada(TipoJogada.LACAIO, carta, null));
-				this.setManaTurno(this.manaTurno - carta.getMana());
+				atualizarMana(carta);
 				remover = carta;
 				break;
 			}
@@ -82,7 +82,7 @@ public class JogadorRA188671 extends Jogador {
 
 		descarte(remover);
 
-		// O laço abaixo cria jogas de baixar lacaios da mão para a mesa se houver mana disponível.
+		// O laço abaixo cria jogadas de lacaios atacando o heroi inimigo
 		minhasJogadas.addAll(this.lacaios.stream().map(lacaio -> new Jogada(TipoJogada.ATAQUE, lacaio, null)).collect(Collectors.toList()));
 
 		return minhasJogadas;
@@ -112,7 +112,7 @@ public class JogadorRA188671 extends Jogador {
 				}
 
 				if (jogada != null) {
-					this.setManaTurno(this.manaTurno - carta.getMana());
+					atualizarMana(carta);
 					remover = carta;
 					break;
 				}
@@ -159,6 +159,14 @@ public class JogadorRA188671 extends Jogador {
 		if (remover != null) {
 			this.mao.remove(remover);
 		}
+	}
+
+	/**
+	 * Atualiza a mana do turno do jogador ao criar uma jogada com respectiva carta
+	 * @param carta usada na jogada
+	 */
+	private void atualizarMana(Carta carta) {
+		this.manaTurno -= manaTurno;
 	}
 
 	public void setManaTurno(int manaTurno) {
