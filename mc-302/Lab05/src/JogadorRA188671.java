@@ -41,20 +41,17 @@ public class JogadorRA188671 extends Jogador {
 	  * @return            um ArrayList com as Jogadas decididas
 	  */
 	public ArrayList<Jogada> processarTurno (Mesa mesa, Carta cartaComprada, ArrayList<Jogada> jogadasOponente){
-		int minhaMana, minhaVida;
+		int minhaMana;
 		if (cartaComprada != null) {
 			mao.add(cartaComprada);
 		}
 
-		if(primeiroJogador){
+		if (primeiroJogador){
 			minhaMana = mesa.getManaJog1();
-			minhaVida = mesa.getVidaHeroi1();
 			lacaios = mesa.getLacaiosJog1();
 			lacaiosOponente = mesa.getLacaiosJog2();
-		}
-		else{
+		} else {
 			minhaMana = mesa.getManaJog2();
-			minhaVida = mesa.getVidaHeroi2();
 			lacaios = mesa.getLacaiosJog2();
 			lacaiosOponente = mesa.getLacaiosJog1();
 		}

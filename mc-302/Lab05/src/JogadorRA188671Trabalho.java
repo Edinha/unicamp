@@ -290,21 +290,11 @@ public class JogadorRA188671Trabalho extends Jogador {
 	}
 
 	/**
-	 * Remove uma carta da mão caso ela não for nula
-	 * @param remover carta a ser retirada da mão
-	 */
-	private void descarte(Carta descarte) {
-		if (descarte != null) {
-			this.mao.remove(descarte);
-		}
-	}
-
-	/**
 	 * Remove uma coleção de cartas da mão
 	 * @param cartas a serem retiradas da mão
 	 */
 	private void descarte(Collection<Carta> cartas) {
-		cartas.forEach(this::descarte);
+		cartas.removeAll(cartas);
 	}
 
 	/**

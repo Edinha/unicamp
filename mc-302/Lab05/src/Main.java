@@ -28,7 +28,7 @@ public class Main {
 		int verbosidade = 1;
 		
 		// A tempoLimite define se o Motor deve exigir do Jogador que processe suas jogadas dentro de um limite de tempo (0=sem limite, 1=com limite).
-		int tempoLimite = 0;
+		int tempoLimite = 1;
 		
 		// Rotina que executa uma partida de LaMa utilizando a GUI
 //		umaPartidaGUI(baralho1, baralho2, verbosidade, tempoLimite);
@@ -211,7 +211,7 @@ public class Main {
 				
 				// Inicializa os Jogadores devidamente (com as cartas da mão e o argumento 'primeiro').
 				JogadorAleatorio jogA = new JogadorAleatorio(mao1clone, moeda);
-				JogadorRA188671Trabalho jogB = new JogadorRA188671Trabalho(mao2clone, !moeda);
+				JogadorRA188671New jogB = new JogadorRA188671New(mao2clone, !moeda);
 				
 				// O Motor é construído
 				Motor partida;
