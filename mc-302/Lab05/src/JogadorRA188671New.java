@@ -91,35 +91,47 @@ public class JogadorRA188671New extends Jogador {
 		Map<Integer, Integer> atacados = new HashMap<>();
 		Map<CartaLacaio, CartaLacaio> ofensiva = new HashMap<>();
 
+		// Para cada um dos meus lacaios em campo, é mapeada uma relação ofensiva
 		this.lacaios.forEach(lacaio -> {
 			CartaLacaio alvo = null;
+
+			// Passando por todos os lacaios inimigos buscando um adversário
 			for (CartaLacaio oponente : this.lacaiosOponente) {
+				// Caso meu minion seria destruido no processo, não ataca
 				if (oponente.getAtaque() >= lacaio.getVidaAtual()) {
 					continue;
 				}
 
+				// Caso seja possível destruir o lacaio inimigo, há chance de ser um novo alvo
 				if (oponente.getVidaAtual() < lacaio.getAtaque()) {
+
+					// Caso esse minion ainda não tenha alvo, ou o novo alvo tenha mais ataque, marca o inimigo como alvo
 					if (alvo == null || alvo.getAtaque() <= oponente.getAtaque()) {
 						alvo = oponente;
 					}
 				}
 			}
 
+			// Mapeia a relação meu lacaio -> qual seu alvo nesse turno
 			ofensiva.put(lacaio, alvo);
 
+			// Mapeia a relação de vida entre
 			if (alvo != null) {
 				atacados.put(alvo.getID(), alvo.getVidaAtual());
 			}
 		});
 
+		// Para cada relação ofensiva formada pela iteração acima, realiza as trocas
 		for (Map.Entry<CartaLacaio, CartaLacaio> entrada : ofensiva.entrySet()) {
 			Carta alvo = entrada.getValue();
 
+			// Caso o lacaio não tenha alvo, ataca o herói inimigo diretamente
 			if (alvo == null) {
 				minhasJogadas.add(new Jogada(TipoJogada.ATAQUE, entrada.getKey(), alvo));
 				continue;
 			}
 
+			// Realiza um ataque ao alvo caso ele já não tenha sido destruido
 			Integer vidaAlvo = atacados.get(alvo.getID());
 			if (vidaAlvo > 0) {
 				minhasJogadas.add(new Jogada(TipoJogada.ATAQUE, entrada.getKey(), alvo));
@@ -127,6 +139,7 @@ public class JogadorRA188671New extends Jogador {
 			}
 		}
 
+		// Baixa os lacaios possíveis da minha mão
 		List<Carta> remover = new ArrayList<>();
 		for (Carta carta : this.mao) {
 			if (carta instanceof CartaLacaio && temManaSuficiente(carta)) {
@@ -136,6 +149,7 @@ public class JogadorRA188671New extends Jogador {
 			}
 		}
 
+		// Usa magia nesse turno
 		Jogada jogadaMagia = usarMagia();
 		if (jogadaMagia != null) {
 			minhasJogadas.add(jogadaMagia);
@@ -148,9 +162,7 @@ public class JogadorRA188671New extends Jogador {
 
 	/**
 	 * Metodo que realiza uma jogada envolvendo apenas uma magia
-	 *
-	 * @return Uma jogada de uma carta magia, nulo caso nao seja possivel jogar magias com a mao
-	 *         atual
+	 * @return Jogada de uma magia, nulo caso não seja possível jogar magias com a mão atual
 	 */
 	public Jogada usarMagia() {
 		Jogada jogada = null;
@@ -185,10 +197,9 @@ public class JogadorRA188671New extends Jogador {
 	}
 
 	/**
-	 * Metedo que verifica se existe mana suficiente para baixar a carta
-	 *
+	 * Método que verifica se existe mana suficiente para baixar a carta
 	 * @param carta que se deseja usar no turno
-	 * @return verdadeiro se eh possivel baixar a carta, falso caso contrario
+	 * @return Verdadeiro se é possível baixar a carta, falso caso contrário
 	 */
 	private boolean temManaSuficiente(Carta carta) {
 		return (carta.getMana() <= this.manaTurno);
@@ -196,9 +207,8 @@ public class JogadorRA188671New extends Jogador {
 
 	/**
 	 * Verifica o tipo "Dano" para a carta magia parametrizada
-	 *
 	 * @param magia que se deseja usar no turno
-	 * @return Verdadeiro caso seja magia de dano
+	 * @return Verdadeiro caso tipo magia seja ALVO ou AREA, falso caso contrário
 	 */
 	private boolean magiaDano(CartaMagia magia) {
 		return (magia.getMagiaTipo().equals(TipoMagia.ALVO) || magia.getMagiaTipo().equals(TipoMagia.AREA));
@@ -206,18 +216,16 @@ public class JogadorRA188671New extends Jogador {
 
 	/**
 	 * Verifica o tipo "Buff" para a carta magia
-	 *
 	 * @param magia que se deseja usar no turno
-	 * @return Verdadeiro caso seja um buff, faldo caso contrario
+	 * @return Verdadeiro caso tipo magia seja BUFF, faldo caso contrario
 	 */
 	private boolean magiaBuff(CartaMagia magia) {
-		return magia.getMagiaTipo().equals(TipoMagia.AREA);
+		return magia.getMagiaTipo().equals(TipoMagia.BUFF);
 	}
 
 	/**
-	 * Remove carta da mao passada como parametro
-	 *
-	 * @param descarte carta a ser retirada da mao
+	 * Remove uma carta da mão caso ela não for nula
+	 * @param remover carta a ser retirada da mão
 	 */
 	private void descarte(Carta descarte) {
 		if (descarte != null) {
@@ -225,6 +233,10 @@ public class JogadorRA188671New extends Jogador {
 		}
 	}
 
+	/**
+	 * Remove uma coleção de cartas da mão
+	 * @param cartas a serem retiradas da mão
+	 */
 	private void descarte(Collection<Carta> cartas) {
 		cartas.forEach(this::descarte);
 	}

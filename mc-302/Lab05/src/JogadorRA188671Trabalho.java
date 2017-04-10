@@ -90,18 +90,19 @@ public class JogadorRA188671Trabalho extends Jogador {
 
 		// Decide a estrategia depois de verificar se nao tem caso de vitoria certa com a mesa atual
 //		minhasJogadas.addAll(agressivo());
-
 		minhasJogadas.addAll(controle());
 
 		return minhasJogadas;
 	}
 
+	// Método que realiza a estratégia agressiva
 	private List<Jogada> agressivo() {
 		List<Carta> retiradas = new ArrayList<>();
 		List<Jogada> minhasJogadas = new ArrayList<>();
 		List<CartaMagia> magias = new ArrayList<>();
 		List<CartaLacaio> invocarLacaios = new ArrayList<>();
 
+		// Para as cartas da mão, mapeia quais são lacaios e quais são magias de dano
 		for (Carta carta : this.mao) {
 			if (carta instanceof CartaLacaio) {
 				invocarLacaios.add((CartaLacaio) carta);
@@ -117,6 +118,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 			}
 		}
 
+		// Ordena os lacaios pelo ataque, dos de maior ataque para os de menor.
 		Collections.sort(invocarLacaios, (o1, o2) -> {
 			if (o1.getAtaque() > o2.getAtaque()) {
 				return -1;
@@ -125,6 +127,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 			return 1;
 		});
 
+		// Ordena as magias pelo dano, das de maior dano para os de menor.
 		Collections.sort(magias, (o1, o2) -> {
 			if (o1.getMagiaDano() > o2.getMagiaDano()) {
 				return -1;
@@ -133,6 +136,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 			return 1;
 		});
 
+		// Invoca quantos lacaios a mana atual permirir
 		for (CartaLacaio lacaio : invocarLacaios) {
 			if (!temManaSuficiente(lacaio)) {
 				continue;
@@ -143,6 +147,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 			retiradas.add(lacaio);
 		}
 
+		// Usa quantas magias a mana restante permirir
 		for (CartaMagia magia : magias) {
 			if (!temManaSuficiente(magia)) {
 				continue;
@@ -153,6 +158,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 			retiradas.add(magia);
 		}
 
+		// Todos os lacaios atacam diretamente o herói inimigo
 		minhasJogadas.addAll(this.lacaios.stream().map(lacaio -> new Jogada(TipoJogada.ATAQUE, lacaio, null)).collect(Collectors.toList()));
 
 		descarte(retiradas);
@@ -160,6 +166,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 		return minhasJogadas;
 	}
 
+  // Método que realiza a estratégia de controle
 	private List<Jogada> controle() {
 		List<Jogada> minhasJogadas = new ArrayList<>();
 
@@ -178,12 +185,14 @@ public class JogadorRA188671Trabalho extends Jogador {
 			if (carta instanceof CartaMagia && temManaSuficiente(carta)) {
 				CartaMagia magia = (CartaMagia) carta;
 
+				// Usa magias em área caso o oponente tenha mais de uma lacaio em campo
 				if (magia.getMagiaTipo().equals(TipoMagia.AREA) && this.lacaiosOponente.size() > 1) {
 					minhasJogadas.add(new Jogada(TipoJogada.MAGIA, magia, null));
 					atualizarMana(magia);
 					retiradas.add(carta);
 				}
 
+				// Usa magias de alvo caso não haja desperdício de mana e consiga destruir o lacaio inimigo
 				if (magia.getMagiaTipo().equals(TipoMagia.ALVO)) {
 					for (CartaLacaio oponente : this.lacaiosOponente) {
 						// TODO calc diference to no waste ?
@@ -198,7 +207,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 			}
 		}
 
-		// Passa pelos lacais e decide as jogadas por trocas favoraveis
+		// Passa pelos lacais e decide as jogadas por trocas favoráveis
 		this.lacaios.forEach(lacaio -> {
 			CartaLacaio alvo = null;
 			for (CartaLacaio oponente : this.lacaiosOponente) {
@@ -214,7 +223,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 			}
 		});
 
-
+		// Invoca quantos lacaios a mana restante permitir
 		for (CartaLacaio invocao : invocarLacaios) {
 			if (temManaSuficiente(invocao)) {
 				retiradas.add(invocao);
@@ -228,20 +237,25 @@ public class JogadorRA188671Trabalho extends Jogador {
 		return minhasJogadas;
 	}
 
-	// TODO javadoc for trocaFavoravel
+	/**
+	 * Método que verifica se existe troca favorável entre um lacaio atacante e um defensor
+	 * @param atacante carta que realiza o ataque nesse turno
+	 * @param defensor carta que recebe o ataque nesse turno
+	 * @return Verdadeiro se existe troca favorável entre as duas cartas, falso caso contrário
+	 */
 	private boolean trocaFavorel(CartaLacaio atacante, CartaLacaio defensor) {
+		// O atacante consegue destruir o defensor
 		if (atacante.getAtaque() >= defensor.getVidaAtual()) {
 
-			// Atacante sobrevive a troca, favoravel
+			// Atacante sobrevive a troca, favorável
 			if (atacante.getVidaAtual() > defensor.getAtaque()) {
 				return true;
 			}
 
-
 			// Ataca e morre no processo, temos dois casos
 			if (atacante.getVidaAtual() <= defensor.getAtaque()) {
 
-				// Se tirou um inimigo com custo de mana maior, favorel
+				// Se tirou um inimigo com custo de mana maior, favorável
 				if (atacante.getMana() < defensor.getMana()) {
 					return true;
 				}
@@ -253,14 +267,14 @@ public class JogadorRA188671Trabalho extends Jogador {
 			}
 		}
 
+		// Se nenhum caso se aplica, troca desfavorável
 		return false;
 	}
 
 	/**
-	 * Metedo que verifica se existe mana suficiente para baixar a carta
-	 *
+	 * Método que verifica se existe mana suficiente para baixar a carta
 	 * @param carta que se deseja usar no turno
-	 * @return verdadeiro se eh possivel baixar a carta, falso caso contrario
+	 * @return verdadeiro se é possível baixar a carta, falso caso contrário
 	 */
 	private boolean temManaSuficiente(Carta carta) {
 		return (carta.getMana() <= this.manaTurno);
@@ -268,18 +282,16 @@ public class JogadorRA188671Trabalho extends Jogador {
 
 	/**
 	 * Verifica o tipo "Dano" para a carta magia parametrizada
-	 *
 	 * @param magia que se deseja usar no turno
-	 * @return Verdadeiro caso seja magia de dano
+	 * @return Verdadeiro caso tipo magia seja ALVO ou AREA, falso caso contrário
 	 */
 	private boolean magiaDano(CartaMagia magia) {
 		return (magia.getMagiaTipo().equals(TipoMagia.ALVO) || magia.getMagiaTipo().equals(TipoMagia.AREA));
 	}
 
 	/**
-	 * Remove carta da mao passada como parametro
-	 *
-	 * @param descarte carta a ser retirada da mao
+	 * Remove uma carta da mão caso ela não for nula
+	 * @param remover carta a ser retirada da mão
 	 */
 	private void descarte(Carta descarte) {
 		if (descarte != null) {
@@ -287,6 +299,10 @@ public class JogadorRA188671Trabalho extends Jogador {
 		}
 	}
 
+	/**
+	 * Remove uma coleção de cartas da mão
+	 * @param cartas a serem retiradas da mão
+	 */
 	private void descarte(Collection<Carta> cartas) {
 		cartas.forEach(this::descarte);
 	}

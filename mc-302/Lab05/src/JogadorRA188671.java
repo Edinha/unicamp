@@ -51,14 +51,12 @@ public class JogadorRA188671 extends Jogador {
 			minhaVida = mesa.getVidaHeroi1();
 			lacaios = mesa.getLacaiosJog1();
 			lacaiosOponente = mesa.getLacaiosJog2();
-			//System.out.println("--------------------------------- Começo de turno pro jogador1");
 		}
 		else{
 			minhaMana = mesa.getManaJog2();
 			minhaVida = mesa.getVidaHeroi2();
 			lacaios = mesa.getLacaiosJog2();
 			lacaiosOponente = mesa.getLacaiosJog1();
-			//System.out.println("--------------------------------- Começo de turno pro jogador2");
 		}
 
 		this.setManaTurno(minhaMana);
@@ -70,6 +68,7 @@ public class JogadorRA188671 extends Jogador {
 			minhasJogadas.add(jogadaMagia);
 		}
 
+		// Itera nas minhas cartas procurando um lacaio para ser invocado
 		Carta remover = null;
 		for (Carta carta : this.mao) {
 			if (carta instanceof CartaLacaio && temManaSuficiente(carta)) {
@@ -90,7 +89,7 @@ public class JogadorRA188671 extends Jogador {
 
 	/**
 	 * Metodo que realiza uma jogada envolvendo apenas uma magia
-	 * @return Uma jogada de uma carta magia, nulo caso nao seja possivel jogar magias com a mao atual
+	 * @return Jogada de uma magia, nulo caso não seja possível jogar magias com a mão atual
 	 */
 	public Jogada usarMagia() {
 		Jogada jogada = null;
@@ -105,12 +104,14 @@ public class JogadorRA188671 extends Jogador {
 				}
 
 				if (magiaBuff(magia)) {
+					// Buffa o primeiro lacaio que encontrar
 					for (CartaLacaio lacaio : this.lacaios) {
 						jogada = new Jogada(TipoJogada.MAGIA, carta, lacaio);
 						break;
 					}
 				}
 
+				// Caso uma jogada tenha sido instanciada, usa a carta magia atual e para de procurar na mao
 				if (jogada != null) {
 					atualizarMana(carta);
 					remover = carta;
@@ -125,9 +126,9 @@ public class JogadorRA188671 extends Jogador {
 	}
 
 	/**
-	 * Metedo que verifica se existe mana suficiente para baixar a carta
+	 * Método que verifica se existe mana suficiente para baixar a carta
 	 * @param carta que se deseja usar no turno
-	 * @return verdadeiro se eh possivel baixar a carta, falso caso contrario
+	 * @return verdadeiro se é possível baixar a carta, falso caso contrário
 	 */
 	private boolean temManaSuficiente(Carta carta) {
 		return (carta.getMana() <= this.manaTurno);
@@ -136,7 +137,7 @@ public class JogadorRA188671 extends Jogador {
 	/**
 	 * Verifica o tipo "Dano" para a carta magia parametrizada
 	 * @param magia que se deseja usar no turno
-	 * @return Verdadeiro caso seja magia de dano
+	 * @return Verdadeiro caso tipo magia seja ALVO ou AREA, falso caso contrário
 	 */
 	private boolean magiaDano(CartaMagia magia) {
 		return (magia.getMagiaTipo().equals(TipoMagia.ALVO) || magia.getMagiaTipo().equals(TipoMagia.AREA));
@@ -145,15 +146,15 @@ public class JogadorRA188671 extends Jogador {
 	/**
 	 * Verifica o tipo "Buff" para a carta magia
 	 * @param magia que se deseja usar no turno
-	 * @return Verdadeiro caso seja um buff, faldo caso contrario
+	 * @return Verdadeiro caso tipo magia seja BUFF, faldo caso contrario
 	 */
 	private boolean magiaBuff(CartaMagia magia) {
-		return magia.getMagiaTipo().equals(TipoMagia.AREA);
+		return magia.getMagiaTipo().equals(TipoMagia.BUFF);
 	}
 
 	/**
-	 * Remove uma carta da mao caso ela nao for nula
-	 * @param remover carta a ser retirada da mao
+	 * Remove uma carta da mão caso ela não for nula
+	 * @param remover carta a ser retirada da mão
 	 */
 	private void descarte(Carta remover) {
 		if (remover != null) {
