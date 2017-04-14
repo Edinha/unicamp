@@ -237,6 +237,45 @@ public class JogadorRA188671Trabalho extends Jogador {
 		return minhasJogadas;
 	}
 
+	// Estrategia de curva de mana
+	public List<Jogada> curvaMana() {
+		List<Jogada> jogadas = new ArrayList<>();
+		List<CartaLacaio> invocar = new ArrayList<>();
+
+		Collections.sort(this.mao, (first, second) -> {
+			if (first.getMana() > second.getMana()) {
+				return -1;
+			}
+
+			return 1;
+		});
+
+		for (Carta carta : this.mao) {
+			if (!temManaSuficiente(carta)) {
+				continue;
+			}
+
+			if (carta instanceof CartaLacaio) {
+				CartaLacaio lacaio = (CartaLacaio) carta;
+
+				// Carta com o maximo de mana possivel
+				if (carta.getMana() == this.manaTurno) {
+					jogadas.add(new Jogada(TipoJogada.LACAIO, lacaio, null));
+					return jogadas;
+				}
+
+				// Menor do que o necessario
+			}
+
+			if (carta instanceof CartaMagia) {
+				CartaMagia magia = (CartaMagia) carta;
+
+			}
+		}
+
+		return jogadas;
+	}
+
 	/**
 	 * Método que verifica se existe troca favorável entre um lacaio atacante e um defensor
 	 * @param atacante carta que realiza o ataque nesse turno
@@ -294,7 +333,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 	 * @param cartas a serem retiradas da mão
 	 */
 	private void descarte(Collection<Carta> cartas) {
-		cartas.removeAll(cartas);
+		this.mao.removeAll(cartas);
 	}
 
 	/**
