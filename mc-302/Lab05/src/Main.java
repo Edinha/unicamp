@@ -25,7 +25,7 @@ public class Main {
 		Baralho.setDeterministico(false);
 		
 		// A verbosidade define se o Motor deve exibir mensagens para cada Jogada feita pelos Jogadores (0=não mostrar mensagens, 1=mostrar mensagens).
-		int verbosidade = 1;
+		int verbosidade = 0;
 		
 		// A tempoLimite define se o Motor deve exigir do Jogador que processe suas jogadas dentro de um limite de tempo (0=sem limite, 1=com limite).
 		int tempoLimite = 1;
@@ -37,7 +37,7 @@ public class Main {
 		//umaPartida(baralho1, baralho2, verbosidade, tempoLimite);
 		
 		// Rotina que executa múltiplas partidas de LaMa
-		multiplasPartidas(baralho1, baralho2, verbosidade, tempoLimite, 10000);
+		multiplasPartidas(baralho1, baralho2, verbosidade, tempoLimite, 1000);
 	}
 	
 	/**
@@ -211,7 +211,7 @@ public class Main {
 				
 				// Inicializa os Jogadores devidamente (com as cartas da mão e o argumento 'primeiro').
 				JogadorAleatorio jogA = new JogadorAleatorio(mao1clone, moeda);
-				JogadorRA188671New jogB = new JogadorRA188671New(mao2clone, !moeda);
+				JogadorRA188671Trabalho jogB = new JogadorRA188671Trabalho(mao2clone, !moeda);
 				
 				// O Motor é construído
 				Motor partida;
