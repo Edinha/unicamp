@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class JogadorRA188671Trabalho extends Jogador {
 	private List<CartaLacaio> lacaios;
@@ -98,9 +99,9 @@ public class JogadorRA188671Trabalho extends Jogador {
 		}
 
 		// Decide a estrategia depois de verificar se nao tem caso de vitoria certa com a mesa atual
-		 minhasJogadas.addAll(agressivo());
-//		minhasJogadas.addAll(controle());
-		// minhasJogadas.addAll(curvaMana());
+//		 minhasJogadas.addAll(agressivo());
+		minhasJogadas.addAll(controle());
+//		 minhasJogadas.addAll(curvaMana());
 
 		// Utiliza o poder heroico ao final da jogada
 		Optional<Jogada> poder = poderHeroico();
@@ -190,16 +191,19 @@ public class JogadorRA188671Trabalho extends Jogador {
 
 	// Método que realiza a estratégia de controle
 	private List<Jogada> controle() {
-		List<Jogada> minhasJogadas = new ArrayList<>();
-		List<CartaLacaio> alvos = new ArrayList<>();
+		List<Jogada> jogadas = new ArrayList<>();
+
 		List<CartaLacaio> invocarLacaios = new ArrayList<>();
 
-		Map<CartaMagia, CartaLacaio> buffs = new HashMap<>();
+		// Ordena meus lacaios do menor para o maior ataque
+		Collections.sort(this.lacaios, (first, second) -> Integer.valueOf(first.getAtaque()).compareTo(second.getAtaque()));
 
-		// Ordena os lacaios do oponente em ordem de maior ataque
+		// Ordena lacaios inimigos do maior para o menor atauq
 		Collections.sort(this.lacaiosOponente, (first, second) -> Integer.valueOf(second.getAtaque()).compareTo(first.getAtaque()));
 
-		// Usar magias de controle
+		// Ordena a mao pelas cartas de maior mana
+		Collections.sort(this.mao, (first, second) -> Integer.valueOf(second.getMana()).compareTo(first.getMana()));
+
 		for (Carta carta : this.mao) {
 			if (carta instanceof CartaLacaio) {
 				invocarLacaios.add((CartaLacaio) carta);
@@ -207,79 +211,75 @@ public class JogadorRA188671Trabalho extends Jogador {
 
 			if (carta instanceof CartaMagia) {
 				CartaMagia magia = (CartaMagia) carta;
+				List<CartaLacaio> destruidos = lacaiosOponente.stream()
+						.filter(inimigo -> inimigo.getVidaAtual() <= magia.getMagiaDano())
+						.collect(Collectors.toList());
 
-				// Usa magias em área caso o oponente tenha mais de uma lacaio em campo
-				if (magiaArea(magia) && this.lacaiosOponente.size() > 1) {
-					Optional<Jogada> jogada = baixarMagia(magia, null);
-					if (jogada.isPresent()) {
-						minhasJogadas.add(jogada.get());
-
-						// Remove os lacaios que sao destruidos pela magia em area
-						this.lacaiosOponente.removeAll(lacaiosOponente.stream()
-								.filter(x -> x.getVidaAtual() <= magia.getMagiaDano())
-								.collect(Collectors.toList()));
-					}
-				}
-
-				// Usa magias de alvo sem desperdício de mana e tenha destruir lacaio
-				if (magiaAlvo(magia)) {
-					CartaLacaio destruida = null;
-					for (CartaLacaio oponente : this.lacaiosOponente) {
-						Optional<Jogada> jogada = baixarMagia(magia, oponente);
-						if (bomAlvo(magia, oponente) && jogada.isPresent()) {
-							minhasJogadas.add(jogada.get());
-							destruida = oponente;
-							break;
+				// Magia area, usada se houverem 2+ lacaios inimigos destruidos por ela
+				if (magiaArea(magia)) {
+					if (destruidos.size() > 1) {
+						Optional<Jogada> jogada = baixarMagia(magia, null);
+						if (jogada.isPresent()) {
+							jogadas.add(jogada.get());
+							this.lacaiosOponente.removeAll(destruidos);
 						}
 					}
+				}
 
-					if (destruida != null) {
-						this.lacaiosOponente.remove(destruida);
+				// Magia alvo, usa no foco de maior ataque, caso haja algum
+				if (magiaAlvo(magia) && !destruidos.isEmpty()) {
+					CartaLacaio alvo = destruidos.iterator().next();
+					Optional<Jogada> jogada = baixarMagia(magia, alvo);
+					if (jogada.isPresent()) {
+						jogadas.add(jogada.get());
+						this.lacaiosOponente.remove(alvo);
 					}
 				}
 
+				// Buffa meu lacaio
 				if (magiaBuff(magia)) {
-					Optional<CartaLacaio> lacaio = this.mapearBuff(magia);
-					if (lacaio.isPresent()) {
-						buffs.put(magia, lacaio.get());
+					Optional<CartaLacaio> possivelBuffado = this.mapearBuff(magia);
+					if (possivelBuffado.isPresent()) {
+						CartaLacaio lacaio = possivelBuffado.get();
+						Optional<Jogada> jogada = baixarMagia(magia, lacaio);
+						if (jogada.isPresent()) {
+							jogadas.add(jogada.get());
+							lacaio.setAtaque(lacaio.getAtaque() + magia.getMagiaDano());
+						}
 					}
 				}
 			}
 		}
 
-		// Usa os buffs antes de comecar as trocas favoraveis
-		minhasJogadas.addAll(this.usarBuffs(buffs));
+		// Para todos os meus lacaios em campo, decide quem atacar
+		for (CartaLacaio lacaio : this.lacaios) {
 
-		// Passa pelos lacaios e decide as jogadas por trocas favoráveis
-		Collections.sort(this.lacaios, (first, second) -> Integer.valueOf(second.getAtaque()).compareTo(first.getAtaque()));
-		this.lacaios.forEach(lacaio -> {
-			CartaLacaio alvo = null;
-			for (CartaLacaio oponente : this.lacaiosOponente) {
-				if (!alvos.contains(oponente) && trocaFavorel(lacaio, oponente)) {
-					alvo = oponente;
-					break;
-				}
+			// Filtra as trocas favoraveis do lacaio atual para com os inimigos
+			List<CartaLacaio> alvos = lacaiosOponente.stream().filter(alvo -> trocaFavorel(lacaio, alvo)).collect(Collectors.toList());
+
+			// Caso nao haja trocas favoraveis, ataca o heroi inimigo
+			if (alvos.isEmpty()) {
+				jogadas.add(new Jogada(TipoJogada.ATAQUE, lacaio, null));
+				continue;
 			}
 
-			minhasJogadas.add(new Jogada(TipoJogada.ATAQUE, lacaio, alvo));
-			if (alvo != null) {
-				alvos.add(alvo);
-				this.lacaiosOponente.remove(alvo);
-			}
-		});
+			// Caso haja trocas favoraveis, pega o lacaio inimigo de maior mana para ser o alvo
+			Collections.sort(alvos, (first, second) -> Integer.valueOf(second.getMana()).compareTo(first.getMana()));
+			CartaLacaio alvo = alvos.iterator().next();
+			this.lacaiosOponente.remove(alvo);
 
-		// Ordena os lacaios pelo ataque, dos de menor mana para os de maior mana
-		Collections.sort(invocarLacaios, (first, second) -> Integer.valueOf(second.getMana()).compareTo(first.getMana()));
+			jogadas.add(new Jogada(TipoJogada.ATAQUE, lacaio, alvo));
+		}
 
-		// Invoca quantos lacaios a mana restante permitir
-		for (CartaLacaio lacaio : invocarLacaios) {
-			Optional<Jogada> jogada = invocar(lacaio);
+		// Invoca os lacaios da mao com a mana restante
+		for (CartaLacaio carta : invocarLacaios) {
+			Optional<Jogada> jogada = invocar(carta);
 			if (jogada.isPresent()) {
-				minhasJogadas.add(jogada.get());
+				jogadas.add(jogada.get());
 			}
 		}
 
-		return minhasJogadas;
+		return jogadas;
 	}
 
 	// Estrategia de curva de mana
