@@ -150,13 +150,13 @@ public class JogadorRA188671Trabalho extends Jogador {
 			}
 		}
 
-		// Ordena os lacaios pelo ataque, dos de menor mana para os de maior mana
+		// Ordena os lacaios pela mana, dos de menor mana para os de maior mana
 		Collections.sort(invocarLacaios, (first, second) -> Integer.valueOf(second.getMana()).compareTo(first.getMana()));
 
 		// Ordena as magias pelo dano, das de maior dano para os de menor.
 		Collections.sort(magias, (first, second) -> Integer.valueOf(second.getMagiaDano()).compareTo(first.getMagiaDano()));
 
-		// Invoca quantos lacaios a mana atual permirir
+		// Invoca quantos lacaios a mana atual permitir
 		for (CartaLacaio lacaio : invocarLacaios) {
 			Optional<Jogada> jogada = invocar(lacaio);
 			if (jogada.isPresent()) {
@@ -165,6 +165,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 		}
 
 		// Usa a magia em area
+		// TODO destruidos por magia de area
 		if (area != null && this.lacaiosOponente.size() > 1) {
 			Optional<Jogada> jogada = baixarMagia(area, null);
 			if (jogada.isPresent()) {
@@ -172,7 +173,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 			}
 		}
 
-		// Usa quantas magias a mana restante permirir
+		// Usa quantas magias a mana restante permitir
 		for (CartaMagia magia : magias) {
 			Optional<Jogada> jogada = baixarMagia(magia, null);
 			if (jogada.isPresent()) {
@@ -194,9 +195,6 @@ public class JogadorRA188671Trabalho extends Jogador {
 		List<Jogada> jogadas = new ArrayList<>();
 
 		List<CartaLacaio> invocarLacaios = new ArrayList<>();
-
-		// Ordena meus lacaios do menor para o maior ataque
-		Collections.sort(this.lacaios, (first, second) -> Integer.valueOf(first.getAtaque()).compareTo(second.getAtaque()));
 
 		// Ordena lacaios inimigos do maior para o menor atauq
 		Collections.sort(this.lacaiosOponente, (first, second) -> Integer.valueOf(second.getAtaque()).compareTo(first.getAtaque()));
@@ -250,6 +248,9 @@ public class JogadorRA188671Trabalho extends Jogador {
 				}
 			}
 		}
+
+		// Ordena meus lacaios do menor para o maior ataque
+		Collections.sort(this.lacaios, (first, second) -> Integer.valueOf(first.getAtaque()).compareTo(second.getAtaque()));
 
 		// Para todos os meus lacaios em campo, decide quem atacar
 		for (CartaLacaio lacaio : this.lacaios) {
@@ -429,7 +430,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 			return Optional.empty();
 		}
 
-		this.lacaios.sort((first, second) -> Integer.valueOf(first.getAtaque()).compareTo(second.getAtaque()));
+		this.lacaios.sort((first, second) -> Integer.valueOf(second.getAtaque()).compareTo(first.getAtaque()));
 		return Optional.ofNullable(this.lacaios.iterator().next());
 	}
 
