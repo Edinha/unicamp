@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class JogadorRA188671Trabalho extends Jogador {
 	private List<CartaLacaio> lacaios;
@@ -14,6 +13,8 @@ public class JogadorRA188671Trabalho extends Jogador {
 
 	private int manaTurno;
 	private int contagemLacaios;
+
+	private int vidaOponente;
 
 	private List<Carta> retiradas;
 
@@ -49,7 +50,8 @@ public class JogadorRA188671Trabalho extends Jogador {
 	 * @return um ArrayList com as Jogadas decididas
 	 */
 	public ArrayList<Jogada> processarTurno(Mesa mesa, Carta cartaComprada, ArrayList<Jogada> jogadasOponente) {
-		int minhaMana, vidaOponente;
+		int minhaMana;
+		//, vidaOponente;
 
 		if (cartaComprada != null) {
 			mao.add(cartaComprada);
@@ -226,11 +228,12 @@ public class JogadorRA188671Trabalho extends Jogador {
 
 				// Magia alvo, usa no foco de maior ataque, caso haja algum
 				if (magiaAlvo(magia) && !destruidos.isEmpty()) {
-					CartaLacaio alvo = destruidos.iterator().next();
-					Optional<Jogada> jogada = baixarMagia(magia, alvo);
+//					CartaLacaio alvo = destruidos.iterator().next();
+//					Optional<Jogada> jogada = baixarMagia(magia, alvo);
+					Optional<Jogada> jogada = mirarMagiaAlvo(magia, destruidos);
 					if (jogada.isPresent()) {
 						jogadas.add(jogada.get());
-						this.lacaiosOponente.remove(alvo);
+//						this.lacaiosOponente.remove(alvo);
 					}
 				}
 
@@ -281,6 +284,10 @@ public class JogadorRA188671Trabalho extends Jogador {
 		}
 
 		return jogadas;
+	}
+
+	private List<Jogada> coracaoDasCartas() {
+
 	}
 
 	// Estrategia de curva de mana
@@ -451,6 +458,21 @@ public class JogadorRA188671Trabalho extends Jogador {
 		this.retiradas.add(lacaio);
 
 		return Optional.of(new Jogada(TipoJogada.LACAIO, lacaio, null));
+	}
+
+	// TODO javadoc
+	private Optional<Jogada> mirarMagiaAlvo(CartaMagia magia, List<CartaLacaio> destruidos) {
+		if (vidaOponente <= magia.getMagiaDano()) {
+			return baixarMagia(magia, null);
+		}
+
+		CartaLacaio alvo = destruidos.iterator().next();
+		Optional<Jogada> jogada = baixarMagia(magia, alvo);
+		if (jogada.isPresent()) {
+			this.lacaiosOponente.remove(alvo);
+		}
+
+		return jogada;
 	}
 
 	/**
