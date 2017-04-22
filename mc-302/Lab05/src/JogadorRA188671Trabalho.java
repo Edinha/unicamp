@@ -38,11 +38,24 @@ import java.util.stream.Collectors;
  *
  *
  * Controle:
- *      
+ *      Primeiramente, essa estrategia ordena as cartas as da mao decrescentemente de acordo com a mana. A partir disso, segue
+ * segue para a secao onde decide que magia utilizar para controlar o campo. Para a magia de alvo, decide se pode acabar o
+ * jogo com ela ou destruir um "bom alvo" lacaio inimigo com ela. Para magias de area, sao utilizadas quando 2+ lacaios
+ * do oponente serao destruidos e magia de buff sao utilizadas no meu lacaio de maior ataque.
+ *
+ * Depois das magia, vem a estrategia parte para a secao de controlar o campo com trocas favoraveis de lacaios. Para todos meus
+ * lacaios em campo eh definido um alvo, seja este um lacaio inimigo ou o heroi. Apos tudo isso, sao invocados mais lacaios ao
+ * campo com a mana restante da magia.
  *
  *
  * Curva de Mana:
+ *      Primeiramente, essa estrategia ordena as cartas as da mao decrescentemente de acordo com a mana. A partir disso,
+ * tenta usar o maximo de mana possivel com em uma repeticao. Para cartas de magia, passa por algumas validacoes antes
+ * de usar uma carta: Verifica se o custo de mana do(s) lacaio(s) destruido(s) pela magia eh maior do que o proprio custo
+ * da magia. Para o caso de magias de alvo, verifica se o alvo eh um "bom alvo" para lancar a magia tambem. Para cartas
+ * de lacaio, apenas as baixa ao campo na ordem de maior mana.
  *
+ * Fora isso, utiliza buffs e ataca diretamente o heroi inimigo, igualmente a estrategia agressiva.
  *
  */
 
@@ -90,8 +103,6 @@ public class JogadorRA188671Trabalho extends Jogador {
 	 */
 	public ArrayList<Jogada> processarTurno(Mesa mesa, Carta cartaComprada, ArrayList<Jogada> jogadasOponente) {
 		int minhaMana;
-		//, vidaOponente;
-
 		if (cartaComprada != null) {
 			mao.add(cartaComprada);
 		}
@@ -191,7 +202,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 			}
 		}
 
-		// Ordena os lacaios pela mana, dos de menor mana para os de maior mana
+		// Ordena os lacaios pela mana, dos de maior mana para os de menor mana
 		Collections.sort(invocarLacaios, (first, second) -> Integer.valueOf(second.getMana()).compareTo(first.getMana()));
 
 		// Ordena as magias pelo dano, das de maior dano para os de menor.
@@ -236,7 +247,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 
 		List<CartaLacaio> invocarLacaios = new ArrayList<>();
 
-		// Ordena lacaios inimigos do maior para o menor atauq
+		// Ordena lacaios inimigos do maior para o menor ataque
 		Collections.sort(this.lacaiosOponente, (first, second) -> Integer.valueOf(second.getAtaque()).compareTo(first.getAtaque()));
 
 		// Ordena a mao pelas cartas de maior mana
@@ -453,8 +464,8 @@ public class JogadorRA188671Trabalho extends Jogador {
 			Optional<Jogada> jogada = baixarMagia(magia, lacaio);
 			if (jogada.isPresent()) {
 				jogadas.add(jogada.get());
-
 				lacaio.setAtaque(lacaio.getAtaque() + magia.getMagiaDano());
+				lacaio.setVidaAtual(lacaio.getVidaAtual() + magia.getMagiaDano());
 			}
 		}
 
