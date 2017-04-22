@@ -7,6 +7,45 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Willam Goncalves da Ceuz - RA 188671
+ * Jogador de LaMa, descrevendo estrategias
+ *
+ * Jogada Base:
+ *      Essa jogada eh comum para as tres estrategias implementadas nesse jogador.
+ * Nela, sao verificadas as possibilidades de acabar com o jogo nessa rodada que esta iniciando.
+ * Dentre as verificacoes, estao:
+ *      - Eh possivel destruir o heroi apenas com o poder heroico
+ *      - Destruir o heroi atacando com todos os lacaios em campo diretamente
+ *      - Destruir o heroi atacando com todos os lacaios mais o poder heroico
+ *
+ * Depois da verificacao basica, caso ela falhe em acabar com o jogo nessa rodada, eh executado o retorno das estrategias.
+ *
+ * Acabada a estrategia, tenta utilizar o poder heroico no heroi inimigo, caso haja mana.
+ *
+ * Descricao estrategias...
+ *
+ * Agressivo:
+ *      O jogador agressivo primeiramente separa as cartas da mao entre magias e lacaios.
+ * Para os lacaios, estes sao ordenador por mana decrescente (do maior custo de mana para o menor).
+ * Assim, tenta invocar o maior numero de lacaios possivel para aquela rodada.
+ *
+ * Jah para as magia de alvo, as ordena em ordem decrescente de dano magia, e novamente tenta utilizar todas as que forem possiveis.
+ *
+ * Caso haja magia de area, tenta usah-la se houver mana e mais de dois lacaios no campo do oponente.
+ * Caso haja algum buff, tenta utilizah-lo no lacaio de maior ataque caso ainda haja mana.
+ * Apos tudo isso, mira todos os meus lacaios em campo para atacar o heroi inimigo diretamente.
+ *
+ *
+ * Controle:
+ *      
+ *
+ *
+ * Curva de Mana:
+ *
+ *
+ */
+
 public class JogadorRA188671Trabalho extends Jogador {
 	private List<CartaLacaio> lacaios;
 	private List<CartaLacaio> lacaiosOponente;
@@ -167,7 +206,6 @@ public class JogadorRA188671Trabalho extends Jogador {
 		}
 
 		// Usa a magia em area
-		// TODO destruidos por magia de area
 		if (area != null && this.lacaiosOponente.size() > 1) {
 			Optional<Jogada> jogada = baixarMagia(area, null);
 			if (jogada.isPresent()) {
@@ -175,7 +213,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 			}
 		}
 
-		// Usa quantas magias a mana restante permitir
+		// Usa quantas magias de alvo a mana restante permitir, mirando no heroi inimigo
 		for (CartaMagia magia : magias) {
 			Optional<Jogada> jogada = baixarMagia(magia, null);
 			if (jogada.isPresent()) {
@@ -226,18 +264,15 @@ public class JogadorRA188671Trabalho extends Jogador {
 					}
 				}
 
-				// Magia alvo, usa no foco de maior ataque, caso haja algum
-				if (magiaAlvo(magia) && !destruidos.isEmpty()) {
-//					CartaLacaio alvo = destruidos.iterator().next();
-//					Optional<Jogada> jogada = baixarMagia(magia, alvo);
+				// Magia alvo, decide a mira da jogada
+				if (magiaAlvo(magia)) {
 					Optional<Jogada> jogada = mirarMagiaAlvo(magia, destruidos);
 					if (jogada.isPresent()) {
 						jogadas.add(jogada.get());
-//						this.lacaiosOponente.remove(alvo);
 					}
 				}
 
-				// Buffa meu lacaio
+				// Buffa meu lacaio de maior ataque e atualiza o objeto
 				if (magiaBuff(magia)) {
 					Optional<CartaLacaio> possivelBuffado = this.mapearBuff(magia);
 					if (possivelBuffado.isPresent()) {
@@ -246,6 +281,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 						if (jogada.isPresent()) {
 							jogadas.add(jogada.get());
 							lacaio.setAtaque(lacaio.getAtaque() + magia.getMagiaDano());
+							lacaio.setVidaAtual(lacaio.getVidaAtual() + magia.getMagiaDano());
 						}
 					}
 				}
@@ -286,10 +322,6 @@ public class JogadorRA188671Trabalho extends Jogador {
 		return jogadas;
 	}
 
-	private List<Jogada> coracaoDasCartas() {
-
-	}
-
 	// Estrategia de curva de mana
 	private List<Jogada> curvaMana() {
 		List<Jogada> jogadas = new ArrayList<>();
@@ -320,6 +352,9 @@ public class JogadorRA188671Trabalho extends Jogador {
 					CartaLacaio destruida = null;
 
 					for (CartaLacaio inimigo : this.lacaiosOponente) {
+
+						// Caso o lacaio inimigo seja um bom alvo e tenha maior custo de mana
+						// que a magia, procede em usar a carta
 						if (bomAlvo(magia, inimigo) && inimigo.getMana() > magia.getMana()) {
 							Optional<Jogada> jogada = baixarMagia(magia, inimigo);
 							if (jogada.isPresent()) {
@@ -460,16 +495,33 @@ public class JogadorRA188671Trabalho extends Jogador {
 		return Optional.of(new Jogada(TipoJogada.LACAIO, lacaio, null));
 	}
 
-	// TODO javadoc
+	/**
+	 * Metodo que avalia onde mirar uma magia de alvo. Caso possa destruir o heroi inimigo,
+	 * mira nele, senao, mira no primero lacaio inimigo (bom alvo) da lista parametrizada
+	 * @param magia de alvo a ser utiizada
+	 * @param destruidos lacaios destruidos pela magia
+	 * @return Opcional com uma jogada caso tenha sido realizada, vazio caso contrario
+	 */
 	private Optional<Jogada> mirarMagiaAlvo(CartaMagia magia, List<CartaLacaio> destruidos) {
 		if (vidaOponente <= magia.getMagiaDano()) {
 			return baixarMagia(magia, null);
 		}
 
-		CartaLacaio alvo = destruidos.iterator().next();
-		Optional<Jogada> jogada = baixarMagia(magia, alvo);
-		if (jogada.isPresent()) {
-			this.lacaiosOponente.remove(alvo);
+		if (destruidos.isEmpty()) {
+			return Optional.empty();
+		}
+
+		// Encontra um bom alvo na lista de destruidos pela magia
+		Optional<CartaLacaio> possivelAlvo = destruidos.stream().filter(destruido -> bomAlvo(magia, destruido)).findFirst();
+
+		Optional<Jogada> jogada = Optional.empty();
+
+		if (possivelAlvo.isPresent()) {
+			CartaLacaio alvo = possivelAlvo.get();
+			jogada = baixarMagia(magia, alvo);
+			if (jogada.isPresent()) {
+				this.lacaiosOponente.remove(alvo);
+			}
 		}
 
 		return jogada;
@@ -540,16 +592,6 @@ public class JogadorRA188671Trabalho extends Jogador {
 	 */
 	private boolean temManaSuficiente(Carta carta) {
 		return (carta.getMana() <= this.manaTurno);
-	}
-
-	/**
-	 * Verifica o tipo "Dano" para a carta magia parametrizada
-	 * 
-	 * @param magia que se deseja usar no turno
-	 * @return Verdadeiro caso tipo magia seja ALVO ou AREA, falso caso contrário
-	 */
-	private boolean magiaDano(CartaMagia magia) {
-		return (magiaAlvo(magia) || magiaArea(magia));
 	}
 
 	/**
