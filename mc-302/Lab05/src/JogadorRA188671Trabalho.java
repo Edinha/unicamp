@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Willam Goncalves da Ceuz - RA 188671
+ * Willam Goncalves da Cruz - RA 188671
  * Jogador de LaMa, descrevendo estrategias
  *
  * Jogada Base:
@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
  *      - Destruir o heroi atacando com todos os lacaios mais o poder heroico
  *
  * Depois da verificacao basica, caso ela falhe em acabar com o jogo nessa rodada, eh executado o retorno das estrategias.
+ *
+ * No meu caso, apenas a estrategia controle eh utilizada efetivamente.
  *
  * Acabada a estrategia, tenta utilizar o poder heroico no heroi inimigo, caso haja mana.
  *
