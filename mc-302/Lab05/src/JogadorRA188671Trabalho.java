@@ -8,56 +8,56 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Willam Goncalves da Cruz - RA 188671
- * Jogador de LaMa, descrevendo estrategias
+ * Willam Gonçalves da Cruz - RA 188671
+ * Jogador de LaMa, descrevendo estratégias
  *
  * Jogada Base:
- *      Essa jogada eh comum para as tres estrategias implementadas nesse jogador.
- * Nela, sao verificadas as possibilidades de acabar com o jogo nessa rodada que esta iniciando.
- * Dentre as verificacoes, estao:
- *      - Eh possivel destruir o heroi apenas com o poder heroico
- *      - Destruir o heroi atacando com todos os lacaios em campo diretamente
- *      - Destruir o heroi atacando com todos os lacaios mais o poder heroico
+ *      Essa jogada é comum para as três estratégias implementadas nesse jogador.
+ * Nela, são verificadas as possibilidades de acabar com o jogo nessa rodada que está iniciando.
+ * Dentre as verificacoes, estão:
+ *      - É possivel destruir o herói apenas com o poder heroico
+ *      - Destruir o herói atacando com todos os lacaios em campo diretamente
+ *      - Destruir o herói atacando com todos os lacaios mais o poder heroico
  *
- * Depois da verificacao basica, caso ela falhe em acabar com o jogo nessa rodada, eh executado o retorno das estrategias.
+ * Depois da verificação básica, caso ela falhe em acabar com o jogo nessa rodada, é executado o retorno das estratégias.
  *
- * No meu caso, apenas a estrategia controle eh utilizada efetivamente.
+ * No meu caso, apenas a estratégia controle é utilizada efetivamente.
  *
- * Acabada a estrategia, tenta utilizar o poder heroico no heroi inimigo, caso haja mana.
+ * Acabada a estratégia, tenta utilizar o poder heroico no herói inimigo, caso haja mana.
  *
- * Descricao estrategias...
+ * Descrição estratégias...
  *
  * Agressivo:
- *      O jogador agressivo primeiramente separa as cartas da mao entre magias e lacaios.
- * Para os lacaios, estes sao ordenador por mana decrescente (do maior custo de mana para o menor).
- * Assim, tenta invocar o maior numero de lacaios possivel para aquela rodada.
+ *      O jogador agressivo primeiramente separa as cartas da mão entre magias e lacaios.
+ * Para os lacaios, estes são ordenados por mana decrescente (do maior custo de mana para o menor).
+ * Assim, tenta invocar o maior número de lacaios fortes possível para aquela rodada.
  *
- * Jah para as magia de alvo, as ordena em ordem decrescente de dano magia, e novamente tenta utilizar todas as que forem possiveis.
+ * Já para as magia de alvo, as ordena em ordem decrescente de dano magia, e novamente tenta utilizar todas as que forem possiveis.
  *
- * Caso haja magia de area, tenta usah-la se houver mana e mais de dois lacaios no campo do oponente.
- * Caso haja algum buff, tenta utilizah-lo no lacaio de maior ataque caso ainda haja mana.
- * Apos tudo isso, mira todos os meus lacaios em campo para atacar o heroi inimigo diretamente.
+ * Caso haja magia de área, tenta usá-la se houver mana e mais de dois lacaios no campo do oponente.
+ * Caso haja algum buff, tenta utilizá-lo no lacaio de maior ataque caso ainda haja mana.
+ * Após tudo isso, mira todos os meus lacaios em campo para atacar o herói inimigo diretamente.
  *
  *
  * Controle:
- *      Primeiramente, essa estrategia ordena as cartas as da mao decrescentemente de acordo com a mana. A partir disso, segue
- * segue para a secao onde decide que magia utilizar para controlar o campo. Para a magia de alvo, decide se pode acabar o
- * jogo com ela ou destruir um "bom alvo" lacaio inimigo com ela. Para magias de area, sao utilizadas quando 2+ lacaios
- * do oponente serao destruidos e magia de buff sao utilizadas no meu lacaio de maior ataque.
+ *      Primeiramente, essa estratégia ordena as cartas as da mão decrescentemente de acordo com a mana. A partir disso, segue
+ * segue para a seção onde decide que magia utilizar para controlar o campo. Para a magia de alvo, decide se pode acabar o
+ * jogo com ela ou destruir um "bom alvo" lacaio inimigo com ela. Para magias de área, são utilizadas quando 2+ lacaios
+ * do oponente podem ser destruidos e magia de buff são utilizadas no meu lacaio de maior ataque.
  *
- * Depois das magia, vem a estrategia parte para a secao de controlar o campo com trocas favoraveis de lacaios. Para todos meus
- * lacaios em campo eh definido um alvo, seja este um lacaio inimigo ou o heroi. Apos tudo isso, sao invocados mais lacaios ao
- * campo com a mana restante da magia.
+ * Depois das magia, vem parte de controlar o campo com trocas favoráveis de lacaios. Para todos meus lacaios em campo eh definido
+ * um alvo, seja este um lacaio inimigo ou o herói, de acordo com as regras descritas. Emfim, são invocados mais lacaios ao
+ * campo com a mana restante do turno.
  *
  *
  * Curva de Mana:
- *      Primeiramente, essa estrategia ordena as cartas as da mao decrescentemente de acordo com a mana. A partir disso,
- * tenta usar o maximo de mana possivel com em uma repeticao. Para cartas de magia, passa por algumas validacoes antes
- * de usar uma carta: Verifica se o custo de mana do(s) lacaio(s) destruido(s) pela magia eh maior do que o proprio custo
- * da magia. Para o caso de magias de alvo, verifica se o alvo eh um "bom alvo" para lancar a magia tambem. Para cartas
+ *      Primeiramente, essa estratégia ordena as cartas as da mão decrescentemente de acordo com a mana. A partir disso,
+ * tenta usar o máximo de mana possivel com em uma repetição. Para cartas de magia, passa por algumas validações antes
+ * de usar uma carta: Verifica se o custo de mana do(s) lacaio(s) destruido(s) pela magia é maior do que o próprio custo
+ * da magia. Para o caso de magias de alvo, verifica se o alvo é um "bom alvo" para lancar a magia também. Para cartas
  * de lacaio, apenas as baixa ao campo na ordem de maior mana.
  *
- * Fora isso, utiliza buffs e ataca diretamente o heroi inimigo, igualmente a estrategia agressiva.
+ * Fora isso, utiliza buffs e ataca diretamente o herói inimigo, igualmente a estratégia agressiva.
  *
  */
 
@@ -73,7 +73,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 	private List<Carta> retiradas;
 
 	/**
-	 * O método construtor do JogadorRA188671Trabalho.
+	 * O método construtor do JogadorRA188671.
 	 *
 	 * @param maoInicial Contém a mão inicial do jogador. Deve conter o número de cartas correto
 	 *        dependendo se esta classe Jogador que está sendo construída é o primeiro ou o segundo
@@ -128,7 +128,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 		this.retiradas = new ArrayList<>();
 		ArrayList<Jogada> minhasJogadas = new ArrayList<>();
 
-		// Usar poder heroico para destruir heroi inimigo
+		// Usar poder heroico para destruir herói inimigo
 		if (vidaOponente == 1) {
 			Optional<Jogada> jogada = poderHeroico();
 			if (jogada.isPresent()) {
@@ -152,7 +152,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 			return minhasJogadas;
 		}
 
-		// Decide a estrategia depois de verificar se nao tem caso de vitoria certa com a mesa atual
+		// Decide a estratégia depois de verificar se não há caso de vitória certa com a mesa atual
 //		 minhasJogadas.addAll(agressivo());
 		minhasJogadas.addAll(controle());
 //		 minhasJogadas.addAll(curvaMana());
@@ -218,7 +218,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 			}
 		}
 
-		// Usa a magia em area
+		// Usa a magia em área
 		if (area != null && this.lacaiosOponente.size() > 1) {
 			Optional<Jogada> jogada = baixarMagia(area, null);
 			if (jogada.isPresent()) {
@@ -226,7 +226,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 			}
 		}
 
-		// Usa quantas magias de alvo a mana restante permitir, mirando no heroi inimigo
+		// Usa quantas magias de alvo a mana restante permitir, mirando no herói inimigo
 		for (CartaMagia magia : magias) {
 			Optional<Jogada> jogada = baixarMagia(magia, null);
 			if (jogada.isPresent()) {
@@ -335,7 +335,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 		return jogadas;
 	}
 
-	// Estrategia de curva de mana
+	// estratégia de curva de mana
 	private List<Jogada> curvaMana() {
 		List<Jogada> jogadas = new ArrayList<>();
 
@@ -452,7 +452,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 
 	/**
 	 * Realiza as jogadas de buffs da rodada
-	 * 
+	 *
 	 * @param buffs mapeamento entre magias de buff e lacaios onde utilizar
 	 * @return lista de jogadas de buff
 	 */
@@ -476,7 +476,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 
 	/**
 	 * Busca o lacaio mais forte em campo para se buffar
-	 * 
+	 *
 	 * @param magia buff desejado usar
 	 * @return lacaio a ser buffado, optional vazio caso nao exista nenhum
 	 */
@@ -491,10 +491,10 @@ public class JogadorRA188671Trabalho extends Jogador {
 
 	/**
 	 * Retorna um opcional para a invocacao do lacaio parametrizado
-	 * 
+	 *
 	 * @param lacaio que se deseja invocar na mesa
 	 * @return Opcional com uma jogada caso a invocacao seja sucedidade, opcional vazio caso
-	 *         contrario
+	 *         contrário
 	 */
 	private Optional<Jogada> invocar(CartaLacaio lacaio) {
 		if (!temManaSuficiente(lacaio) || this.contagemLacaios >= 7) {
@@ -513,7 +513,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 	 * mira nele, senao, mira no primero lacaio inimigo (bom alvo) da lista parametrizada
 	 * @param magia de alvo a ser utiizada
 	 * @param destruidos lacaios destruidos pela magia
-	 * @return Opcional com uma jogada caso tenha sido realizada, vazio caso contrario
+	 * @return Opcional com uma jogada caso tenha sido realizada, vazio caso contrário
 	 */
 	private Optional<Jogada> mirarMagiaAlvo(CartaMagia magia, List<CartaLacaio> destruidos) {
 		if (vidaOponente <= magia.getMagiaDano()) {
@@ -542,10 +542,10 @@ public class JogadorRA188671Trabalho extends Jogador {
 
 	/**
 	 * Baixa uma magia a mesa
-	 * 
+	 *
 	 * @param magia carta a ser jogada
 	 * @param alvo quem recebe a magia
-	 * @return Opcional com jogada caso seja possivel baixar a magia, vazio caso contrario
+	 * @return Opcional com jogada caso seja possivel baixar a magia, vazio caso contrário
 	 */
 	private Optional<Jogada> baixarMagia(CartaMagia magia, Carta alvo) {
 		if (!temManaSuficiente(magia)) {
@@ -560,8 +560,8 @@ public class JogadorRA188671Trabalho extends Jogador {
 
 	/**
 	 * Realiza a jogada de um poder heroico
-	 * 
-	 * @return Opcional com jogada de poder caso tenha mana para jogar, vazio caso contrario
+	 *
+	 * @return Opcional com jogada de poder caso tenha mana para jogar, vazio caso contrário
 	 */
 	private Optional<Jogada> poderHeroico() {
 		if (this.manaTurno < 2) {
@@ -573,8 +573,8 @@ public class JogadorRA188671Trabalho extends Jogador {
 	}
 
 	/**
-	 * Retorna colecao de jogadas com todos os lacaios atacando diretamente o heroi inimigo
-	 * 
+	 * Retorna colecao de jogadas com todos os lacaios atacando diretamente o herói inimigo
+	 *
 	 * @return ataques contra o heroi inimigo
 	 */
 	private List<Jogada> ataqueDiretoHeroi() {
@@ -583,10 +583,10 @@ public class JogadorRA188671Trabalho extends Jogador {
 
 	/**
 	 * Decide se o lacaio eh um bom alvo para a magia
-	 * 
+	 *
 	 * @param magia que se deseja utilizar
 	 * @param alvo mirado
-	 * @return Verdadeiro caso magia destrua o alvo e haja pouco desperdicio, falso caso contrario
+	 * @return Verdadeiro caso magia destrua o alvo e haja pouco desperdicio, falso caso contrário
 	 */
 	private boolean bomAlvo(CartaMagia magia, CartaLacaio alvo) {
 		if (magia.getMagiaDano() < alvo.getVidaAtual()) {
@@ -599,7 +599,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 
 	/**
 	 * Método que verifica se existe mana suficiente para baixar a carta
-	 * 
+	 *
 	 * @param carta que se deseja usar no turno
 	 * @return verdadeiro se é possível baixar a carta, falso caso contrário
 	 */
@@ -608,10 +608,10 @@ public class JogadorRA188671Trabalho extends Jogador {
 	}
 
 	/**
-	 * Verifica o tipo area para magia parametrizada
-	 * 
+	 * Verifica o tipo área para magia parametrizada
+	 *
 	 * @param magia carta
-	 * @return Verdadeiro caso seja magia de area, falso caso contrario
+	 * @return Verdadeiro caso seja magia de area, falso caso contrário
 	 */
 	private boolean magiaArea(CartaMagia magia) {
 		return TipoMagia.AREA.equals(magia.getMagiaTipo());
@@ -619,9 +619,9 @@ public class JogadorRA188671Trabalho extends Jogador {
 
 	/**
 	 * Verifica o tipo alvo para magia parametrizada
-	 * 
+	 *
 	 * @param magia carta
-	 * @return Verdadeiro caso seja magia de alvo, falso caso contrario
+	 * @return Verdadeiro caso seja magia de alvo, falso caso contrário
 	 */
 	private boolean magiaAlvo(CartaMagia magia) {
 		return TipoMagia.ALVO.equals(magia.getMagiaTipo());
@@ -629,9 +629,9 @@ public class JogadorRA188671Trabalho extends Jogador {
 
 	/**
 	 * Verifica o tipo buff para magia parametrizada
-	 * 
+	 *
 	 * @param magia carta
-	 * @return Verdadeiro caso seja magia de buff, falso caso contrario
+	 * @return Verdadeiro caso seja magia de buff, falso caso contrário
 	 */
 	private boolean magiaBuff(CartaMagia magia) {
 		return TipoMagia.BUFF.equals(magia.getMagiaTipo());
@@ -639,7 +639,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 
 	/**
 	 * Remove uma coleção de cartas da mão
-	 * 
+	 *
 	 * @param cartas a serem retiradas da mão
 	 */
 	private void descarte(Collection<Carta> cartas) {
@@ -648,7 +648,7 @@ public class JogadorRA188671Trabalho extends Jogador {
 
 	/**
 	 * Atualiza a mana do turno do jogador ao criar uma jogada com respectiva carta
-	 * 
+	 *
 	 * @param carta usada na jogada
 	 */
 	private void atualizarMana(Carta carta) {
