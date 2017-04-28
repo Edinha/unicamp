@@ -126,6 +126,7 @@ public class JogadorRA188671 extends Jogador {
 		this.setContagemLacaios(this.lacaios.size());
 		this.setManaTurno(minhaMana);
 		this.retiradas = new ArrayList<>();
+
 		ArrayList<Jogada> minhasJogadas = new ArrayList<>();
 
 		// Usar poder heroico para destruir herói inimigo
@@ -152,10 +153,12 @@ public class JogadorRA188671 extends Jogador {
 			return minhasJogadas;
 		}
 
-		// Decide a estratégia depois de verificar se não há caso de vitória certa com a mesa atual
+		// Decide a estratégia depois de verificar se não há caso de vitória certa com a mesa atual,
+		// usando apenas controle no caso da entrega do trabalho
 //		 minhasJogadas.addAll(agressivo());
-		minhasJogadas.addAll(controle());
 //		 minhasJogadas.addAll(curvaMana());
+
+		minhasJogadas.addAll(controle());
 
 		// Utiliza o poder heroico ao final da jogada
 		Optional<Jogada> poder = poderHeroico();
