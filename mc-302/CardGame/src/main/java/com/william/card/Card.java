@@ -51,5 +51,24 @@ public abstract class Card {
 		return out;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (!(obj instanceof Card)) {
+			return false;
+		}
+
+		Card c = (Card) obj;
+		return this.id.equals(c.getId());
+	}
+
+	@Override
+	public int hashCode() {
+		return id.hashCode();
+	}
+
 	public abstract void use(Card target);
 }

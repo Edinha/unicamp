@@ -48,4 +48,23 @@ public class Deck {
 			System.out.println();
 		}
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (!(obj instanceof Deck)) {
+			return false;
+		}
+
+		Deck d = (Deck) obj;
+		return this.deck.equals(d.getDeck());
+	}
+
+	@Override
+	public int hashCode() {
+		return deck.hashCode();
+	}
 }
