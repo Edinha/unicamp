@@ -154,7 +154,7 @@ public class JogadorRA188671 extends Jogador {
 		}
 
 		// Decide a estratégia depois de verificar se não há caso de vitória certa com a mesa atual,
-		// usando apenas controle no caso da entrega do trabalho
+		// usando apenas controle no caso da entrega do trabalho. Abaixo, como seria usando as demais estratégias
 //		 minhasJogadas.addAll(agressivo());
 //		 minhasJogadas.addAll(curvaMana());
 
