@@ -61,12 +61,16 @@ public class Main {
 
 		// As colecoes de set nao aceitam cartas repetidas
 
-		Set<Minion> minions = arrayList.stream().filter(f -> f instanceof Minion).map(m -> (Minion) m).collect(Collectors.toSet());
+		// Filtra todos os lacaios da colecao de cartas
+		Set<Minion> minions = arrayList.stream().filter(card -> card instanceof Minion).map(m -> (Minion) m).collect(Collectors.toSet());
 
+		// 2. Recurepa o lacaio de maior ataque, ordenando por ataque decrescente e pegando o primeiro
 		Minion strongest = minions.stream().sorted(Comparator.comparing(Minion::getAttack, Comparator.reverseOrder())).findFirst().orElse(null);
 
+		// 3. Soma os ataques dos lacaios
 		int sumMinionAttacks = minions.stream().mapToInt(Minion::getAttack).sum();
 
+		// 4. Ordena os lacaios de acordo com os pontos de vida
 		Set<Minion> sortedByCurrentHealth = minions.stream().sorted(Comparator.comparing(Minion::getCurrentHealth)).collect(Collectors.toSet());
 
 		System.out.println("Strongest minion : " + strongest);
