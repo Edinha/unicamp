@@ -11,6 +11,8 @@ public class Minion extends Card {
 	private int totalHealth;
 	private int currentHealth;
 
+	private MinionAbility ability;
+
 	public Minion(UUID id, String name, int manaCost, int attack, int totalHealth, int currentHealth) {
 		super(id, name, manaCost);
 		this.attack = attack;
@@ -23,6 +25,14 @@ public class Minion extends Card {
 		this.attack = attack;
 		this.totalHealth = totalHealth;
 		this.currentHealth = currentHealth;
+	}
+
+	public Minion(UUID id, String name, int manaCost, int attack, int totalHealth, int currentHealth, MinionAbility ability) {
+		super(id, name, manaCost);
+		this.attack = attack;
+		this.totalHealth = totalHealth;
+		this.currentHealth = currentHealth;
+		this.ability = ability;
 	}
 
 	public int getAttack() {
@@ -47,6 +57,14 @@ public class Minion extends Card {
 
 	public void setTotalHealth(int totalHealth) {
 		this.totalHealth = totalHealth;
+	}
+
+	public MinionAbility getAbility() {
+		return ability;
+	}
+
+	public void setAbility(MinionAbility ability) {
+		this.ability = ability;
 	}
 
 	public static String getBuffedNameSuffix() {

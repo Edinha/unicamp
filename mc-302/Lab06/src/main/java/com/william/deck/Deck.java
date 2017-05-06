@@ -7,7 +7,7 @@ import java.util.List;
 import com.william.card.Card;
 
 public class Deck {
-	public static int MAX_CARDS = 30;
+	private static int MAX_CARDS = 30;
 
 	private List<Card> deck;
 
