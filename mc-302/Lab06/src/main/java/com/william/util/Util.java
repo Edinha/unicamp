@@ -38,7 +38,7 @@ public class Util {
 		int mana = randInt(random, 1, maxMana);
 		int attack = randInt(random, 1, maxAttack);
 		int health = randInt(random, 1, maxHealth);
-		String name = "";
+		String name = new RandomString(random, 50).nextString();
 
 		if (cardType == null) {
 			cardType = CardType.of(random.nextInt(CardType.values().length - 1));
