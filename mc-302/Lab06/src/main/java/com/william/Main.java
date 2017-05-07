@@ -1,145 +1,84 @@
 package com.william;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import com.william.card.Card;
-import com.william.card.Minion;
-import com.william.card.magic.Buff;
-import com.william.card.magic.Damage;
-import com.william.card.magic.DamageArea;
+import com.william.card.CardType;
+import com.william.deck.Deck;
+import com.william.move.Move;
+import com.william.move.ProcessMove;
+import com.william.table.Table;
+import com.william.util.RandomString;
+import com.william.util.Util;
 
 public class Main {
 
 	public static void main(String[] args) {
-		int min = 1;
-		int max = 4;
+		// Creating base values for cards
+		int mana = ThreadLocalRandom.current().nextInt(1, 10);
+		int attack = ThreadLocalRandom.current().nextInt(1, 10);
+		int health = ThreadLocalRandom.current().nextInt(1, 10);
 
-		Set<Card> hashSet = new HashSet<>();
-		Set<Card> treeSet = new TreeSet<>(Comparator.comparing(Card::getId));
-		List<Card> arrayList = new ArrayList<>();
-		List<Card> linkedList = new LinkedList<>();
+		Deck firstDeck = new Deck();
+		Deck secondDeck = new Deck();
 
-		for (int i = 0; i < 10000; i++) {
-			int random = ThreadLocalRandom.current().nextInt(min, max + 1);
+		// Random fill both decks
+		Random random = new Random();
+		firstDeck.randomFill(random, 30, mana, attack, health);
+		secondDeck.randomFill(random, 30, mana, attack, health);
 
-			Card card = CardInstanceType.from(random).getCard();
-			treeSet.add(card);
-			hashSet.add(card);
-			arrayList.add(card);
-			linkedList.add(card);
+		Table table = new Table();
+		ProcessMove processMove = new ProcessMove();
+
+		List<Card> firstMinions = new ArrayList<>();
+		List<Card> secondMinions = new ArrayList<>();
+
+		int minionMaxCount = ThreadLocalRandom.current().nextInt(2, 5);
+
+		// Creating minions for both players
+		RandomString randomString = new RandomString(random, ThreadLocalRandom.current().nextInt(20, 30));
+		for (int i = 0; i < minionMaxCount; i++) {
+			int value = ThreadLocalRandom.current().nextInt(1, 10);
+			firstMinions.add(CardType.MINION.create(randomString.nextString(), value, value, value));
 		}
 
-		System.out.println("Start counting time (get ArrayList)...");
-		measureGetTime(arrayList);
+		for (int i = 0; i < minionMaxCount; i++) {
+			int value = ThreadLocalRandom.current().nextInt(1, 10);
+			secondMinions.add(CardType.MINION.create(randomString.nextString(), value, value, value));
+		}
 
-		System.out.println("Start counting time (get LinkedList)...");
-		measureGetTime(linkedList);
+		table.setFirstPlayerMinions(firstMinions);
+		table.setSecondPlayerMinions(secondMinions);
 
-		System.out.println("Start counting time (ArrayList contains LinkedList)...");
-		measureContainsTime(arrayList, linkedList);
+		// Fill each player hand, with second player receiving four cards
+		table.getSecondPlayerHand().add(secondDeck.pullCard());
+		for (int i = 0; i < Util.INITIAL_HAND_SIZE; i++) {
+			table.getFirstPlayerHand().add(firstDeck.pullCard());
+			table.getSecondPlayerHand().add(secondDeck.pullCard());
+		}
 
-		System.out.println("Start counting time (LinkedList contains ArrayList)...");
-		measureContainsTime(linkedList, arrayList);
+		Card firstPlayerHandCard = table.getFirstPlayerHand().get(0);
+		Card secondPlayerHandCard = table.getFirstPlayerHand().get(0);
 
-		// As colecoes de lista aceitam cartas repetidas
+		// Attacking other hero with chosen hand cards
+		Move firstPlayerHeroAttack = new Move(firstPlayerHandCard, null, 'P');
+		Move secondPlayerHeroAttack = new Move(secondPlayerHandCard, null, 'S');
 
-		System.out.println("Start counting time (HashSet contains ArrayList)...");
-		measureContainsTime(hashSet, arrayList);
+		processMove.process(firstPlayerHeroAttack, table);
+		processMove.process(secondPlayerHeroAttack, table);
 
-		System.out.println("Start counting time (TreeSet contains ArrayList)...");
-		measureContainsTime(treeSet, arrayList);
+		// Attacking other player minions
+		Card firstPlayerMinion = firstMinions.get(0);
+		Card secondPlayerMinion = secondMinions.get(0);
 
-		// As colecoes de set nao aceitam cartas repetidas
+		Move firstPlayerMinionAttack = new Move(firstPlayerMinion, secondMinions.get(1), 'P');
+		Move secondPlayerMinionAttack = new Move(secondPlayerMinion, firstMinions.get(1), 'S');
 
-		// Filtra todos os lacaios da colecao de cartas
-		Set<Minion> minions = arrayList.stream().filter(card -> card instanceof Minion).map(m -> (Minion) m).collect(Collectors.toSet());
-
-		// 2. Recurepa o lacaio de maior ataque, ordenando por ataque decrescente e pegando o primeiro
-		Minion strongest = minions.stream().sorted(Comparator.comparing(Minion::getAttack, Comparator.reverseOrder())).findFirst().orElse(null);
-
-		// 3. Soma os ataques dos lacaios
-		int sumMinionAttacks = minions.stream().mapToInt(Minion::getAttack).sum();
-
-		// 4. Ordena os lacaios de acordo com os pontos de vida
-		Set<Minion> sortedByCurrentHealth = minions.stream().sorted(Comparator.comparing(Minion::getCurrentHealth)).collect(Collectors.toSet());
-
-		System.out.println("Strongest minion : " + strongest);
-		System.out.println("Sum of attacks : " + sumMinionAttacks);
-		System.out.println("Sorted by current health (first) : " + sortedByCurrentHealth.iterator().next());
+		processMove.process(firstPlayerMinionAttack, table);
+		processMove.process(secondPlayerMinionAttack, table);
 	}
 
-	private static void measureContainsTime(Collection<Card> base, Collection<Card> contained) {
-		long start = System.nanoTime();
-		contained.forEach(base::contains);
-		System.out.println("Finished (time: " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) + " ms)");
-	}
-
-	private static void measureGetTime(List<Card> cards) {
-		long start = System.nanoTime();
-		for (int i = 0; i < cards.size(); i++) {
-			cards.get(i);
-		}
-
-		System.out.println("Finished (time: " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) + " ms)");
-	}
-}
-
-
-enum CardInstanceType {
-	MINION(1) {
-		@Override
-		public Card getCard() {
-			return new Minion("Minion", 0, 0, 0, 0);
-		}
-	},
-	DAMAGE(2) {
-		@Override
-		public Card getCard() {
-			return new Damage("Damage", 0, 0);
-		}
-	},
-	AREA(3) {
-		@Override
-		public Card getCard() {
-			return new DamageArea("Damage area", 0, 0);
-		}
-	},
-	BUFF(4) {
-		@Override
-		public Card getCard() {
-			return new Buff("Buff", 0, 0, 0);
-		}
-	};
-
-	private Integer type;
-
-	CardInstanceType(Integer type) {
-		this.type = type;
-	}
-
-	public Integer getType() {
-		return type;
-	}
-
-	public static CardInstanceType from(Integer type) {
-		for (CardInstanceType c : CardInstanceType.values()) {
-			if (c.getType().equals(type)) {
-				return c;
-			}
-		}
-
-		return CardInstanceType.MINION;
-	}
-
-	public abstract Card getCard();
 }

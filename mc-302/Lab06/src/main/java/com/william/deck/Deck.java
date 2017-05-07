@@ -3,8 +3,10 @@ package com.william.deck;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import com.william.card.Card;
+import com.william.util.Util;
 
 public class Deck {
 	private static int MAX_CARDS = 30;
@@ -40,6 +42,16 @@ public class Deck {
 	public void shuffle()  {
 		Collections.shuffle(this.deck);
 		printReverseDeck();
+	}
+
+	public void randomFill(Random random, int size, int maxMana, int maxAttack, int maxHealth) {
+		size = Math.min(size, MAX_CARDS);
+
+		this.deck.clear();
+
+		for (int i = 0; i < size; i++) {
+			this.addCard(Util.generateRandomCard(random, maxMana, maxAttack, maxHealth, null));
+		}
 	}
 
 	private void printReverseDeck() {

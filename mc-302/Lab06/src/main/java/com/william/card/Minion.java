@@ -67,6 +67,10 @@ public class Minion extends Card {
 		this.ability = ability;
 	}
 
+	public boolean isDestroyed() {
+		return (currentHealth <= 0);
+	}
+
 	public static String getBuffedNameSuffix() {
 		return BUFFED_NAME_SUFFIX;
 	}

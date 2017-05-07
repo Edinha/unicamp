@@ -7,6 +7,9 @@ import com.william.card.Minion;
 import java.util.Random;
 
 public class Util {
+	public static int HEROIC_POWER = 5;
+	public static int INITIAL_HAND_SIZE = 3;
+
 	public static void buff(Minion minion, int attackAndHealthBuff) {
 		buff(minion, attackAndHealthBuff, attackAndHealthBuff);
 	}
