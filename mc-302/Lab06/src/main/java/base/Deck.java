@@ -1,12 +1,12 @@
-package com.william.deck;
+package base;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import com.william.card.Card;
-import com.william.util.Util;
+import base.card.Card;
+import util.Util;
 
 public class Deck {
 	private static int MAX_CARDS = 30;

@@ -1,7 +1,6 @@
-package com.william.card.magic;
+package base.card.magic;
 
-import com.william.card.Card;
-import com.william.card.Minion;
+import base.card.Card;
 
 import java.util.List;
 import java.util.UUID;

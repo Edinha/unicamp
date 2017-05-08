@@ -1,18 +1,16 @@
-package com.william;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.william.card.Card;
-import com.william.card.CardType;
-import com.william.deck.Deck;
-import com.william.move.Move;
-import com.william.move.ProcessMove;
-import com.william.table.Table;
-import com.william.util.RandomString;
-import com.william.util.Util;
+import base.card.Card;
+import base.card.CardType;
+import base.Deck;
+import base.move.Move;
+import base.move.ProcessMove;
+import base.Table;
+import util.RandomString;
+import util.Util;
 
 public class Main {
 

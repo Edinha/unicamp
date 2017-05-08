@@ -1,6 +1,6 @@
-package com.william.card.magic;
+package base.card.magic;
 
-import com.william.card.Card;
+import base.card.Card;
 
 import java.util.UUID;
 

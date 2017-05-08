@@ -1,11 +1,11 @@
-package com.william.table;
+package base;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.william.card.Card;
-import com.william.util.Util;
+import base.card.Card;
+import util.Util;
 
 public class Table {
 	private List<Card> firstPlayerHand;

@@ -1,8 +1,8 @@
-package com.william.card;
+package base.card;
 
-import com.william.card.magic.Buff;
-import com.william.card.magic.Damage;
-import com.william.card.magic.DamageArea;
+import base.card.magic.Buff;
+import base.card.magic.Damage;
+import base.card.magic.DamageArea;
 
 import java.util.HashMap;
 import java.util.Map;

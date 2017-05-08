@@ -1,4 +1,4 @@
-package com.william.card;
+package base.card;
 
 import java.util.UUID;
 

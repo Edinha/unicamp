@@ -1,15 +1,15 @@
-package com.william.move;
+package base.move;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.william.card.Card;
-import com.william.card.Minion;
-import com.william.card.MinionAbility;
-import com.william.card.magic.Buff;
-import com.william.card.magic.Damage;
-import com.william.card.magic.DamageArea;
-import com.william.table.Table;
+import base.Table;
+import base.card.Card;
+import base.card.Minion;
+import base.card.MinionAbility;
+import base.card.magic.Buff;
+import base.card.magic.Damage;
+import base.card.magic.DamageArea;
 
 public class ProcessMove {
 

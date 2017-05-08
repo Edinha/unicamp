@@ -1,8 +1,8 @@
-package com.william.util;
+package util;
 
-import com.william.card.Card;
-import com.william.card.CardType;
-import com.william.card.Minion;
+import base.card.Card;
+import base.card.CardType;
+import base.card.Minion;
 
 import java.util.Random;
 

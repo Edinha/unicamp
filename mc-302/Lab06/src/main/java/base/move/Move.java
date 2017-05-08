@@ -1,6 +1,6 @@
-package com.william.move;
+package base.move;
 
-import com.william.card.Card;
+import base.card.Card;
 
 public class Move {
 	private Card card;

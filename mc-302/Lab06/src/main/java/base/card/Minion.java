@@ -1,6 +1,6 @@
-package com.william.card;
+package base.card;
 
-import com.william.util.Util;
+import util.Util;
 
 import java.util.UUID;
 

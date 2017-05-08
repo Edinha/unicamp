@@ -1,4 +1,4 @@
-package com.william.card;
+package base.card;
 
 public enum MinionAbility {
 	TAUNT,
