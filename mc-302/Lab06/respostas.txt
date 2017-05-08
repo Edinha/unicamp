@@ -1,28 +1,28 @@
-Respostas questoes - William Goncalves da Cruz - 188671
+Respostas questões - William Gonçalves da Cruz - 188671
 
-1) Como todos os tipos de cartas herdam de uma soh classe, eh possivel agrupah-las
-utilizando uma referencia de Carta (Card). Para essas referencias, o metodo usar que
-sera chamado serah aquele do tipo da instancia. Se na referencia tiver uma instancia
-de Buff, o usar de Buff serah chamado, sendo assim para todas as subclasses de Carta.
-
-
-2) Composicao
-
-Mesa possui varias elacoes com carta, desde a mao dos jogadores e os lacaios em campo.
-Alem disso, a classe perde seu objetivo caso nao haja a relacao com carta, e uma vez
-que deixa de existir, as cartas que a compoe tambem deixam de existir.
+1) Como todos os tipos de cartas herdam de uma só classe, é possível agrupá-las
+utilizando uma referência de Carta (Card). Para essas referências, o método usar
+chamado será aquele do tipo da instância. Se na referência houver uma instância
+de Buff, o usar de Buff será chamado, sendo assim para todas as subclasses de Carta.
 
 
-3) Agregacao
+2) Composição
 
-ProcessarJogada utiliza os atributos de Mesa, porem nao contem uma mesa como sendo sua
-parte (dentro de seu objeto. Estas se relacionam a partir de operacoes.
-
-
-4) A palavra chave eh final. Isso indica que o valor delas nao muda uma vez atribuido.
+Mesa possui várias relações com carta, desde a mão dos jogadores e os lacaios em campo.
+Além disso, a classe perde seu objetivo caso não haja a relação com carta, e uma vez
+que deixa de existir, as cartas que a compẽe também deixam de existir.
 
 
---- Saida gerada pelo codigo -------
+3) Agregação
+
+ProcessarJogada utiliza os atributos de Mesa, porem não contém uma mesa como sendo sua
+parte (dentro de seu objeto). Estas se relacionam a partir de operações.
+
+
+4) A palavra chave é 'final'. Isso indica que o valor da variável não muda uma vez atribuido.
+
+
+--- Saída gerada pelo código -------
 
 [START] Player move.
 Move: Author: P
