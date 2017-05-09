@@ -40,29 +40,50 @@ public class ProcessMove {
 		enemyDetails(enemyMinions, enemyHeroicPower);
 
 		if (target == null) {
-			// TODO attack hero
-			return;
+			if (card instanceof Buff) {
+				return;
+			}
+
+			if (card instanceof Damage) {
+				enemyHeroicPower -= ((Damage) card).getDamage();
+			} else if (card instanceof Minion) {
+				Minion minion = (Minion) card;
+				if (MinionAbility.EXHAUSTION.equals(minion.getAbility())) {
+					minion.setAbility(MinionAbility.CHARGE);
+					myMinions.add(minion);
+				} else {
+					enemyHeroicPower -= minion.getAttack();
+				}
+			}
+
+		} else {
+			if (card instanceof Buff && target instanceof Minion) {
+				card.use(target);
+			} else if (card instanceof DamageArea) {
+				DamageArea damageArea = (DamageArea) card;
+				damageArea.use(enemyMinions);
+				enemyHeroicPower -= damageArea.getDamage();
+			} else if (card instanceof Damage && target instanceof Minion) {
+				card.use(target);
+			} else if (card instanceof Minion) {
+				Minion minion = (Minion) card;
+				if (MinionAbility.EXHAUSTION.equals(minion.getAbility())) {
+					minion.setAbility(MinionAbility.CHARGE);
+					myMinions.add(minion);
+				} else {
+					minion.use(target);
+				}
+
+				if (minion.isDestroyed()) {
+					myMinions.remove(minion);
+				}
+			}
 		}
 
-		if (card instanceof Buff && target instanceof Minion) {
-			card.use(target);
-		} else if (card instanceof DamageArea) {
-			DamageArea damageArea = (DamageArea) card;
-			damageArea.use(enemyMinions);
-		} else if (card instanceof Damage && target instanceof Minion) {
-			card.use(target);
-		} else if (card instanceof Minion) {
-			Minion minion = (Minion) card;
-			if (MinionAbility.EXHAUSTION.equals(minion.getAbility())) {
-				minion.setAbility(MinionAbility.CHARGE);
-				myMinions.add(minion);
-			} else {
-				minion.use(target);
-			}
-
-			if (minion.isDestroyed()) {
-				myMinions.remove(minion);
-			}
+		if (move.getAuthor() == 'P') {
+			table.setSecondPlayerHeroicPower(enemyHeroicPower);
+		} else {
+			table.setFirstPlayerHeroicPower(enemyHeroicPower);
 		}
 
 		List<Card> deadMinions = enemyMinions.stream().filter(e -> ((Minion) e).isDestroyed()).collect(Collectors.toList());
