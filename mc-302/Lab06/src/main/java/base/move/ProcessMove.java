@@ -20,7 +20,6 @@ public class ProcessMove {
 		int enemyHeroicPower;
 
 		Card card = move.getCard();
-		Card target = move.getTarget();
 
 		if (move.getAuthor() == 'P') {
 			myMinions = table.getFirstPlayerMinions();
@@ -33,6 +32,10 @@ public class ProcessMove {
 			table.setSecondPlayerMana(table.getSecondPlayerMana() - card.getManaCost());
 			enemyHeroicPower = table.getFirstPlayerHeroicPower();
 		}
+
+		// Give preference to Taunt minion instead of target
+		Card target = enemyMinions.stream().map(x -> (Minion) x).filter(x -> MinionAbility.TAUNT.equals(x.getAbility())).findAny().orElse(
+			(Minion) move.getTarget());
 
 		System.out.println("[START] Player move.");
 		System.out.println("Move: " + move.toString());
@@ -57,13 +60,13 @@ public class ProcessMove {
 			}
 
 		} else {
-			if (card instanceof Buff && target instanceof Minion) {
+			if (card instanceof Buff) {
 				card.use(target);
 			} else if (card instanceof DamageArea) {
 				DamageArea damageArea = (DamageArea) card;
 				damageArea.use(enemyMinions);
 				enemyHeroicPower -= damageArea.getDamage();
-			} else if (card instanceof Damage && target instanceof Minion) {
+			} else if (card instanceof Damage) {
 				card.use(target);
 			} else if (card instanceof Minion) {
 				Minion minion = (Minion) card;
