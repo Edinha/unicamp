@@ -1,6 +1,6 @@
 package util;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomString {
 
@@ -20,20 +20,18 @@ public class RandomString {
 	}
 
 	private final char[] buff;
-	private final Random random;
 
-	public RandomString(Random random, int length) {
+	public RandomString(int length) {
 		if (length < 1) {
 			throw new IllegalArgumentException("Length < 1: " + length);
 		}
 
 		this.buff = new char[length];
-		this.random = random;
 	}
 
 	public String nextString() {
 		for (int idx = 0; idx < buff.length; idx++) {
-			buff[idx] = SYMBOLS[random.nextInt(SYMBOLS.length)];
+			buff[idx] = SYMBOLS[ThreadLocalRandom.current().nextInt(SYMBOLS.length)];
 		}
 
 		return new String(buff);

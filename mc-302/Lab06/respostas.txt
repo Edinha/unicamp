@@ -1,186 +1,111 @@
 Respostas questões - William Gonçalves da Cruz - 188671
 
-1) Como todos os tipos de cartas herdam de uma só classe, é possível agrupá-las
-utilizando uma referência de Carta (Card). Para essas referências, o método usar
-chamado será aquele do tipo da instância. Se na referência houver uma instância
-de Buff, o usar de Buff será chamado, sendo assim para todas as subclasses de Carta.
+3.1) Fazendo com que a classe carta e magia sejam abstratas (abstract), garantimos que essas
+classes nunca serao instanciadas.
 
+Tornando o metodo usar abstratos, podemos forcas a sua implementacao em classes concretas
+que herdem de carta. Essa alteracao pode gerar um erro de compilacao caso haja uma classe onde
+o metodo nao esta implementado e retira a obrigatoriedade de existir um metodo vazio em Carta
+apenas para ser sobreescrito nas classes que a herdam
 
-2) Composição
+3.2)
 
-Mesa possui várias relações com carta, desde a mão dos jogadores e os lacaios em campo.
-Além disso, a classe perde seu objetivo caso não haja a relação com carta, e uma vez
-que deixa de existir, as cartas que a compẽe também deixam de existir.
+Como os controladores conhecem apenas as interfaces, este se torna um modelo de baixo acoplamento. Ou seja,
+eh possivel mudar implementacoes facilmente nesse modelo, visto que para criar uma nova implementacao apenas
+eh necessario que a nova classe "implements" a interface que o controlador conhece. Esse seria o caso tambem
+para criar uma nova estrategia de jogada, alem da agressiva.
 
-
-3) Agregação
-
-ProcessarJogada utiliza os atributos de Mesa, porem não contém uma mesa como sendo sua
-parte (dentro de seu objeto). Estas se relacionam a partir de operações.
-
-
-4) A palavra chave é 'final'. Isso indica que o valor da variável não muda uma vez atribuido.
+Com relacao as classes internas, eh vantajoso pois ... TODO
 
 
 --- Saída gerada pelo código -------
 
 [START] Player move.
 Move: Author: P
-Card played: g45cqn0pj0tuog0s3cn0ctyxrebku25btxsvu86mn3kmmv3mi4 (ID: 43dde0b1-3e10-4fe1-bf6d-e9cb322539f7)
-Custo de Mana = 1
-Buff Vida = 1
-Buff Ataque  = 1
+Card played: kdht74j3uiywghog6qdkrnafhwbpec8cmlod8yhacrvinwjkaw (ID: 081c37b3-05dc-4bbe-8d9a-169df07cd720)
+Custo de Mana = 4
+Ataque = 3
+Vida Atual = 3
+Vida Maxima = 3
 
 Card targeted: No card
-Enemy minions count: 3
+Enemy minions count: 6
 Enemy minions:
-yldkcwgup22a18dhvyxmuusou41k (ID: 37fc1a87-2499-4655-9195-ab49a41dc397)
-Custo de Mana = 5
-Ataque = 5
+4yg8ovmdd6w3vhxqvfesvv8bsgt8rbx5us05eyri82h31xgywn (ID: 37890ab0-ac61-4111-bb66-94deda37437a)
+Custo de Mana = 10
+Ataque = 8
 Vida Atual = 5
 Vida Maxima = 5
 
-hf5oj2bbbwvcs6pxyxmi3lnvtn18 (ID: 302564a0-513c-4369-b99a-1ed7bf33f444)
-Custo de Mana = 6
-Ataque = 6
-Vida Atual = 6
-Vida Maxima = 6
-
-wkeci1uyuqgjnbc762ywpyq0ijds (ID: 7dcb8e0c-9ec7-4169-a36e-a86c077818fe)
-Custo de Mana = 4
-Ataque = 4
-Vida Atual = 4
-Vida Maxima = 4
-
-Enemy heroic power: 5
-[START] Player move.
-Move: Author: S
-Card played: g45cqn0pj0tuog0s3cn0ctyxrebku25btxsvu86mn3kmmv3mi4 (ID: 43dde0b1-3e10-4fe1-bf6d-e9cb322539f7)
-Custo de Mana = 1
-Buff Vida = 1
-Buff Ataque  = 1
-
-Card targeted: No card
-Enemy minions count: 3
-Enemy minions:
-hgi1r2hnllwfylusbp0gnjhgo00m (ID: cab54fbd-9b16-4a23-b2e6-60a8111875d5)
-Custo de Mana = 2
+dp3yinycxgo4ctvir8ohkufd74k10uvehr3kuava2s0mkj5fws (ID: 2ec91220-c800-4086-a498-576b444159fe)
+Custo de Mana = 3
 Ataque = 2
-Vida Atual = 2
-Vida Maxima = 2
+Vida Atual = 10
+Vida Maxima = 10
 
-rouxdxp7t63nv6afgb0x64rf46sx (ID: f8f5b748-290b-454f-9a34-6900f1b96c91)
+rfotpdikpnvlhb3uj3440y5lksh8angy5i4w43gyncge66elba (ID: 233c3d4b-cff9-461a-b6ee-f14ee036b86f)
 Custo de Mana = 6
-Ataque = 6
-Vida Atual = 6
-Vida Maxima = 6
+Ataque = 2
+Vida Atual = 7
+Vida Maxima = 7
 
-e6yco011bsopebswy7hub82bx136 (ID: a5bd8123-5837-4893-b5ef-6eb639a797fb)
+015yakcj3k2h1n0stoefxfbbxuf0coqyqqvvct5ghl8x84fq68 (ID: acb861d2-927a-4438-bb8f-317c7d6d6ac2)
 Custo de Mana = 1
+Ataque = 4
+Vida Atual = 13
+Vida Maxima = 13
+
+fv6vwn40y0ab3jfhdbkqc3psdrd7hbjot02bok5bvhtvd3mpew (ID: 448587f2-7dca-4aa9-9279-182494cc3c63)
+Custo de Mana = 7
 Ataque = 1
-Vida Atual = 1
-Vida Maxima = 1
+Vida Atual = 16
+Vida Maxima = 16
 
-Enemy heroic power: 5
-[START] Player move.
-Move: Author: P
-Card played: hgi1r2hnllwfylusbp0gnjhgo00m (ID: cab54fbd-9b16-4a23-b2e6-60a8111875d5)
-Custo de Mana = 2
-Ataque = 2
-Vida Atual = 2
-Vida Maxima = 2
-
-Card targeted: hf5oj2bbbwvcs6pxyxmi3lnvtn18 (ID: 302564a0-513c-4369-b99a-1ed7bf33f444)
-Custo de Mana = 6
-Ataque = 6
-Vida Atual = 6
-Vida Maxima = 6
-
-Enemy minions count: 3
-Enemy minions:
-yldkcwgup22a18dhvyxmuusou41k (ID: 37fc1a87-2499-4655-9195-ab49a41dc397)
-Custo de Mana = 5
-Ataque = 5
-Vida Atual = 5
-Vida Maxima = 5
-
-hf5oj2bbbwvcs6pxyxmi3lnvtn18 (ID: 302564a0-513c-4369-b99a-1ed7bf33f444)
-Custo de Mana = 6
-Ataque = 6
-Vida Atual = 6
-Vida Maxima = 6
-
-wkeci1uyuqgjnbc762ywpyq0ijds (ID: 7dcb8e0c-9ec7-4169-a36e-a86c077818fe)
+rdw6nuw5ch6jh4y3r11lvym4rsp3r13t72w0prr4srfhdn2q6k (ID: d2315577-ab92-42d9-8b99-23f1b5b614ea)
 Custo de Mana = 4
-Ataque = 4
-Vida Atual = 4
-Vida Maxima = 4
+Ataque = 7
+Vida Atual = 13
+Vida Maxima = 13
 
 Enemy heroic power: 5
 [END] Player move.
-Enemy minions count: 3
+Enemy minions count: 6
 Enemy minions:
-yldkcwgup22a18dhvyxmuusou41k (ID: 37fc1a87-2499-4655-9195-ab49a41dc397)
-Custo de Mana = 5
-Ataque = 5
+4yg8ovmdd6w3vhxqvfesvv8bsgt8rbx5us05eyri82h31xgywn (ID: 37890ab0-ac61-4111-bb66-94deda37437a)
+Custo de Mana = 10
+Ataque = 8
 Vida Atual = 5
 Vida Maxima = 5
 
-hf5oj2bbbwvcs6pxyxmi3lnvtn18 (ID: 302564a0-513c-4369-b99a-1ed7bf33f444)
-Custo de Mana = 6
-Ataque = 6
-Vida Atual = 4
-Vida Maxima = 6
+dp3yinycxgo4ctvir8ohkufd74k10uvehr3kuava2s0mkj5fws (ID: 2ec91220-c800-4086-a498-576b444159fe)
+Custo de Mana = 3
+Ataque = 2
+Vida Atual = 10
+Vida Maxima = 10
 
-wkeci1uyuqgjnbc762ywpyq0ijds (ID: 7dcb8e0c-9ec7-4169-a36e-a86c077818fe)
-Custo de Mana = 4
+rfotpdikpnvlhb3uj3440y5lksh8angy5i4w43gyncge66elba (ID: 233c3d4b-cff9-461a-b6ee-f14ee036b86f)
+Custo de Mana = 6
+Ataque = 2
+Vida Atual = 7
+Vida Maxima = 7
+
+015yakcj3k2h1n0stoefxfbbxuf0coqyqqvvct5ghl8x84fq68 (ID: acb861d2-927a-4438-bb8f-317c7d6d6ac2)
+Custo de Mana = 1
 Ataque = 4
-Vida Atual = 4
-Vida Maxima = 4
+Vida Atual = 13
+Vida Maxima = 13
 
-Enemy heroic power: 5
-[START] Player move.
-Move: Author: S
-Card played: yldkcwgup22a18dhvyxmuusou41k (ID: 37fc1a87-2499-4655-9195-ab49a41dc397)
-Custo de Mana = 5
-Ataque = 5
-Vida Atual = 5
-Vida Maxima = 5
-
-Card targeted: rouxdxp7t63nv6afgb0x64rf46sx (ID: f8f5b748-290b-454f-9a34-6900f1b96c91)
-Custo de Mana = 6
-Ataque = 6
-Vida Atual = 6
-Vida Maxima = 6
-
-Enemy minions count: 2
-Enemy minions:
-rouxdxp7t63nv6afgb0x64rf46sx (ID: f8f5b748-290b-454f-9a34-6900f1b96c91)
-Custo de Mana = 6
-Ataque = 6
-Vida Atual = 6
-Vida Maxima = 6
-
-e6yco011bsopebswy7hub82bx136 (ID: a5bd8123-5837-4893-b5ef-6eb639a797fb)
-Custo de Mana = 1
+fv6vwn40y0ab3jfhdbkqc3psdrd7hbjot02bok5bvhtvd3mpew (ID: 448587f2-7dca-4aa9-9279-182494cc3c63)
+Custo de Mana = 7
 Ataque = 1
-Vida Atual = 1
-Vida Maxima = 1
+Vida Atual = 16
+Vida Maxima = 16
 
-Enemy heroic power: 5
-[END] Player move.
-Enemy minions count: 2
-Enemy minions:
-rouxdxp7t63nv6afgb0x64rf46sx (ID: f8f5b748-290b-454f-9a34-6900f1b96c91)
-Custo de Mana = 6
-Ataque = 6
-Vida Atual = 1
-Vida Maxima = 6
+rdw6nuw5ch6jh4y3r11lvym4rsp3r13t72w0prr4srfhdn2q6k (ID: d2315577-ab92-42d9-8b99-23f1b5b614ea)
+Custo de Mana = 4
+Ataque = 7
+Vida Atual = 13
+Vida Maxima = 13
 
-e6yco011bsopebswy7hub82bx136 (ID: a5bd8123-5837-4893-b5ef-6eb639a797fb)
-Custo de Mana = 1
-Ataque = 1
-Vida Atual = 1
-Vida Maxima = 1
-
-Enemy heroic power: 5
+Enemy heroic power: 2
+##### P win!

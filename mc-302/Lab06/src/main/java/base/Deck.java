@@ -3,10 +3,9 @@ package base;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import base.card.Card;
-import util.Util;
+import service.card.CardService;
 
 public class Deck {
 	private static int MAX_CARDS = 30;
@@ -17,11 +16,11 @@ public class Deck {
 		this.deck = new ArrayList<>();
 	}
 
-	public List<Card> getDeck() {
+	private List<Card> getDeck() {
 		return deck;
 	}
 
-	public void addCard(Card card) {
+	private void addCard(Card card) {
 		if (this.deck.size() == MAX_CARDS) {
 			return;
 		}
@@ -39,26 +38,18 @@ public class Deck {
 		return card;
 	}
 
-	public void shuffle()  {
-		Collections.shuffle(this.deck);
-		printReverseDeck();
-	}
-
-	public void randomFill(Random random, int size, int maxMana, int maxAttack, int maxHealth) {
-		size = Math.min(size, MAX_CARDS);
-
+	public void randomFill(CardService cardService, int maxMana, int maxAttack, int maxHealth) {
 		this.deck.clear();
 
-		for (int i = 0; i < size; i++) {
-			this.addCard(Util.generateRandomCard(random, maxMana, maxAttack, maxHealth, null));
+		for (int i = 0; i < MAX_CARDS; i++) {
+			this.addCard(cardService.randomCard(maxMana, maxAttack, maxHealth, null));
 		}
+
+		shuffle();
 	}
 
-	private void printReverseDeck() {
-		for (int i = this.deck.size() - 1; i >= 0; i--) {
-			System.out.println(this.deck.get(i));
-			System.out.println();
-		}
+	private void shuffle() {
+		Collections.shuffle(this.deck);
 	}
 
 	@Override

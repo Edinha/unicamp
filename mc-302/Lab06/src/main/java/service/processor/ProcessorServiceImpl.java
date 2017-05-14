@@ -1,4 +1,4 @@
-package base.move;
+package service.processor;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,10 +10,12 @@ import base.card.MinionAbility;
 import base.card.magic.Buff;
 import base.card.magic.Damage;
 import base.card.magic.DamageArea;
+import base.move.Move;
 
-public class ProcessMove {
+public class ProcessorServiceImpl implements ProcessorService {
 
-	public void process(Move move, Table table) {
+	@Override
+	public boolean process(Move move, Table table) {
 		List<Card> myMinions;
 		List<Card> enemyMinions;
 
@@ -44,7 +46,7 @@ public class ProcessMove {
 
 		if (target == null) {
 			if (card instanceof Buff) {
-				return;
+				return false;
 			}
 
 			if (card instanceof Damage) {
@@ -94,6 +96,8 @@ public class ProcessMove {
 
 		System.out.println("[END] Player move.");
 		enemyDetails(enemyMinions, enemyHeroicPower);
+
+		return true;
 	}
 
 	private void enemyDetails(List<Card> enemyMinions, int enemyHeroicPower) {

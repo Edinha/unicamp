@@ -1,10 +1,6 @@
 package util;
 
-import base.card.Card;
-import base.card.CardType;
 import base.card.Minion;
-
-import java.util.Random;
 
 public class Util {
 	public static int HEROIC_POWER = 5;
@@ -35,23 +31,6 @@ public class Util {
 	public static void damage(Minion minion, int damage) {
 		int healthAfterDamage = minion.getCurrentHealth() - damage;
 		minion.setCurrentHealth(healthAfterDamage);
-	}
-
-	public static Card generateRandomCard(Random random, int maxMana, int maxAttack, int maxHealth, CardType cardType) {
-		int mana = randInt(random, 1, maxMana);
-		int attack = randInt(random, 1, maxAttack);
-		int health = randInt(random, 1, maxHealth);
-		String name = new RandomString(random, 50).nextString();
-
-		if (cardType == null) {
-			cardType = CardType.of(random.nextInt(CardType.values().length - 1));
-		}
-
-		return cardType.create(name, mana, health, attack);
-	}
-
-	private static int randInt(Random random, int min, int max) {
-		return random.nextInt((max - min) + 1) + min;
 	}
 
 	private static boolean hasAppliedBuff(int oldStat, int newStat) {
