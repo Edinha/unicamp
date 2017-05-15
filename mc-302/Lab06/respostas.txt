@@ -1,21 +1,21 @@
 Respostas questões - William Gonçalves da Cruz - 188671
 
 3.1) Fazendo com que a classe carta e magia sejam abstratas (abstract), garantimos que essas
-classes nunca serao instanciadas.
+classes nunca serão instanciadas.
 
-Tornando o metodo usar abstratos, podemos forcas a sua implementacao em classes concretas
-que herdem de carta. Essa alteracao pode gerar um erro de compilacao caso haja uma classe onde
-o metodo nao esta implementado e retira a obrigatoriedade de existir um metodo vazio em Carta
-apenas para ser sobreescrito nas classes que a herdam
+Tornando o método usar abstrato, podemos forçar a sua implementação em classes concretas
+que herdem de Carta (Card). Essa alteração pode gerar um erro de compilação caso haja uma classe onde
+o método não está implementado e retira a obrigatoriedade de existir um método vazio em Carta (Card)
+apenas para ser sobreescrito nas classes que a herdam.
 
 3.2)
 
 Como os controladores conhecem apenas as interfaces, este se torna um modelo de baixo acoplamento. Ou seja,
-eh possivel mudar implementacoes facilmente nesse modelo, visto que para criar uma nova implementacao apenas
-eh necessario que a nova classe "implements" a interface que o controlador conhece. Esse seria o caso tambem
-para criar uma nova estrategia de jogada, alem da agressiva.
+é possével mudar implementações facilmente nesse modelo, visto que para criar uma nova implementação apenas
+é necessário que a nova classe "implements" a interface que o controlador conhece. Esse seria o caso também
+para criar uma nova estratégia de jogada, além da agressiva.
 
-Com relacao as classes internas, eh vantajoso pois ... TODO
+Com relação as classes internas, é vantajoso pois ... TODO
 
 
 --- Saída gerada pelo código -------
