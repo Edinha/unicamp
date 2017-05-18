@@ -6,6 +6,7 @@ import java.util.List;
 
 import base.Table;
 import base.card.Card;
+import base.card.Minion;
 import base.move.Move;
 
 public class MoveServiceAggressiveImpl implements MoveService {
@@ -36,8 +37,10 @@ public class MoveServiceAggressiveImpl implements MoveService {
 		}
 
 		@Override
-		public int compare(Card first, Card second) {
-			return 0;
+		public int compare(Card o1, Card o2) {
+			Minion first = (Minion) o1;
+			Minion second = (Minion) o2;
+			return Integer.valueOf(first.getAttack()).compareTo(second.getAttack());
 		}
 	}
 }

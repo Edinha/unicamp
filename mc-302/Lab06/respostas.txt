@@ -15,7 +15,7 @@ Como os controladores conhecem apenas as interfaces, este se torna um modelo de 
 é necessário que a nova classe "implements" a interface que o controlador conhece. Esse seria o caso também
 para criar uma nova estratégia de jogada, além da agressiva.
 
-Com relação as classes internas, é vantajoso pois juntas as classes que fazem sentido apenas em um escopo
+Com relação as classes internas, é vantajoso pois junta as classes que fazem sentido apenas em um escopo
 fechado, tal como os comparadores da jogada agressiva.
 
 
