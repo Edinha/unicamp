@@ -3,8 +3,14 @@ package util;
 import base.card.Minion;
 
 public class Util {
-	public static int HEROIC_POWER = 5;
-	public static int INITIAL_HAND_SIZE = 3;
+	public static final int MAX_CARDS = 30;
+	public static final int HEROIC_POWER = 5;
+	public static final int INITIAL_HAND_SIZE = 3;
+
+	public static final int MAX_MANA = 7;
+	public static final int MAX_ATTACK = 8;
+	public static final int MAX_HEALTH = 9;
+	public static final int MAX_MINIONS = 10;
 
 	public static void buff(Minion minion, int attackAndHealthBuff) {
 		buff(minion, attackAndHealthBuff, attackAndHealthBuff);

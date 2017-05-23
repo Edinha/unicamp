@@ -5,11 +5,8 @@ import java.util.Collections;
 import java.util.List;
 
 import base.card.Card;
-import service.card.CardService;
 
 public class Deck {
-	private static int MAX_CARDS = 30;
-
 	private List<Card> deck;
 
 	public Deck() {
@@ -18,14 +15,6 @@ public class Deck {
 
 	private List<Card> getDeck() {
 		return deck;
-	}
-
-	private void addCard(Card card) {
-		if (this.deck.size() == MAX_CARDS) {
-			return;
-		}
-
-		this.deck.add(card);
 	}
 
 	public Card pullCard() {
@@ -38,13 +27,9 @@ public class Deck {
 		return card;
 	}
 
-	public void randomFill(CardService cardService, int maxMana, int maxAttack, int maxHealth) {
+	public void fill(List<Card> cards) {
 		this.deck.clear();
-
-		for (int i = 0; i < MAX_CARDS; i++) {
-			this.addCard(cardService.randomCard(maxMana, maxAttack, maxHealth, null));
-		}
-
+		this.deck.addAll(cards);
 		shuffle();
 	}
 

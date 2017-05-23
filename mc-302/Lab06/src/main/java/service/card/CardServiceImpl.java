@@ -5,16 +5,17 @@ import java.util.concurrent.ThreadLocalRandom;
 import base.card.Card;
 import base.card.CardType;
 import util.RandomString;
+import util.Util;
 
 public class CardServiceImpl implements CardService {
 	public CardServiceImpl() {
 	}
 
 	@Override
-	public Card randomCard(int maxMana, int maxAttack, int maxHealth, CardType cardType) {
-		int mana = randomInt(1, maxMana);
-		int attack = randomInt(1, maxAttack);
-		int health = randomInt(1, maxHealth);
+	public Card randomCard(CardType cardType) {
+		int mana = randomInt(1, Util.MAX_MANA);
+		int attack = randomInt(1, Util.MAX_ATTACK);
+		int health = randomInt(1, Util.MAX_HEALTH);
 		String name = new RandomString(50).nextString();
 
 		if (cardType == null) {

@@ -4,28 +4,29 @@ import java.util.List;
 
 import base.Deck;
 import base.Table;
-import base.card.CardType;
+import base.exception.NullTableException;
 import base.move.Move;
 import service.card.CardService;
 import service.card.CardServiceImpl;
+import service.deck.DeckService;
+import service.deck.DeckServiceImpl;
 import service.move.MoveService;
 import service.move.MoveServiceAggressiveImpl;
+import service.processor.ProcessorService;
 import service.processor.ProcessorServiceImpl;
-import util.Util;
+import service.table.TableService;
+import service.table.TableServiceImpl;
 
 public class Controller {
 	private CardService cardService;
 	private MoveService moveService;
-	private ProcessorController controller;
+	private DeckService deckService;
+	private TableService tableService;
+	private ProcessorService processorService;
 
 	private Table table;
 	private Deck firstDeck;
 	private Deck secondDeck;
-
-	private int maxMana = 10;
-	private int maxAttack = 8;
-	private int maxHealth = 20;
-	private int maxMinions = 6;
 
 	public Controller() {
 		this.table = new Table();
@@ -33,9 +34,10 @@ public class Controller {
 		this.secondDeck = new Deck();
 
 		this.cardService = new CardServiceImpl();
+		this.deckService = new DeckServiceImpl();
+		this.tableService = new TableServiceImpl();
 		this.moveService = new MoveServiceAggressiveImpl();
-
-		this.controller = new ProcessorController(new ProcessorServiceImpl());
+		this.processorService = new ProcessorServiceImpl();
 	}
 
 	public void execute() {
@@ -46,7 +48,7 @@ public class Controller {
 		List<Move> moves = moveService.createMove(table, 'P');
 
 		for (Move move : moves) {
-			if (controller.process(move, table)) {
+			if (processorService.process(move, table)) {
 				System.out.println("##### " + move.getAuthor() + " win!");
 				break;
 			}
@@ -54,22 +56,18 @@ public class Controller {
 	}
 
 	private void fillDecks() {
-		this.firstDeck.randomFill(cardService, maxMana, maxAttack, maxHealth);
-		this.secondDeck.randomFill(cardService, maxMana, maxAttack, maxHealth);
+		this.firstDeck.fill(deckService.randomFill(cardService));
+		this.secondDeck.fill(deckService.randomFill(cardService));
 	}
 
 	private void organizeTable() {
-		for (int i = 0; i < maxMinions; i++) {
-			table.getFirstPlayerMinions().add(cardService.randomCard(maxMana, maxAttack, maxHealth, CardType.MINION));
-			table.getSecondPlayerMinions().add(cardService.randomCard(maxMana, maxAttack, maxHealth, CardType.MINION));
+		try {
+			this.tableService.addMinions(table, cardService);
+			this.tableService.addInitialHand(table, firstDeck, secondDeck);
+		} catch (NullTableException e) {
+			// TODO
+//			e.printStackTrace();
 		}
-
-		for (int i = 0; i < Util.INITIAL_HAND_SIZE; i++) {
-			table.getFirstPlayerHand().add(firstDeck.pullCard());
-			table.getSecondPlayerHand().add(secondDeck.pullCard());
-		}
-
-		table.getSecondPlayerHand().add(secondDeck.pullCard());
 	}
 }
 
