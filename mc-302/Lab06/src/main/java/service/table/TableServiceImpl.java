@@ -3,6 +3,7 @@ package service.table;
 import base.Deck;
 import base.Table;
 import base.card.CardType;
+import base.exception.InvalidValueException;
 import base.exception.NullTableException;
 import service.card.CardService;
 import util.Util;
@@ -29,5 +30,13 @@ public class TableServiceImpl implements TableService {
 		}
 
 		table.getSecondPlayerHand().add(second.pullCard());
+
+		if (table.getFirstPlayerHand().size() < 3) {
+			throw new InvalidValueException("Initial hand (first player) value is invalid: " + Util.INITIAL_HAND_SIZE);
+		}
+
+		if (table.getSecondPlayerHand().size() < 3) {
+			throw new InvalidValueException("Initial hand (second player) value is invalid: " + Util.INITIAL_HAND_SIZE);
+		}
 	}
 }

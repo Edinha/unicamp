@@ -4,6 +4,7 @@ import java.util.List;
 
 import base.Deck;
 import base.Table;
+import base.exception.InvalidValueException;
 import base.exception.NullTableException;
 import base.move.Move;
 import service.card.CardService;
@@ -41,17 +42,24 @@ public class Controller {
 	}
 
 	public void execute() {
-		fillDecks();
 
-		organizeTable();
+		try {
+			fillDecks();
+			organizeTable();
+			List<Move> moves = moveService.createMove(table, 'P');
 
-		List<Move> moves = moveService.createMove(table, 'P');
-
-		for (Move move : moves) {
-			if (processorService.process(move, table)) {
-				System.out.println("##### " + move.getAuthor() + " win!");
-				break;
+			for (Move move : moves) {
+				if (processorService.process(move, table)) {
+					System.out.println("##### " + move.getAuthor() + " win!");
+					break;
+				}
 			}
+
+		} catch (NullTableException e) {
+			// TODO
+			e.printStackTrace();
+		} finally {
+			System.out.println("Finished game");
 		}
 	}
 
@@ -60,14 +68,9 @@ public class Controller {
 		this.secondDeck.fill(deckService.randomFill(cardService));
 	}
 
-	private void organizeTable() {
-		try {
-			this.tableService.addMinions(table, cardService);
-			this.tableService.addInitialHand(table, firstDeck, secondDeck);
-		} catch (NullTableException e) {
-			// TODO
-//			e.printStackTrace();
-		}
+	private void organizeTable() throws NullTableException {
+		this.tableService.addMinions(table, cardService);
+		this.tableService.addInitialHand(table, firstDeck, secondDeck);
 	}
 }
 

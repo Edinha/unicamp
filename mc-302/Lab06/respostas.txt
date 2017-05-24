@@ -7,4 +7,14 @@ até a main.
 3) A exceção de BaralhoVazio é não checada, ou seja, não é preciso aplicar a regra de lançamento/captura
 do Java, pois esta é obrigatória apenas paras as checadas (como MesaNula).
 
+4) Pois elas já estão declaradas e possuem semântica que exemplifica o problema.
+
+6) Utilizando a instrução 'finally' podemos ter um trecho de código que é executado independente de terem
+acontecidos exceções no fluxo.
+
+7) Qualquer exceção lançada terá seu fluxo desviado para catch Exception, pois toda exceção deve herdar (direta
+ou indiretamente) de Exception. Assim, não haverá tratamento específico para todas as exceções lançadas.
+Outro problema é que RuntimeException's (não checadas) também serão desviadas, "escondendo" os error de
+lógica do seu código sob um try catch.
+
 --- Saída gerada pelo código -------
