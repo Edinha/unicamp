@@ -18,3 +18,142 @@ Outro problema é que RuntimeException's (não checadas) também serão desviada
 lógica do seu código sob um try catch.
 
 --- Saída gerada pelo código -------
+
+START] Player move.
+Move: Author: P
+Card played: afydm7oox0js7vl37rsosknrcejeglkypctkxwput1nckjg7tl (ID: 890d1abe-5de0-486c-9e83-05616139c3ff)
+Custo de Mana = 6
+Ataque = 8
+Vida Atual = 2
+Vida Maxima = 2
+
+Card targeted: No card
+Enemy minions count: 10
+Enemy minions:
+s6mcptvdp5wh8eh4hofpbwfxcv6eo8ptohrv7q07hrxx5lx0gn (ID: 573e4f27-69f7-426a-bc6f-a71961f0e1ae)
+Custo de Mana = 6
+Ataque = 3
+Vida Atual = 3
+Vida Maxima = 3
+
+u4bq8gusdmt85bwqltbnbvsy4f3cbp6f3ok7ak0eccjf1xuc2b (ID: b8487686-a75b-40e4-9b45-eb5d53704eb4)
+Custo de Mana = 5
+Ataque = 4
+Vida Atual = 3
+Vida Maxima = 3
+
+0ric0xuubv5h74ydd8e5kysik0o8w5xgelckpqnxp1lh05rwu2 (ID: 41eb73e9-e01d-431f-b419-e381263ecedb)
+Custo de Mana = 6
+Ataque = 6
+Vida Atual = 6
+Vida Maxima = 6
+
+vwiysjdsaff0r10dca534s5624j81ydtb7f2crbypnv821ucsi (ID: cbc8bc69-9581-48dc-906d-85d7b5db4e8f)
+Custo de Mana = 4
+Ataque = 8
+Vida Atual = 1
+Vida Maxima = 1
+
+u23c7rfhua087dnjg2haanne1tcap5alo876vclpigqg0t5npn (ID: 1f81566b-c35c-41f9-ac47-e2b86cadded1)
+Custo de Mana = 5
+Ataque = 3
+Vida Atual = 1
+Vida Maxima = 1
+
+hvx3yudbwvx53ythy3gerlyau2w00aolexe46ti61lyyq3o6l6 (ID: c4757061-464d-4f0e-afa7-c595ccab3404)
+Custo de Mana = 3
+Ataque = 5
+Vida Atual = 4
+Vida Maxima = 4
+
+qen41upqarv5bgrr1im17wcvsslyi7farkrrpoihlkdjrm0rjp (ID: b894ffdc-c2c8-47e5-a9c7-2656b73dedae)
+Custo de Mana = 5
+Ataque = 8
+Vida Atual = 9
+Vida Maxima = 9
+
+mmlvj5jyyx321aefk4ryvodajte0ochq2fc35h8156i46h5dsu (ID: e92bfe8e-9569-4caa-be6e-059b1a9d59c4)
+Custo de Mana = 7
+Ataque = 1
+Vida Atual = 8
+Vida Maxima = 8
+
+sjohb5a2yyq6sdmk15ke3mt5txo4mdu4rto5g72y672arorl3o (ID: bf6e6b3d-ab45-4268-9bdb-58bee9fc3396)
+Custo de Mana = 4
+Ataque = 1
+Vida Atual = 5
+Vida Maxima = 5
+
+hif3ktsa3vjad2riu0aqv87tjx1p7lyp0hs1rrljxawyyqit4y (ID: fbff41c7-bdd2-44e7-b1cb-c184b42361e8)
+Custo de Mana = 2
+Ataque = 2
+Vida Atual = 5
+Vida Maxima = 5
+
+Enemy heroic power: 5
+[END] Player move.
+Enemy minions count: 10
+Enemy minions:
+s6mcptvdp5wh8eh4hofpbwfxcv6eo8ptohrv7q07hrxx5lx0gn (ID: 573e4f27-69f7-426a-bc6f-a71961f0e1ae)
+Custo de Mana = 6
+Ataque = 3
+Vida Atual = 3
+Vida Maxima = 3
+
+u4bq8gusdmt85bwqltbnbvsy4f3cbp6f3ok7ak0eccjf1xuc2b (ID: b8487686-a75b-40e4-9b45-eb5d53704eb4)
+Custo de Mana = 5
+Ataque = 4
+Vida Atual = 3
+Vida Maxima = 3
+
+0ric0xuubv5h74ydd8e5kysik0o8w5xgelckpqnxp1lh05rwu2 (ID: 41eb73e9-e01d-431f-b419-e381263ecedb)
+Custo de Mana = 6
+Ataque = 6
+Vida Atual = 6
+Vida Maxima = 6
+
+vwiysjdsaff0r10dca534s5624j81ydtb7f2crbypnv821ucsi (ID: cbc8bc69-9581-48dc-906d-85d7b5db4e8f)
+Custo de Mana = 4
+Ataque = 8
+Vida Atual = 1
+Vida Maxima = 1
+
+u23c7rfhua087dnjg2haanne1tcap5alo876vclpigqg0t5npn (ID: 1f81566b-c35c-41f9-ac47-e2b86cadded1)
+Custo de Mana = 5
+Ataque = 3
+Vida Atual = 1
+Vida Maxima = 1
+
+hvx3yudbwvx53ythy3gerlyau2w00aolexe46ti61lyyq3o6l6 (ID: c4757061-464d-4f0e-afa7-c595ccab3404)
+Custo de Mana = 3
+Ataque = 5
+Vida Atual = 4
+Vida Maxima = 4
+
+qen41upqarv5bgrr1im17wcvsslyi7farkrrpoihlkdjrm0rjp (ID: b894ffdc-c2c8-47e5-a9c7-2656b73dedae)
+Custo de Mana = 5
+Ataque = 8
+Vida Atual = 9
+Vida Maxima = 9
+
+mmlvj5jyyx321aefk4ryvodajte0ochq2fc35h8156i46h5dsu (ID: e92bfe8e-9569-4caa-be6e-059b1a9d59c4)
+Custo de Mana = 7
+Ataque = 1
+Vida Atual = 8
+Vida Maxima = 8
+
+sjohb5a2yyq6sdmk15ke3mt5txo4mdu4rto5g72y672arorl3o (ID: bf6e6b3d-ab45-4268-9bdb-58bee9fc3396)
+Custo de Mana = 4
+Ataque = 1
+Vida Atual = 5
+Vida Maxima = 5
+
+hif3ktsa3vjad2riu0aqv87tjx1p7lyp0hs1rrljxawyyqit4y (ID: fbff41c7-bdd2-44e7-b1cb-c184b42361e8)
+Custo de Mana = 2
+Ataque = 2
+Vida Atual = 5
+Vida Maxima = 5
+
+Enemy heroic power: -3
+##### P win!
+Finished game
