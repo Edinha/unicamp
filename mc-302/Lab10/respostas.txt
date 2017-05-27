@@ -1,0 +1,43 @@
+Respostas questões - William Gonçalves da Cruz - 188671
+
+1)
+
+Poderiamos serializar a classe Baralho indicando que é o começo de um baralho com seu tamanho:
+
+obj Baralho
+tamanho 30
+
+E depois disso, serializando cada uma de suas cartas em sequência:
+
+obj (Lacaio/Buff/Damage)
+....
+
+obj (Lacaio/Buff/Damage)
+....
+
+Assim, teríamos um baralho inteiro serializado no arquivo.
+
+Para leitura posterior, teríamos a quantidade de cartas do baralho (tamanho) para qual o loop de de-serialização se repetiria.
+Assim, remontamos o baralho serializado.
+
+--- Saída gerada pelo código -------
+
+Minion (ID: 635d4317-3d44-4440-899c-2511bfb19ffe)
+Custo de Mana = 10
+Ataque = 9
+Vida Atual = 7
+Vida Maxima = 8
+
+Damage (ID: dc322cd7-9473-42a5-846f-3549adda2abd)
+Custo de Mana = 6
+Dano = 5
+
+Damage (ID: 2cca4bb4-255e-40d1-bbb2-1f13613f8080)
+Custo de Mana = 4
+Dano = 3
+Dano aplicado em area
+
+Buff (ID: 5b4fbf3b-e639-48fd-b5f6-c66b0342cc32)
+Custo de Mana = 2
+Buff Vida = 0
+Buff Ataque  = 1
