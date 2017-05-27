@@ -84,7 +84,7 @@ public class Minion extends Card implements LaMaSerializable {
 
 	@Override
 	public void readAttributes(Reader reader) {
-		readBasicData(reader);
+		super.readAttributes(reader);
 		this.attack = new Integer(reader.nextAttribute());
 		this.ability = MinionAbility.valueOf(reader.nextAttribute());
 		this.totalHealth = new Integer(reader.nextAttribute());
@@ -93,7 +93,7 @@ public class Minion extends Card implements LaMaSerializable {
 
 	@Override
 	public void writeAttributes(Writer writer) throws IOException {
-		writeBasicData(writer, this.getClass().getSimpleName());
+		super.writeAttributes(writer);
 		writer.writeAttribute("attack", String.valueOf(attack));
 		writer.writeAttribute("ability", ability.name());
 		writer.writeAttribute("totalHealth", String.valueOf(totalHealth));

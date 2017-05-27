@@ -1,5 +1,5 @@
 obj Minion
-id df22be5a-ef44-4aa4-92f7-4d2679a89e49
+id d17b7001-503d-4e84-865f-037d5dec5a70
 mana 10
 name Minion
 attack 9
@@ -7,17 +7,17 @@ ability EXHAUSTION
 totalHealth 8
 currentHealth 7
 obj Damage
-id 51e061f4-58b4-47c1-b2bc-310b57ee9c52
+id 16152685-c0db-429d-9797-fd6f987fa400
 mana 6
 name Damage
 damage 5
 obj DamageArea
-id 47a38af0-7ef3-42b4-8700-c473500219bb
+id 7d1f8785-cee6-4426-930d-40dd79a7359b
 mana 4
 name Damage area
 damage 3
 obj Buff
-id 0334a048-b820-4892-97b1-ed10ed6d55fb
+id f26e6418-e30a-4a59-9600-a455cf37f9c7
 mana 2
 name Buff
 attackBuff 1

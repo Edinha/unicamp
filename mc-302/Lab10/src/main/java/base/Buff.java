@@ -60,14 +60,14 @@ public class Buff extends Magic implements LaMaSerializable {
 
 	@Override
 	public void readAttributes(Reader reader) {
-		readBasicData(reader);
+		super.readAttributes(reader);
 		this.attackBuff = new Integer(reader.nextAttribute());
 		this.healthBuff = new Integer(reader.nextAttribute());
 	}
 
 	@Override
 	public void writeAttributes(Writer writer) throws IOException {
-		writeBasicData(writer, this.getClass().getSimpleName());
+		super.writeAttributes(writer);
 		writer.writeAttribute("attackBuff", String.valueOf(attackBuff));
 		writer.writeAttribute("healthBuff", String.valueOf(healthBuff));
 	}

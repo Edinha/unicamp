@@ -6,22 +6,22 @@ import java.util.UUID;
 import io.Reader;
 import io.Writer;
 
-public abstract class Card {
+public abstract class Card implements LaMaSerializable {
 	private UUID id;
 	private String name;
 	private int manaCost;
 
-	public Card() {
+	Card() {
 		// Reading from file constructor
 	}
 
-	public Card(UUID id, String name, int manaCost) {
+	Card(UUID id, String name, int manaCost) {
 		this.id = id;
 		this.name = name;
 		this.manaCost = manaCost;
 	}
 
-	public Card(String name, int manaCost) {
+	Card(String name, int manaCost) {
 		this(UUID.randomUUID(), name, manaCost);
 	}
 
@@ -49,17 +49,19 @@ public abstract class Card {
 		this.manaCost = manaCost;
 	}
 
-	void readBasicData(Reader reader) {
-		this.id = UUID.fromString(reader.nextAttribute());
-		this.manaCost = new Integer(reader.nextAttribute());
-		this.name = reader.nextAttribute();
-	}
-
-	void writeBasicData(Writer writer, String subClassName) throws IOException {
-		writer.writeDelimiter(subClassName);
+	@Override
+	public void writeAttributes(Writer writer) throws IOException {
+		writer.writeDelimiter(this.getClass().getSimpleName());
 		writer.writeAttribute("id", id.toString());
 		writer.writeAttribute("mana", String.valueOf(manaCost));
 		writer.writeAttribute("name", name);
+	}
+
+	@Override
+	public void readAttributes(Reader reader) {
+		this.id = UUID.fromString(reader.nextAttribute());
+		this.manaCost = new Integer(reader.nextAttribute());
+		this.name = reader.nextAttribute();
 	}
 
 	@Override
