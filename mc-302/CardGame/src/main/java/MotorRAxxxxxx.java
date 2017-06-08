@@ -180,7 +180,7 @@ public class MotorRAxxxxxx extends Motor {
 	protected void processarJogada(Jogada umaJogada) throws LamaException {
 		switch(umaJogada.getTipo()){
 		case ATAQUE:
-			// TODO: Um ataque foi realizado... quem atacou? quem foi atacado? qual o dano? o alvo morreu ou ficou com quanto de vida? Trate o caso do herói como alvo também.		
+			// TODO: Um ataque foi realizado... quem atacou? quem foi atacado? qual o dano? o alvo sofreuFatalidade ou ficou com quanto de vida? Trate o caso do herói como alvo também.
 			break;
 		case LACAIO:
 			int lacaioID = umaJogada.getCartaJogada().getID();
