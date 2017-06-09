@@ -5,6 +5,7 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @SuppressWarnings("unchecked")
 public class MotorRA188671 extends Motor {
@@ -21,6 +22,8 @@ public class MotorRA188671 extends Motor {
 		imprimir("ATAQUE_DUPLO: " + (this.funcionalidadesAtivas.contains(Funcionalidade.ATAQUE_DUPLO) ? "SIM" : "NAO"));
 		imprimir("PROVOCAR: " + (this.funcionalidadesAtivas.contains(Funcionalidade.PROVOCAR) ? "SIM" : "NAO"));
 		imprimir("========================");
+
+
 	}
 
 	private int jogador; // 1 == turno do jogador1, 2 == turno do jogador2.
@@ -69,6 +72,9 @@ public class MotorRA188671 extends Motor {
 
 			JogadorInfo primeiroJogador = new JogadorInfo(1, vidaHeroi1, maoJogador1, baralho1, lacaiosMesa1, mesa.getManaJog1(), jogador1);
 			JogadorInfo segundoJogador = new JogadorInfo(2, vidaHeroi2, maoJogador2, baralho2, lacaiosMesa2, mesa.getManaJog2(), jogador2);
+
+			primeiroJogador.comecarTurno();
+			segundoJogador.comecarTurno();
 
 			imprimir("\n----------------------- Começo de turno para Jogador 1:");
 			boolean danoFatalProprioTUrno = realizarJogadaTurno(primeiroJogador);
@@ -259,7 +265,7 @@ public class MotorRA188671 extends Motor {
 	}
 
 	protected void processarJogada(Jogada umaJogada) throws LamaException {
-		MAP.get(umaJogada.getTipo()).processar(umaJogada, atacante, defensor);
+		JOGADA_MAPA.get(umaJogada.getTipo()).processar(umaJogada, atacante, defensor);
 
 //		switch (umaJogada.getTipo()) {
 //			case ATAQUE:
@@ -336,6 +342,9 @@ public class MotorRA188671 extends Motor {
 		private Jogador referencia;
 		private Integer numeroJogador;
 
+		private Set<Integer> lacaiosUsadosTurno = new HashSet<>();
+		private Set<Integer> cartasBaixadasTurno = new HashSet<>();
+
 		JogadorInfo(Integer jogador, Integer vida, List<Carta> mao, Baralho baralho, List<Carta> lacaiosMesa, Integer mana, Jogador referencia) {
 			this.vida = vida;
 			this.mana = mana;
@@ -350,6 +359,11 @@ public class MotorRA188671 extends Motor {
 			this.numeroJogador = jogador;
 		}
 
+		void comecarTurno() {
+			this.lacaiosUsadosTurno.clear();
+			this.cartasBaixadasTurno.clear();
+		}
+
 		void fadiga() {
 			this.vida -= this.danoFadiga++;
 			imprimir("Fadiga: O " + getName() + " recebeu dano por falta de cartas. (Vida atual: " + this.vida + ")");
@@ -357,6 +371,8 @@ public class MotorRA188671 extends Motor {
 
 		void baixarCarta(Carta carta) {
 			this.mana -= carta.getMana();
+			this.mao.remove(carta);
+			this.cartasBaixadasTurno.add(carta.getID());
 		}
 
 		boolean temManaSuficiente(Carta carta) {
@@ -370,6 +386,10 @@ public class MotorRA188671 extends Motor {
 		String getName() {
 			return "Heroi " + numeroJogador;
 		}
+
+		void ataqueDireto(CartaLacaio cartaAlvo) {
+			this.vida -= cartaAlvo.getAtaque();
+		}
 	}
 
 	private interface Processavel {
@@ -379,23 +399,49 @@ public class MotorRA188671 extends Motor {
 	private static class AtaqueJogada implements Processavel {
 		@Override
 		public void processar(Jogada jogada, JogadorInfo atacante, JogadorInfo defensor) throws LamaException {
-			final List<Carta> lacaiosMesa = atacante.lacaiosMesa;
+			final Carta cartaAlvo = jogada.getCartaAlvo();
 			final Carta cartaJogada = jogada.getCartaJogada();
+			final List<Carta> lacaiosAtacanteMesa = atacante.lacaiosMesa;
 
-			int id = cartaJogada.getID();
-			if (!lacaiosMesa.contains(cartaJogada)) {
-				String mensagemErro = "Tentativa de atacar com lacaio (id: " + id +
-						"), porém essa carta não está no campo do jogador. IDS Cartas da mesa: " +
-						lacaiosMesa.toString();
-
+			final Integer id = cartaJogada.getID();
+			if (!lacaiosAtacanteMesa.contains(cartaJogada)) {
+				String mensagemErro = "Tentativa de atacar com lacaio (id: " + id + "), porém essa carta não está no campo do jogador. IDS Cartas da mesa: " + lacaiosAtacanteMesa.toString();
 				throw new LamaException(5, jogada, mensagemErro, defensor.numeroJogador);
 			}
 
-			Carta cartaAlvo = jogada.getCartaAlvo();
+			if (atacante.cartasBaixadasTurno.contains(id)) {
+				String mensagemErro = "Tentativa de atacar com lacaio (id: " + id + ") que foi baixado no mesmo turno";
+				throw new LamaException(6, jogada, mensagemErro, defensor.numeroJogador);
+			}
 
-//			Carta lacaioBaixado = lacaiosMesa.get(lacaiosMesa.indexOf(cartaJogada));
-//			atacante.lacaiosMesa.add(lacaioBaixado);
-//			lacaiosMesa.remove(cartaJogada);
+			if (atacante.lacaiosUsadosTurno.contains(id)) {
+				String mensagemErro = "Tentativa de atacar com lacaio (id: " + id + ") duas vezes no mesmo turno";
+				throw new LamaException(7, jogada, mensagemErro, defensor.numeroJogador);
+			}
+
+			if (!defensor.lacaiosMesa.contains(cartaAlvo)) {
+				String mensagemErro = "Tentativa de atacar com lacaio (id: " + id + "), porém a carta alvo não está no campo do jogador inimigo (alvo_id: " + cartaAlvo.getID() + ")";
+				throw new LamaException(8, jogada, mensagemErro, defensor.numeroJogador);
+			}
+
+			atacante.lacaiosUsadosTurno.add(id);
+			if (cartaAlvo == null) {
+				defensor.ataqueDireto((CartaLacaio) cartaJogada);
+				return;
+			}
+
+			final CartaLacaio lacaioAtacante = (CartaLacaio) atacante.lacaiosMesa.get(atacante.lacaiosMesa.indexOf(cartaJogada));
+			final CartaLacaio lacaioDefensor = (CartaLacaio) defensor.lacaiosMesa.get(defensor.lacaiosMesa.indexOf(cartaAlvo));
+
+			lacaioAtacante.setVidaAtual(lacaioAtacante.getVidaAtual() - lacaioDefensor.getVidaAtual());
+			lacaioDefensor.setVidaAtual(lacaioDefensor.getVidaAtual() - lacaioAtacante.getVidaAtual());
+			if (lacaioAtacante.getVidaAtual() <= 0) {
+				atacante.lacaiosMesa.remove(lacaioAtacante);
+			}
+
+			if (lacaioDefensor.getVidaAtual() <= 0) {
+				defensor.lacaiosMesa.remove(lacaioDefensor);
+			}
 		}
 	}
 
@@ -415,14 +461,15 @@ public class MotorRA188671 extends Motor {
 			}
 
 			Carta lacaioBaixado = mao.get(mao.indexOf(cartaJogada));
+			atacante.baixarCarta(lacaioBaixado);
 			atacante.lacaiosMesa.add(lacaioBaixado);
-			mao.remove(cartaJogada);
 		}
 	}
 
-	private static final Map<TipoJogada, Processavel> MAP = new EnumMap<>(TipoJogada.class);
+	private static final Map<TipoJogada, Processavel> JOGADA_MAPA = new EnumMap<>(TipoJogada.class);
 	static {
-		MAP.put(TipoJogada.ATAQUE, new AtaqueJogada());
-		MAP.put(TipoJogada.LACAIO, new LacaioJogada());
+		JOGADA_MAPA.put(TipoJogada.LACAIO, new LacaioJogada());
+		JOGADA_MAPA.put(TipoJogada.ATAQUE, new AtaqueJogada());
 	}
+
 }
