@@ -169,9 +169,9 @@ public class Main {
 				// O Motor é construído
 				Motor partida;
 				if(moeda)
-					partida = new MotorRAxxxxxx(deck1, deck2, Mao1, Mao2, jogA, jogB, verbosidade, tempoLimite, saidaArquivo, funcionalidades);
+					partida = new MotorRA188671(deck1, deck2, Mao1, Mao2, jogA, jogB, verbosidade, tempoLimite, saidaArquivo, funcionalidades);
 				else
-					partida = new MotorRAxxxxxx(deck2, deck1, Mao2, Mao1, jogB, jogA, verbosidade, tempoLimite, saidaArquivo, funcionalidades);
+					partida = new MotorRA188671(deck2, deck1, Mao2, Mao1, jogB, jogA, verbosidade, tempoLimite, saidaArquivo, funcionalidades);
 				
 				// A partida é executada
 				int vencedor;
