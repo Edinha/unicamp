@@ -88,7 +88,7 @@ public class Main {
 		Jogador jogB = new JogadorAleatorioFuncionalidades(mao2clone, false, funcionalidades);
 		
 		// O Motor é construído
-		Motor partida = new MotorRAxxxxxx(baralho1, baralho2, Mao1, Mao2, jogA, jogB, verbosidade, tempoLimite, saidaArquivo, funcionalidades);
+		Motor partida = new MotorRA188671(baralho1, baralho2, Mao1, Mao2, jogA, jogB, verbosidade, tempoLimite, saidaArquivo, funcionalidades);
 		
 		// Verifica o vencedor da partida
 		// A partida é executada

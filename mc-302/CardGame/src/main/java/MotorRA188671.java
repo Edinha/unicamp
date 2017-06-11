@@ -1,6 +1,7 @@
 import java.io.PrintWriter;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -35,11 +36,16 @@ public class MotorRA188671 extends Motor {
 	private JogadorInfo defensor;
 
 	private static final Map<TipoJogada, Processavel> JOGADA_MAPA = new EnumMap<>(TipoJogada.class);
+	private static final Map<TipoMagia, Processavel> MAGIA_JOGADA_MAPA = new EnumMap<>(TipoMagia.class);
 	static {
 		JOGADA_MAPA.put(TipoJogada.MAGIA, new MagiaJogada());
 		JOGADA_MAPA.put(TipoJogada.LACAIO, new LacaioJogada());
 		JOGADA_MAPA.put(TipoJogada.ATAQUE, new AtaqueJogada());
 		JOGADA_MAPA.put(TipoJogada.PODER, new PoderHeroicoJogada());
+
+		MAGIA_JOGADA_MAPA.put(TipoMagia.ALVO, null);
+		MAGIA_JOGADA_MAPA.put(TipoMagia.BUFF, new BuffJogada());
+		MAGIA_JOGADA_MAPA.put(TipoMagia.AREA, null);
 	}
 
 	@Override
@@ -54,14 +60,18 @@ public class MotorRA188671 extends Motor {
 			imprimir("\n=== TURNO " + turno + " ===\n");
 
 			// Atualiza lacaiosMesa (com cópia profunda)
-			JogadorInfo primeiroJogador = new JogadorInfo(1, vidaHeroi1, maoJogador1, baralho1, lacaiosMesa1, mesa.getManaJog1(), jogador1);
-			JogadorInfo segundoJogador = new JogadorInfo(2, vidaHeroi2, maoJogador2, baralho2, lacaiosMesa2, mesa.getManaJog2(), jogador2);
+
+			manaJogador1 = turno > 10 ? 10 : turno;
+			manaJogador2 = turno > 10 ? 10 : (turno == 1 ? 2 : turno);
+
+			JogadorInfo primeiroJogador = new JogadorInfo(1, vidaHeroi1, maoJogador1, baralho1, lacaiosMesa1, manaJogador1, jogador1);
+			JogadorInfo segundoJogador = new JogadorInfo(2, vidaHeroi2, maoJogador2, baralho2, lacaiosMesa2, manaJogador2, jogador2);
 
 			ArrayList<CartaLacaio> lacaios1clone = (ArrayList<CartaLacaio>) UnoptimizedDeepCopy.copy(primeiroJogador.lacaiosMesa);
 			ArrayList<CartaLacaio> lacaios2clone = (ArrayList<CartaLacaio>) UnoptimizedDeepCopy.copy(segundoJogador.lacaiosMesa);
 
 			mesa = new Mesa(lacaios1clone, lacaios2clone, primeiroJogador.vida, segundoJogador.vida, primeiroJogador.mao.size() + 1,
-				segundoJogador.mao.size(), turno > 10 ? 10 : turno, turno > 10 ? 10 : (turno == 1 ? 2 : turno));
+					segundoJogador.mao.size(), primeiroJogador.mana, segundoJogador.mana);
 
 			primeiroJogador.comecarTurno();
 			segundoJogador.comecarTurno();
@@ -89,7 +99,7 @@ public class MotorRA188671 extends Motor {
 			lacaios2clone = (ArrayList<CartaLacaio>) UnoptimizedDeepCopy.copy(segundoJogador.lacaiosMesa);
 
 			mesa = new Mesa(lacaios1clone, lacaios2clone, primeiroJogador.vida, segundoJogador.vida, primeiroJogador.mao.size() + 1,
-					segundoJogador.mao.size(), turno > 10 ? 10 : turno, turno > 10 ? 10 : (turno == 1 ? 2 : turno));
+					segundoJogador.mao.size(), primeiroJogador.mana, segundoJogador.mana);
 
 			imprimir("\n----------------------- Começo de turno para Jogador 2:");
 			danoFatalProprioTurno = realizarJogadaTurno(segundoJogador);
@@ -177,8 +187,7 @@ public class MotorRA188671 extends Motor {
 	}
 
 	protected void processarJogada(Jogada umaJogada) throws LamaException {
-		String mensagem = JOGADA_MAPA.get(umaJogada.getTipo()).processar(umaJogada, atacante, defensor);
-		imprimir(mensagem);
+		imprimir(JOGADA_MAPA.get(umaJogada.getTipo()).processar(umaJogada, atacante, defensor));
 	}
 
 	private class JogadorInfo {
@@ -273,6 +282,15 @@ public class MotorRA188671 extends Motor {
 
 	private interface Processavel {
 		String processar(Jogada jogada, JogadorInfo atacante, JogadorInfo defensor) throws LamaException;
+
+		default void manaInsuficiente(Jogada jogada, JogadorInfo atacante, JogadorInfo defensor) throws LamaException {
+			if (!atacante.temManaSuficiente(jogada.getCartaJogada())) {
+				String mensagem = format("Mana insuficiente para jogada de {0} (mana necessária: 2, mana atual: {1})",
+						jogada.getTipo().name(),
+						atacante.mana.toString());
+				throw new LamaException(2, jogada, mensagem, defensor.numeroJogador);
+			}
+		}
 	}
 
 	private static class AtaqueJogada implements Processavel {
@@ -289,7 +307,7 @@ public class MotorRA188671 extends Motor {
 			if (!atacanteOptional.isPresent()) {
 				String mensagemErro = format("Tentativa de atacar com lacaio (id: {0}), porém essa carta não está no campo do jogador. IDS Cartas da mesa: {1}",
 					id.toString(),
-					atacante.lacaiosMesa.toString());
+					ids(atacante.lacaiosMesa));
 				
 				throw new LamaException(5, jogada, mensagemErro, defensor.numeroJogador);
 			}
@@ -334,14 +352,16 @@ public class MotorRA188671 extends Motor {
 	private static class LacaioJogada implements Processavel {
 		@Override
 		public String processar(Jogada jogada, JogadorInfo atacante, JogadorInfo defensor) throws LamaException {
+
+			manaInsuficiente(jogada, atacante, defensor);
+
 			final Carta cartaJogada = jogada.getCartaJogada();
 			final Optional<Carta> cartaOptional = atacante.mao.stream().filter(carta -> carta.equals(cartaJogada)).findFirst();
-
 			if (!cartaOptional.isPresent()) {
 				String mensagemErro = format(
 					"Tentativa de usar carta (id: {0}), porém essa carta não existe na mão do jogador. IDS Cartas da mão: {1}",
 					cartaJogada.getID() + "",
-					atacante.mao.toString());
+					ids(atacante.mao));
 
 				throw new LamaException(1, jogada, mensagemErro, defensor.numeroJogador);
 			}
@@ -363,7 +383,7 @@ public class MotorRA188671 extends Motor {
 
 			atacante.usarPoderHeroico();
 			if (!atacante.temManaSuficientePoderHeroico()) {
-				String mensagem = format("Mana insuficiente para jogada de {0} (mana necessaria: 2, mana atual: {1})",
+				String mensagem = format("Mana insuficiente para jogada de {0} (mana necessária: 2, mana atual: {1})",
 					jogada.getTipo().name(),
 					atacante.mana.toString());
 				throw new LamaException(2, jogada, mensagem, defensor.numeroJogador);
@@ -394,12 +414,59 @@ public class MotorRA188671 extends Motor {
 	private static class MagiaJogada implements Processavel {
 		@Override
 		public String processar(Jogada jogada, JogadorInfo atacante, JogadorInfo defensor) throws LamaException {
-			// TODO this....
-			return "";
+
+			manaInsuficiente(jogada, atacante, defensor);
+
+			final Carta cartaJogada = jogada.getCartaJogada();
+			final Optional<Carta> cartaOptional = atacante.mao.stream().filter(carta -> carta.equals(cartaJogada)).findFirst();
+			if (!cartaOptional.isPresent()) {
+				String mensagemErro = format(
+						"Tentativa de usar carta (id: {0}), porém essa carta não existe na mão do jogador. IDS Cartas da mão: {1}",
+						cartaJogada.getID() + "",
+						ids(atacante.mao));
+
+				throw new LamaException(1, jogada, mensagemErro, defensor.numeroJogador);
+			}
+
+			if (cartaJogada instanceof CartaLacaio) {
+				String mensagem = format("Tentativa de utilizar a carta lacaio {0} (id: {1}) como uma magia",
+					cartaJogada.getNome(),
+					cartaJogada.getID());
+				throw new LamaException(9, jogada, mensagem, defensor.numeroJogador);
+			}
+
+			final CartaMagia magia = (CartaMagia) cartaJogada;
+			return MAGIA_JOGADA_MAPA.get(magia.getMagiaTipo()).processar(jogada, atacante, defensor);
+		}
+	}
+
+	private static class BuffJogada implements Processavel {
+		@Override
+		public String processar(Jogada jogada, JogadorInfo atacante, JogadorInfo defensor) throws LamaException {
+			final Carta alvo = jogada.getCartaAlvo();
+			final CartaMagia buff = (CartaMagia) jogada.getCartaJogada();
+
+			Optional<CartaLacaio> alvoOptional = atacante.lacaiosMesa.stream().filter(l -> l.equals(alvo)).findFirst();
+			if (!alvoOptional.isPresent()) {
+				String mensagem = format("Tentativa de utilizar magia de buff (id: {0}) em uma carta inexistente (id: {1})",
+						buff.getID(),
+						alvo.getID());
+				throw new LamaException(10, jogada, mensagem, defensor.numeroJogador);
+			}
+
+			final CartaLacaio lacaio = alvoOptional.get();
+			lacaio.setAtaque(lacaio.getAtaque() + buff.getMagiaDano());
+			lacaio.setVidaAtual(lacaio.getVidaAtual() + buff.getMagiaDano());
+
+			return format("{0} buffou o lacaio (id: {1}) com a carta {2}", atacante.getNome(), lacaio.getID(), buff.getNome());
 		}
 	}
 
 	private static String format(String message, Object... arguments) {
 		return MessageFormat.format(message, arguments);
+	}
+
+	private static <T extends Carta> String ids(Collection<T> cartas) {
+		return cartas.stream().map(Carta::getID).collect(Collectors.toList()).toString();
 	}
 }
