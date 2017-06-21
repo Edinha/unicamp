@@ -4,12 +4,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+/**
+ * Trabalho 2
+ *
+ * RA  : 188671
+ * Nome: William Gonçalves da Cruz
+ *
+ */
 
 @SuppressWarnings("unchecked")
 public class MotorRA188671 extends Motor {
@@ -26,7 +35,11 @@ public class MotorRA188671 extends Motor {
 		imprimir("ATAQUE_DUPLO: " + (this.funcionalidadesAtivas.contains(Funcionalidade.ATAQUE_DUPLO) ? "SIM" : "NAO"));
 		imprimir("PROVOCAR: " + (this.funcionalidadesAtivas.contains(Funcionalidade.PROVOCAR) ? "SIM" : "NAO"));
 		imprimir("========================");
+
+		FUNCIONALIDADES.addAll(this.funcionalidadesAtivas);
 	}
+
+	private static final Set<Funcionalidade> FUNCIONALIDADES = new HashSet<>();
 
 	private Mesa mesa;
 
@@ -43,9 +56,9 @@ public class MotorRA188671 extends Motor {
 		JOGADA_MAPA.put(TipoJogada.ATAQUE, new AtaqueJogada());
 		JOGADA_MAPA.put(TipoJogada.PODER, new PoderHeroicoJogada());
 
-		MAGIA_JOGADA_MAPA.put(TipoMagia.ALVO, null);
 		MAGIA_JOGADA_MAPA.put(TipoMagia.BUFF, new BuffJogada());
-		MAGIA_JOGADA_MAPA.put(TipoMagia.AREA, null);
+		MAGIA_JOGADA_MAPA.put(TipoMagia.ALVO, new MagiaAlvoJogada());
+		MAGIA_JOGADA_MAPA.put(TipoMagia.AREA, new MagiaAreaJogada());
 	}
 
 	@Override
@@ -56,16 +69,14 @@ public class MotorRA188671 extends Motor {
 
 		Integer turno = 1;
 
+		JogadorInfo primeiroJogador = new JogadorInfo(1, vidaHeroi1, maoJogador1, baralho1, lacaiosMesa1, manaJogador1, jogador1);
+		JogadorInfo segundoJogador = new JogadorInfo(2, vidaHeroi2, maoJogador2, baralho2, lacaiosMesa2, manaJogador2, jogador2);
+
 		for (int k = 0; k < 60; k++) {
 			imprimir("\n=== TURNO " + turno + " ===\n");
 
-			// Atualiza lacaiosMesa (com cópia profunda)
-
-			manaJogador1 = turno > 10 ? 10 : turno;
-			manaJogador2 = turno > 10 ? 10 : (turno == 1 ? 2 : turno);
-
-			JogadorInfo primeiroJogador = new JogadorInfo(1, vidaHeroi1, maoJogador1, baralho1, lacaiosMesa1, manaJogador1, jogador1);
-			JogadorInfo segundoJogador = new JogadorInfo(2, vidaHeroi2, maoJogador2, baralho2, lacaiosMesa2, manaJogador2, jogador2);
+			primeiroJogador.atualizarMana(turno > 10 ? 10 : turno);
+			segundoJogador.atualizarMana(turno > 10 ? 10 : (turno == 1 ? 2 : turno));
 
 			ArrayList<CartaLacaio> lacaios1clone = (ArrayList<CartaLacaio>) UnoptimizedDeepCopy.copy(primeiroJogador.lacaiosMesa);
 			ArrayList<CartaLacaio> lacaios2clone = (ArrayList<CartaLacaio>) UnoptimizedDeepCopy.copy(segundoJogador.lacaiosMesa);
@@ -89,6 +100,8 @@ public class MotorRA188671 extends Motor {
 			for (Jogada jogada : movimentos) {
 				this.processarJogada(jogada);
 			}
+
+			detalhesJogadores();
 
 			Integer vencedorAposTurno = vencedorAposTurno();
 			if (vencedorAposTurno != 0) {
@@ -115,6 +128,8 @@ public class MotorRA188671 extends Motor {
 				this.processarJogada(jogada);
 			}
 
+			detalhesJogadores();
+
 			vencedorAposTurno = vencedorAposTurno();
 			if (vencedorAposTurno != 0) {
 				return vencedorAposTurno;
@@ -126,6 +141,13 @@ public class MotorRA188671 extends Motor {
 		// Nunca vai chegar aqui dependendo do número de rodadas
 		imprimir("Erro: A partida não pode ser determinada em mais de 60 rounds. Provavel BUG.");
 		throw new LamaException(-1, null, "Erro desconhecido. Mais de 60 turnos sem termino do jogo.", 0);
+	}
+
+	/**
+	 * Imprime os detalhes de vida dos jogadores após um turno de jogadas completo
+	 */
+	private void detalhesJogadores() {
+		imprimir(format("Vida {0}: {1} \nVida {2}: {3}", atacante.getNome(), atacante.vida, defensor.getNome(), defensor.vida));
 	}
 
 	/**
@@ -187,7 +209,10 @@ public class MotorRA188671 extends Motor {
 	}
 
 	protected void processarJogada(Jogada umaJogada) throws LamaException {
-		imprimir(JOGADA_MAPA.get(umaJogada.getTipo()).processar(umaJogada, atacante, defensor));
+		String mensagem = JOGADA_MAPA.get(umaJogada.getTipo()).processar(umaJogada, atacante, defensor);
+		atacante.removerLacaiosDestruidos();
+		defensor.removerLacaiosDestruidos();
+		imprimir(mensagem);
 	}
 
 	private class JogadorInfo {
@@ -204,8 +229,8 @@ public class MotorRA188671 extends Motor {
 		private Jogador referencia;
 		private Integer numeroJogador;
 
-		private Set<Integer> lacaiosUsadosTurno = new HashSet<>();
 		private Set<Integer> cartasBaixadasTurno = new HashSet<>();
+		private Map<Integer, Integer> contagemAtaqueLacaios = new HashMap<>();
 
 		private boolean poderHeroicoUtilizado;
 
@@ -227,8 +252,8 @@ public class MotorRA188671 extends Motor {
 
 		void comecarTurno() {
 			this.poderHeroicoUtilizado = false;
-			this.lacaiosUsadosTurno.clear();
 			this.cartasBaixadasTurno.clear();
+			this.contagemAtaqueLacaios.clear();
 		}
 
 		void fadiga() {
@@ -239,8 +264,15 @@ public class MotorRA188671 extends Motor {
 		void baixarCarta(Carta carta) {
 			this.mana -= carta.getMana();
 			this.mao.remove(carta);
+
+			CartaLacaio lacaio = (CartaLacaio) carta;
+			this.lacaiosMesa.add(lacaio);
+
+			if (temInvestida() && TipoEfeito.INVESTIDA.equals(lacaio.getEfeito())) {
+				return;
+			}
+
 			this.cartasBaixadasTurno.add(carta.getID());
-			this.lacaiosMesa.add((CartaLacaio) carta);
 		}
 
 		boolean temManaSuficientePoderHeroico() {
@@ -256,7 +288,11 @@ public class MotorRA188671 extends Motor {
 		}
 
 		String getNome() {
-			return "Heroi " + numeroJogador;
+			return "Jogador " + numeroJogador;
+		}
+
+		void atualizarMana(Integer mana) {
+			this.mana = mana;
 		}
 
 		void ataqueDireto(CartaLacaio cartaAlvo) {
@@ -267,16 +303,20 @@ public class MotorRA188671 extends Motor {
 			this.vida--;
 		}
 
-		void sofrerDanoLacaio(CartaLacaio lacaio) {
-			this.vida -= lacaio.getAtaque();
-		}
-
 		void removerLacaiosDestruidos() {
 			this.lacaiosMesa = lacaiosMesa.stream().filter(l -> l.getVidaAtual() > 0).collect(Collectors.toList());
 		}
 
 		void usarPoderHeroico() {
 			this.poderHeroicoUtilizado = true;
+		}
+
+		void sofrerDanoLacaio(CartaLacaio lacaio) {
+			this.vida -= lacaio.getAtaque();
+		}
+
+		void sofrerDanoMagia(CartaMagia magia) {
+			this.vida -= magia.getMagiaDano();
 		}
 	}
 
@@ -308,7 +348,7 @@ public class MotorRA188671 extends Motor {
 				String mensagemErro = format("Tentativa de atacar com lacaio (id: {0}), porém essa carta não está no campo do jogador. IDS Cartas da mesa: {1}",
 					id.toString(),
 					ids(atacante.lacaiosMesa));
-				
+
 				throw new LamaException(5, jogada, mensagemErro, defensor.numeroJogador);
 			}
 
@@ -317,35 +357,50 @@ public class MotorRA188671 extends Motor {
 				throw new LamaException(6, jogada, mensagemErro, defensor.numeroJogador);
 			}
 
-			if (atacante.lacaiosUsadosTurno.contains(id)) {
-				String mensagemErro = format("Tentativa de atacar com lacaio (id: {0}) duas vezes no mesmo turno", id.toString());
-				throw new LamaException(7, jogada, mensagemErro, defensor.numeroJogador);
+			Integer maximoAtaquesTurno = getMaximoAtaquesTurno();
+			Integer contagem = atacante.contagemAtaqueLacaios.getOrDefault(id, 0);
+
+			if (contagem >= maximoAtaquesTurno) {
+				String mensagemErro = format("Número máximo de ataque excedido para o lacaio (id: {0})", id.toString());
+				throw new LamaException(8, jogada, mensagemErro, defensor.numeroJogador);
 			}
 
-			atacante.lacaiosUsadosTurno.add(id);
+			atacante.contagemAtaqueLacaios.put(id, contagem + 1);
 			if (cartaAlvo == null) {
 				defensor.ataqueDireto((CartaLacaio) cartaJogada);
 				return format("{0} atacou diretamente o herói inimigo com lacaio {1}", atacante.getNome(), cartaJogada.getNome());
 			}
 
 			if (!defensorOptional.isPresent()) {
-				String mensagemErro = "Tentativa de atacar com lacaio (id: " +
-					id +
-					"), porém a carta alvo não está no campo do jogador inimigo (alvo_id: " +
-					cartaAlvo.getID() +
-					")";
+				String mensagemErro = format(
+					"Tentativa de atacar com lacaio (id: {0}), porém a carta alvo não está no campo do jogador inimigo (alvo_id: {1})",
+					id.toString(),
+					cartaAlvo.getID() + "");
+
 				throw new LamaException(8, jogada, mensagemErro, defensor.numeroJogador);
 			}
 
 			final CartaLacaio lacaioAtacante = atacanteOptional.get();
 			final CartaLacaio lacaioDefensor = defensorOptional.get();
+
+			final List<Integer> provocativos = defensor.lacaiosMesa.stream()
+					.filter(l -> TipoEfeito.PROVOCAR.equals(l.getEfeito()))
+					.map(Carta::getID)
+					.collect(Collectors.toList());
+
+			if (temProvocar() && !provocativos.isEmpty() && !provocativos.contains(lacaioDefensor.getID())) {
+				String mensagemErro = format(
+					"Ataque a um lacaio quando existe um outro com provocar no campo. Alvo {0}, Lacaios com provocar: {1}",
+					lacaioDefensor.getID() + "",
+					provocativos);
+
+				throw new LamaException(13, jogada, mensagemErro, defensor.numeroJogador);
+			}
+
 			lacaioAtacante.setVidaAtual(lacaioAtacante.getVidaAtual() - lacaioDefensor.getVidaAtual());
 			lacaioDefensor.setVidaAtual(lacaioDefensor.getVidaAtual() - lacaioAtacante.getVidaAtual());
 
-			atacante.removerLacaiosDestruidos();
-			defensor.removerLacaiosDestruidos();
-
-			return format("{0} aatacou lacaio inimigo {1} com seu lacaio {2}", atacante.getNome(), cartaJogada.getNome(), cartaAlvo.getNome());
+			return format("{0} atacou lacaio inimigo {1} com seu lacaio {2}", atacante.getNome(), cartaJogada.getNome(), cartaAlvo.getNome());
 		}
 	}
 
@@ -405,8 +460,6 @@ public class MotorRA188671 extends Motor {
 			defensor.sofrerDanoLacaio(lacaio);
 			lacaio.setVidaAtual(lacaio.getVidaAtual() - 1);
 
-			defensor.removerLacaiosDestruidos();
-
 			return format("{0} usou poder heróico no lacaio inimigo {1}", atacante.getNome(), cartaAlvo.getNome());
 		}
 	}
@@ -460,6 +513,48 @@ public class MotorRA188671 extends Motor {
 
 			return format("{0} buffou o lacaio (id: {1}) com a carta {2}", atacante.getNome(), lacaio.getID(), buff.getNome());
 		}
+	}
+
+	private static class MagiaAlvoJogada implements Processavel {
+		@Override
+		public String processar(Jogada jogada, JogadorInfo atacante, JogadorInfo defensor) throws LamaException {
+			final Carta alvo = jogada.getCartaAlvo();
+			final CartaMagia magia = (CartaMagia) jogada.getCartaJogada();
+
+			Optional<CartaLacaio> alvoOptional = defensor.lacaiosMesa.stream().filter(l -> l.equals(alvo)).findFirst();
+			if (!alvoOptional.isPresent()) {
+				defensor.sofrerDanoMagia(magia);
+				return format("{0} atacou o herói inimigo com a carta {1}", atacante.getNome(), magia.getNome());
+			}
+
+			final CartaLacaio lacaio = alvoOptional.get();
+			lacaio.setVidaAtual(lacaio.getVidaAtual() - magia.getMagiaDano());
+
+			return format("{0} atacou o lacaio (id: {1}) com a carta {2}", atacante.getNome(), lacaio.getID(), magia.getNome());
+		}
+	}
+
+	private static class MagiaAreaJogada implements Processavel {
+		@Override
+		public String processar(Jogada jogada, JogadorInfo atacante, JogadorInfo defensor) throws LamaException {
+			final CartaMagia magia = (CartaMagia) jogada.getCartaJogada();
+
+			defensor.lacaiosMesa.forEach(lacaio -> lacaio.setVidaAtual(lacaio.getVidaAtual() - magia.getMagiaDano()));
+
+			return format("{0} usou a magia em área {1}", atacante.getNome(), magia.getNome());
+		}
+	}
+
+	private static boolean temInvestida() {
+		return FUNCIONALIDADES.contains(Funcionalidade.INVESTIDA);
+	}
+
+	private static boolean temProvocar() {
+		return FUNCIONALIDADES.contains(Funcionalidade.PROVOCAR);
+	}
+
+	private static Integer getMaximoAtaquesTurno() {
+		return FUNCIONALIDADES.contains(Funcionalidade.ATAQUE_DUPLO) ? 2 : 1;
 	}
 
 	private static String format(String message, Object... arguments) {
