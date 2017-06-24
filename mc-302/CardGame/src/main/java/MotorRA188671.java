@@ -337,8 +337,17 @@ public class MotorRA188671 extends Motor {
 			this.vida--;
 		}
 
+		/**
+		 * Remove da mesa os lacaios destruídos do jogador nessa jogada
+		 */
 		void removerLacaiosDestruidos() {
-			this.lacaiosMesa = lacaiosMesa.stream().filter(l -> l.getVidaAtual() > 0).collect(Collectors.toList());
+			List<CartaLacaio> destruidos = lacaiosMesa.stream().filter(l -> l.getVidaAtual() <= 0).collect(Collectors.toList());
+
+			imprimir("");
+			destruidos.forEach(l -> imprimir(format("O lacaio {0} de {1} foi destruído nessa jogada", l.getNome(), getNome())));
+			imprimir("");
+
+			this.lacaiosMesa.removeAll(destruidos);
 		}
 
 		void usarPoderHeroico() {
