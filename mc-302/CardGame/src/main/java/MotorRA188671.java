@@ -183,6 +183,11 @@ public class MotorRA188671 extends Motor {
 		return 0;
 	}
 
+	/**
+	 * Calcula o tempo de uma jogada para o jogador parametrizado
+	 * @param jogador atacante nessa jogada
+	 * @return Tempo utilizado para realizar o método "processar turno"
+	 */
 	private long calcularTempoJogada(JogadorInfo jogador) {
 		long startTime;
 		startTime = System.nanoTime();
@@ -193,6 +198,11 @@ public class MotorRA188671 extends Motor {
 		return startTime - System.nanoTime();
 	}
 
+	/**
+	 * Adiciona uma carta do baralho do jogador a sua mao
+	 * @param jogador que irá sacar a carta
+	 * @return Carta retirada do baralho e posta na mão, nulo caso o baralho esteja vazio
+	 */
 	private Carta sacarCarta(JogadorInfo jogador) {
 		if (jogador.baralho.getCartas().isEmpty()) {
 			jogador.fadiga();
@@ -204,10 +214,19 @@ public class MotorRA188671 extends Motor {
 		return (Carta) UnoptimizedDeepCopy.copy(carta);
 	}
 
+	/**
+	 * @param tempoTotal o tempo total gasto em uma jogada
+	 * @return Verdeiro se esse tempo excedeu o máximo permitido, falso caso contrário
+	 */
 	private boolean estourouTempoPermitido(long tempoTotal) {
 		return tempoLimitado != 0 && tempoTotal > 3e8;
 	}
 
+	/**
+	 * Processa uma jogada parametrizada, aplicando seus efeitos ao jogo
+	 * @param umaJogada contendo as informações de mudança
+	 * @throws LamaException caso seja uma jogada inválida
+	 */
 	protected void processarJogada(Jogada umaJogada) throws LamaException {
 		String mensagem = JOGADA_MAPA.get(umaJogada.getTipo()).processar(umaJogada, atacante, defensor);
 		atacante.removerLacaiosDestruidos();
@@ -215,6 +234,11 @@ public class MotorRA188671 extends Motor {
 		imprimir(mensagem);
 	}
 
+	/**
+	 * Essa classe encapsula as informações de um jogador, mantendo seu estado atualizado com o decorrer do jogo
+	 * Ela é usada para validações, e para extrair informações importantes sobre a mão, baralho, lacaios mesa e
+	 * o andamento do turno de um jogador
+	 */
 	private class JogadorInfo {
 		private Integer vida;
 		private Integer mana;
@@ -250,17 +274,27 @@ public class MotorRA188671 extends Motor {
 			this.numeroJogador = jogador;
 		}
 
+		/**
+		 * Inicializa os atributos do jogador para um novo turno
+		 */
 		void comecarTurno() {
 			this.poderHeroicoUtilizado = false;
 			this.cartasBaixadasTurno.clear();
 			this.contagemAtaqueLacaios.clear();
 		}
 
+		/**
+		 * Aplica o dano de fadiga
+		 */
 		void fadiga() {
 			this.vida -= this.danoFadiga++;
 			imprimir("Fadiga: O " + getNome() + " recebeu dano por falta de cartas. (Vida atual: " + this.vida + ")");
 		}
 
+		/**
+		 * Baixa uma carta da mão do jogador
+		 * @param carta a ser baixada para a mesa
+		 */
 		void baixarCarta(Carta carta) {
 			this.mana -= carta.getMana();
 			this.mao.remove(carta);
@@ -318,8 +352,23 @@ public class MotorRA188671 extends Motor {
 		void sofrerDanoMagia(CartaMagia magia) {
 			this.vida -= magia.getMagiaDano();
 		}
+
+		boolean possuiNumeroMaximoLacaios() {
+			return lacaiosMesa.size() >= 7;
+		}
 	}
 
+	/**
+	 * Esta interface é utlizada para se manter a generalidade com relação ao processamento de uma jogada.
+	 * As jogadas de ataque, baixar lacaio, magia, entre outras, cada uma possuirá sua implementação de
+	 * "processar" com uma jogada, um atacante e um defensor.
+	 *
+	 * Todas essas implementações devem retornar uma mensagem de andamento daquele processamento, e podem
+	 * lançar exceção em caso de jogada inválida.
+	 *
+	 * Como todos os processamentos possuem validações e tratamentos iguais uma vez que a jogada é processada,
+	 * surgiu a motivação de ter uma interface para o processamento.
+	 */
 	private interface Processavel {
 		String processar(Jogada jogada, JogadorInfo atacante, JogadorInfo defensor) throws LamaException;
 
@@ -362,7 +411,7 @@ public class MotorRA188671 extends Motor {
 
 			if (contagem >= maximoAtaquesTurno) {
 				String mensagemErro = format("Número máximo de ataque excedido para o lacaio (id: {0})", id.toString());
-				throw new LamaException(8, jogada, mensagemErro, defensor.numeroJogador);
+				throw new LamaException(7, jogada, mensagemErro, defensor.numeroJogador);
 			}
 
 			atacante.contagemAtaqueLacaios.put(id, contagem + 1);
@@ -421,6 +470,15 @@ public class MotorRA188671 extends Motor {
 				throw new LamaException(1, jogada, mensagemErro, defensor.numeroJogador);
 			}
 
+			if (atacante.possuiNumeroMaximoLacaios()) {
+				String mensagemErro = format(
+						"Tentativa de usar carta (id: {0}, nome: {1}), porém número máximo de lacaios seria ultrapassado.",
+						cartaJogada.getID() + "",
+						cartaJogada.getNome());
+
+				throw new LamaException(4, jogada, mensagemErro, defensor.numeroJogador);
+			}
+
 			Carta lacaioBaixado = cartaOptional.get();
 			atacante.baixarCarta(lacaioBaixado);
 
@@ -460,7 +518,10 @@ public class MotorRA188671 extends Motor {
 			defensor.sofrerDanoLacaio(lacaio);
 			lacaio.setVidaAtual(lacaio.getVidaAtual() - 1);
 
-			return format("{0} usou poder heróico no lacaio inimigo {1}", atacante.getNome(), cartaAlvo.getNome());
+			return format("{0} usou poder heróico no lacaio inimigo {1}, recebendo {2} de dano",
+				atacante.getNome(),
+				cartaAlvo.getNome(),
+				lacaio.getAtaque() + "");
 		}
 	}
 
@@ -557,6 +618,12 @@ public class MotorRA188671 extends Motor {
 		return FUNCIONALIDADES.contains(Funcionalidade.ATAQUE_DUPLO) ? 2 : 1;
 	}
 
+	/**
+	 * Formata a String com os argumentos parametrizados
+	 * @param message uma string com interpolação
+	 * @param arguments parâmetros a serem evaludados na String
+	 * @return Uma mensagem com os valores evaluados
+	 */
 	private static String format(String message, Object... arguments) {
 		return MessageFormat.format(message, arguments);
 	}
