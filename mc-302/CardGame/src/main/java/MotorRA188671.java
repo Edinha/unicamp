@@ -424,7 +424,18 @@ public class MotorRA188671 extends Motor {
 			}
 
 			atacante.contagemAtaqueLacaios.put(id, contagem + 1);
+
+			final List<Integer> provocativos = defensor.lacaiosMesa.stream()
+					.filter(l -> TipoEfeito.PROVOCAR.equals(l.getEfeito()))
+					.map(Carta::getID)
+					.collect(Collectors.toList());
+
 			if (cartaAlvo == null) {
+				if (temProvocar() && !provocativos.isEmpty()) {
+					String mensagemErro = format("Ataque direto a herói inimigo quando existe lacaio com provocar no campo. Lacaios com provocar: {0}", provocativos);
+					throw new LamaException(13, jogada, mensagemErro, defensor.numeroJogador);
+				}
+
 				defensor.ataqueDireto((CartaLacaio) cartaJogada);
 				return format("{0} atacou diretamente o herói inimigo com lacaio {1}", atacante.getNome(), cartaJogada.getNome());
 			}
@@ -440,17 +451,11 @@ public class MotorRA188671 extends Motor {
 
 			final CartaLacaio lacaioAtacante = atacanteOptional.get();
 			final CartaLacaio lacaioDefensor = defensorOptional.get();
-
-			final List<Integer> provocativos = defensor.lacaiosMesa.stream()
-					.filter(l -> TipoEfeito.PROVOCAR.equals(l.getEfeito()))
-					.map(Carta::getID)
-					.collect(Collectors.toList());
-
 			if (temProvocar() && !provocativos.isEmpty() && !provocativos.contains(lacaioDefensor.getID())) {
 				String mensagemErro = format(
-					"Ataque a um lacaio quando existe um outro com provocar no campo. Alvo {0}, Lacaios com provocar: {1}",
-					lacaioDefensor.getID() + "",
-					provocativos);
+						"Ataque a um lacaio quando existe um outro com provocar no campo. Alvo {0}, Lacaios com provocar: {1}",
+						lacaioDefensor.getID() + "",
+						provocativos);
 
 				throw new LamaException(13, jogada, mensagemErro, defensor.numeroJogador);
 			}
