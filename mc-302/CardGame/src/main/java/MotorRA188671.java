@@ -15,8 +15,7 @@ import java.util.stream.Collectors;
 /**
  * Trabalho 2
  *
- * RA  : 188671
- * Nome: William Gonçalves da Cruz
+ * RA : 188671 Nome: William Gonçalves da Cruz
  *
  */
 
@@ -82,7 +81,7 @@ public class MotorRA188671 extends Motor {
 			ArrayList<CartaLacaio> lacaios2clone = (ArrayList<CartaLacaio>) UnoptimizedDeepCopy.copy(segundoJogador.lacaiosMesa);
 
 			mesa = new Mesa(lacaios1clone, lacaios2clone, primeiroJogador.vida, segundoJogador.vida, primeiroJogador.mao.size() + 1,
-					segundoJogador.mao.size(), primeiroJogador.mana, segundoJogador.mana);
+				segundoJogador.mao.size(), primeiroJogador.mana, segundoJogador.mana);
 
 			primeiroJogador.comecarTurno();
 			segundoJogador.comecarTurno();
@@ -112,7 +111,7 @@ public class MotorRA188671 extends Motor {
 			lacaios2clone = (ArrayList<CartaLacaio>) UnoptimizedDeepCopy.copy(segundoJogador.lacaiosMesa);
 
 			mesa = new Mesa(lacaios1clone, lacaios2clone, primeiroJogador.vida, segundoJogador.vida, primeiroJogador.mao.size() + 1,
-					segundoJogador.mao.size(), primeiroJogador.mana, segundoJogador.mana);
+				segundoJogador.mao.size(), primeiroJogador.mana, segundoJogador.mana);
 
 			imprimir("\n----------------------- Começo de turno para Jogador 2:");
 			danoFatalProprioTurno = realizarJogadaTurno(segundoJogador);
@@ -120,7 +119,7 @@ public class MotorRA188671 extends Motor {
 				return primeiroJogador.numeroJogador;
 			}
 
-			// Atualiza as variáveis para o turno do jogador 1
+			// Atualiza as variáveis para o turno do jogador 2
 			atacante = segundoJogador;
 			defensor = primeiroJogador;
 
@@ -151,9 +150,10 @@ public class MotorRA188671 extends Motor {
 	}
 
 	/**
-	 * Realiza um entrada de turno para o jogador parametrizado
+	 * Realiza uma entrada de turno para o jogador parametrizado
+	 * 
 	 * @param jogadorInfo quem realiza a jogada do turno
-	 * @return verdadeiro se o jogador perdeu seu proprio turno de ataque e falso c.c.
+	 * @return verdadeiro se o jogador perdeu em seu próprio turno de ataque e falso caso contrário
 	 */
 	private boolean realizarJogadaTurno(JogadorInfo jogadorInfo) {
 		long totalTime = calcularTempoJogada(jogadorInfo);
@@ -169,7 +169,9 @@ public class MotorRA188671 extends Motor {
 
 	/**
 	 * Método que avalia a existência de um vencedor para o turno
-	 * @return O número contrário ao jogador que sofreu fatalidade no turno, 0 caso nenhum tenha sofrido fatalidade
+	 * 
+	 * @return O número contrário ao jogador que sofreu fatalidade no turno, 0 caso nenhum tenha
+	 *         sofrido fatalidade
 	 */
 	private Integer vencedorAposTurno() {
 		if (atacante.sofreuFatalidade()) {
@@ -185,6 +187,7 @@ public class MotorRA188671 extends Motor {
 
 	/**
 	 * Calcula o tempo de uma jogada para o jogador parametrizado
+	 * 
 	 * @param jogador atacante nessa jogada
 	 * @return Tempo utilizado para realizar o método "processar turno"
 	 */
@@ -195,13 +198,14 @@ public class MotorRA188671 extends Motor {
 		ArrayList<Jogada> cloneMovimentos = (ArrayList<Jogada>) UnoptimizedDeepCopy.copy(movimentos);
 		movimentos = jogador.referencia.processarTurno(mesa, sacarCarta(jogador), cloneMovimentos);
 
-		return startTime - System.nanoTime();
+		return System.nanoTime() - startTime;
 	}
 
 	/**
-	 * Adiciona uma carta do baralho do jogador a sua mao
+	 * Adiciona uma carta do baralho do jogador a sua mão
+	 * 
 	 * @param jogador que irá sacar a carta
-	 * @return Carta retirada do baralho e posta na mão, nulo caso o baralho esteja vazio
+	 * @return Carta retirada do baralho e colocada na mão, nulo caso o baralho esteja vazio
 	 */
 	private Carta sacarCarta(JogadorInfo jogador) {
 		if (jogador.baralho.getCartas().isEmpty()) {
@@ -215,6 +219,8 @@ public class MotorRA188671 extends Motor {
 	}
 
 	/**
+	 * Verifica se o tempo permitido para se realizar uma jogada foi excedido
+	 * 
 	 * @param tempoTotal o tempo total gasto em uma jogada
 	 * @return Verdeiro se esse tempo excedeu o máximo permitido, falso caso contrário
 	 */
@@ -224,6 +230,7 @@ public class MotorRA188671 extends Motor {
 
 	/**
 	 * Processa uma jogada parametrizada, aplicando seus efeitos ao jogo
+	 * 
 	 * @param umaJogada contendo as informações de mudança
 	 * @throws LamaException caso seja uma jogada inválida
 	 */
@@ -235,9 +242,9 @@ public class MotorRA188671 extends Motor {
 	}
 
 	/**
-	 * Essa classe encapsula as informações de um jogador, mantendo seu estado atualizado com o decorrer do jogo
-	 * Ela é usada para validações, e para extrair informações importantes sobre a mão, baralho, lacaios mesa e
-	 * o andamento do turno de um jogador
+	 * Essa classe encapsula as informações de um jogador, mantendo seu estado atualizado com o
+	 * decorrer do jogo Ela é usada para validações, e para extrair informações importantes sobre a
+	 * mão, baralho, lacaios mesa e o andamento do turno de um jogador
 	 */
 	private class JogadorInfo {
 		private Integer vida;
@@ -258,7 +265,8 @@ public class MotorRA188671 extends Motor {
 
 		private boolean poderHeroicoUtilizado;
 
-		JogadorInfo(Integer jogador, Integer vida, List<Carta> mao, Baralho baralho, List<Carta> lacaiosMesa, Integer mana, Jogador referencia) {
+		JogadorInfo(Integer jogador, Integer vida, List<Carta> mao, Baralho baralho, List<Carta> lacaiosMesa, Integer mana,
+				Jogador referencia) {
 			this.vida = vida;
 			this.mana = mana;
 			this.baralho = baralho;
@@ -293,6 +301,7 @@ public class MotorRA188671 extends Motor {
 
 		/**
 		 * Baixa uma carta da mão do jogador
+		 * 
 		 * @param carta a ser baixada para a mesa
 		 */
 		void baixarCarta(Carta carta) {
@@ -309,10 +318,19 @@ public class MotorRA188671 extends Motor {
 			this.cartasBaixadasTurno.add(carta.getID());
 		}
 
+		/**
+		 * Retorna verdadeiro caso o jogador possua mana suficiente para utilizar poder heróico
+		 */
 		boolean temManaSuficientePoderHeroico() {
 			return (this.mana >= 2);
 		}
 
+		/**
+		 * Retorna verdadeiro caso o jogador possua mana suficiente para utilizar a carta
+		 * parametrizada
+		 * 
+		 * @param carta a ser avaliada
+		 */
 		boolean temManaSuficiente(Carta carta) {
 			return (this.mana >= carta.getMana());
 		}
@@ -342,11 +360,7 @@ public class MotorRA188671 extends Motor {
 		 */
 		void removerLacaiosDestruidos() {
 			List<CartaLacaio> destruidos = lacaiosMesa.stream().filter(l -> l.getVidaAtual() <= 0).collect(Collectors.toList());
-
-			imprimir("");
 			destruidos.forEach(l -> imprimir(format("O lacaio {0} de {1} foi destruído nessa jogada", l.getNome(), getNome())));
-			imprimir("");
-
 			this.lacaiosMesa.removeAll(destruidos);
 		}
 
@@ -368,26 +382,48 @@ public class MotorRA188671 extends Motor {
 	}
 
 	/**
-	 * Esta interface é utlizada para se manter a generalidade com relação ao processamento de uma jogada.
-	 * As jogadas de ataque, baixar lacaio, magia, entre outras, cada uma possuirá sua implementação de
-	 * "processar" com uma jogada, um atacante e um defensor.
+	 * Esta interface é utlizada para se manter a generalidade com relação ao processamento de uma
+	 * jogada. As jogadas de ataque, baixar lacaio, magia, entre outras, cada uma possuirá sua
+	 * implementação de "processar" com uma jogada, um atacante e um defensor.
 	 *
-	 * Todas essas implementações devem retornar uma mensagem de andamento daquele processamento, e podem
-	 * lançar exceção em caso de jogada inválida.
+	 * Todas essas implementações devem retornar uma mensagem de andamento daquele processamento, e
+	 * podem lançar exceção em caso de jogada inválida.
 	 *
-	 * Como todos os processamentos possuem validações e tratamentos iguais uma vez que a jogada é processada,
-	 * surgiu a motivação de ter uma interface para o processamento.
+	 * Como todos os processamentos possuem validações e tratamentos iguais uma vez que a jogada é
+	 * processada, surgiu a motivação de ter uma interface para o processamento.
 	 */
 	private interface Processavel {
 		String processar(Jogada jogada, JogadorInfo atacante, JogadorInfo defensor) throws LamaException;
 
-		default void manaInsuficiente(Jogada jogada, JogadorInfo atacante, JogadorInfo defensor) throws LamaException {
-			if (!atacante.temManaSuficiente(jogada.getCartaJogada())) {
+		/**
+		 * Recupera da mão do atacante a carta jogada, validando suas informações no caminho
+		 * @param jogada objeto contendo ações a serem realizadas
+		 * @param atacante Jogador
+		 * @param defensor Jogador
+		 * @return A carta jogada da mão do jogador
+		 * @throws LamaException Em caso da carta não existir na mão do jogador ou não possuir mana suficiente para usá-la
+		 */
+		default Carta recuperarCartaJogada(Jogada jogada, JogadorInfo atacante, JogadorInfo defensor) throws LamaException {
+			final Carta cartaJogada = jogada.getCartaJogada();
+			final Optional<Carta> cartaOptional = atacante.mao.stream().filter(carta -> carta.equals(cartaJogada)).findFirst();
+			if (!cartaOptional.isPresent()) {
+				String mensagemErro = format(
+					"Tentativa de usar carta (id: {0}), porém essa carta não existe na mão do jogador. IDS Cartas da mão: {1}",
+					cartaJogada.getID() + "",
+					ids(atacante.mao));
+
+				throw new LamaException(1, jogada, mensagemErro, defensor.numeroJogador);
+			}
+
+			final Carta carta = cartaOptional.get();
+			if (!atacante.temManaSuficiente(carta)) {
 				String mensagem = format("Mana insuficiente para jogada de {0} (mana necessária: 2, mana atual: {1})",
-						jogada.getTipo().name(),
-						atacante.mana.toString());
+					jogada.getTipo().name(),
+					atacante.mana.toString());
 				throw new LamaException(2, jogada, mensagem, defensor.numeroJogador);
 			}
+
+			return carta;
 		}
 	}
 
@@ -403,7 +439,8 @@ public class MotorRA188671 extends Motor {
 			final Optional<CartaLacaio> atacanteOptional = atacante.lacaiosMesa.stream().filter(l -> l.equals(cartaJogada)).findFirst();
 
 			if (!atacanteOptional.isPresent()) {
-				String mensagemErro = format("Tentativa de atacar com lacaio (id: {0}), porém essa carta não está no campo do jogador. IDS Cartas da mesa: {1}",
+				String mensagemErro = format(
+					"Tentativa de atacar com lacaio (id: {0}), porém essa carta não está no campo do jogador. IDS Cartas da mesa: {1}",
 					id.toString(),
 					ids(atacante.lacaiosMesa));
 
@@ -415,7 +452,9 @@ public class MotorRA188671 extends Motor {
 				throw new LamaException(6, jogada, mensagemErro, defensor.numeroJogador);
 			}
 
-			Integer maximoAtaquesTurno = getMaximoAtaquesTurno();
+			final CartaLacaio lacaioAtacante = atacanteOptional.get();
+
+			Integer maximoAtaquesTurno = getMaximoAtaquesTurno(lacaioAtacante);
 			Integer contagem = atacante.contagemAtaqueLacaios.getOrDefault(id, 0);
 
 			if (contagem >= maximoAtaquesTurno) {
@@ -425,8 +464,8 @@ public class MotorRA188671 extends Motor {
 
 			atacante.contagemAtaqueLacaios.put(id, contagem + 1);
 			if (cartaAlvo == null) {
-				defensor.ataqueDireto((CartaLacaio) cartaJogada);
-				return format("{0} atacou diretamente o herói inimigo com lacaio {1}", atacante.getNome(), cartaJogada.getNome());
+				defensor.ataqueDireto(lacaioAtacante);
+				return format("{0} atacou diretamente o herói inimigo com lacaio {1}", atacante.getNome(), lacaioAtacante.getNome());
 			}
 
 			if (!defensorOptional.isPresent()) {
@@ -438,9 +477,7 @@ public class MotorRA188671 extends Motor {
 				throw new LamaException(8, jogada, mensagemErro, defensor.numeroJogador);
 			}
 
-			final CartaLacaio lacaioAtacante = atacanteOptional.get();
 			final CartaLacaio lacaioDefensor = defensorOptional.get();
-
 			final List<Integer> provocativos = defensor.lacaiosMesa.stream()
 					.filter(l -> TipoEfeito.PROVOCAR.equals(l.getEfeito()))
 					.map(Carta::getID)
@@ -458,7 +495,10 @@ public class MotorRA188671 extends Motor {
 			lacaioAtacante.setVidaAtual(lacaioAtacante.getVidaAtual() - lacaioDefensor.getVidaAtual());
 			lacaioDefensor.setVidaAtual(lacaioDefensor.getVidaAtual() - lacaioAtacante.getVidaAtual());
 
-			return format("{0} atacou lacaio inimigo {1} com seu lacaio {2}", atacante.getNome(), cartaJogada.getNome(), cartaAlvo.getNome());
+			return format("{0} atacou lacaio inimigo {1} com seu lacaio {2}",
+				atacante.getNome(),
+				lacaioAtacante.getNome(),
+				lacaioDefensor.getNome());
 		}
 	}
 
@@ -466,32 +506,21 @@ public class MotorRA188671 extends Motor {
 		@Override
 		public String processar(Jogada jogada, JogadorInfo atacante, JogadorInfo defensor) throws LamaException {
 
-			manaInsuficiente(jogada, atacante, defensor);
-
-			final Carta cartaJogada = jogada.getCartaJogada();
-			final Optional<Carta> cartaOptional = atacante.mao.stream().filter(carta -> carta.equals(cartaJogada)).findFirst();
-			if (!cartaOptional.isPresent()) {
-				String mensagemErro = format(
-					"Tentativa de usar carta (id: {0}), porém essa carta não existe na mão do jogador. IDS Cartas da mão: {1}",
-					cartaJogada.getID() + "",
-					ids(atacante.mao));
-
-				throw new LamaException(1, jogada, mensagemErro, defensor.numeroJogador);
-			}
-
+			final Carta lacaioBaixado = recuperarCartaJogada(jogada, atacante, defensor);
 			if (atacante.possuiNumeroMaximoLacaios()) {
 				String mensagemErro = format(
-						"Tentativa de usar carta (id: {0}, nome: {1}), porém número máximo de lacaios seria ultrapassado.",
-						cartaJogada.getID() + "",
-						cartaJogada.getNome());
+					"Tentativa de usar carta (id: {0}, nome: {1}), porém número máximo de lacaios seria ultrapassado.",
+					lacaioBaixado.getID() + "",
+					lacaioBaixado.getNome());
 
 				throw new LamaException(4, jogada, mensagemErro, defensor.numeroJogador);
 			}
 
-			Carta lacaioBaixado = cartaOptional.get();
 			atacante.baixarCarta(lacaioBaixado);
-
-			return format("{0} baixou a carta {1} com custo de mana de {2}", atacante.getNome(), cartaJogada.getNome(), cartaJogada.getMana()+"");
+			return format("{0} baixou a carta {1} com custo de mana de {2}",
+				atacante.getNome(),
+				lacaioBaixado.getNome(),
+				lacaioBaixado.getMana() + "");
 		}
 	}
 
@@ -519,7 +548,7 @@ public class MotorRA188671 extends Motor {
 
 			final Optional<CartaLacaio> alvo = defensor.lacaiosMesa.stream().filter(l -> l.equals(cartaAlvo)).findAny();
 			if (!alvo.isPresent()) {
-				String mensagem = format("Tentativa de usar poder heróico em alvo inexistente (alvo_id: {0})", cartaAlvo.getID()+"");
+				String mensagem = format("Tentativa de usar poder heróico em alvo inexistente (alvo_id: {0})", cartaAlvo.getID() + "");
 				throw new LamaException(12, jogada, mensagem, defensor.numeroJogador);
 			}
 
@@ -529,7 +558,7 @@ public class MotorRA188671 extends Motor {
 
 			return format("{0} usou poder heróico no lacaio inimigo {1}, recebendo {2} de dano",
 				atacante.getNome(),
-				cartaAlvo.getNome(),
+				lacaio.getNome(),
 				lacaio.getAtaque() + "");
 		}
 	}
@@ -537,28 +566,15 @@ public class MotorRA188671 extends Motor {
 	private static class MagiaJogada implements Processavel {
 		@Override
 		public String processar(Jogada jogada, JogadorInfo atacante, JogadorInfo defensor) throws LamaException {
-
-			manaInsuficiente(jogada, atacante, defensor);
-
-			final Carta cartaJogada = jogada.getCartaJogada();
-			final Optional<Carta> cartaOptional = atacante.mao.stream().filter(carta -> carta.equals(cartaJogada)).findFirst();
-			if (!cartaOptional.isPresent()) {
-				String mensagemErro = format(
-						"Tentativa de usar carta (id: {0}), porém essa carta não existe na mão do jogador. IDS Cartas da mão: {1}",
-						cartaJogada.getID() + "",
-						ids(atacante.mao));
-
-				throw new LamaException(1, jogada, mensagemErro, defensor.numeroJogador);
-			}
-
-			if (cartaJogada instanceof CartaLacaio) {
+			final Carta carta = recuperarCartaJogada(jogada, atacante, defensor);
+			if (carta instanceof CartaLacaio) {
 				String mensagem = format("Tentativa de utilizar a carta lacaio {0} (id: {1}) como uma magia",
-					cartaJogada.getNome(),
-					cartaJogada.getID());
+					carta.getNome(),
+					carta.getID());
 				throw new LamaException(9, jogada, mensagem, defensor.numeroJogador);
 			}
 
-			final CartaMagia magia = (CartaMagia) cartaJogada;
+			final CartaMagia magia = (CartaMagia) carta;
 			return MAGIA_JOGADA_MAPA.get(magia.getMagiaTipo()).processar(jogada, atacante, defensor);
 		}
 	}
@@ -567,13 +583,13 @@ public class MotorRA188671 extends Motor {
 		@Override
 		public String processar(Jogada jogada, JogadorInfo atacante, JogadorInfo defensor) throws LamaException {
 			final Carta alvo = jogada.getCartaAlvo();
-			final CartaMagia buff = (CartaMagia) jogada.getCartaJogada();
+			final CartaMagia buff = (CartaMagia) recuperarCartaJogada(jogada, atacante, defensor);
 
 			Optional<CartaLacaio> alvoOptional = atacante.lacaiosMesa.stream().filter(l -> l.equals(alvo)).findFirst();
 			if (!alvoOptional.isPresent()) {
 				String mensagem = format("Tentativa de utilizar magia de buff (id: {0}) em uma carta inexistente (id: {1})",
-						buff.getID(),
-						alvo.getID());
+					buff.getID(),
+					alvo.getID());
 				throw new LamaException(10, jogada, mensagem, defensor.numeroJogador);
 			}
 
@@ -589,7 +605,7 @@ public class MotorRA188671 extends Motor {
 		@Override
 		public String processar(Jogada jogada, JogadorInfo atacante, JogadorInfo defensor) throws LamaException {
 			final Carta alvo = jogada.getCartaAlvo();
-			final CartaMagia magia = (CartaMagia) jogada.getCartaJogada();
+			final CartaMagia magia = (CartaMagia) recuperarCartaJogada(jogada, atacante, defensor);
 
 			Optional<CartaLacaio> alvoOptional = defensor.lacaiosMesa.stream().filter(l -> l.equals(alvo)).findFirst();
 			if (!alvoOptional.isPresent()) {
@@ -607,7 +623,7 @@ public class MotorRA188671 extends Motor {
 	private static class MagiaAreaJogada implements Processavel {
 		@Override
 		public String processar(Jogada jogada, JogadorInfo atacante, JogadorInfo defensor) throws LamaException {
-			final CartaMagia magia = (CartaMagia) jogada.getCartaJogada();
+			final CartaMagia magia = (CartaMagia) recuperarCartaJogada(jogada, atacante, defensor);
 
 			defensor.lacaiosMesa.forEach(lacaio -> lacaio.setVidaAtual(lacaio.getVidaAtual() - magia.getMagiaDano()));
 
@@ -615,20 +631,35 @@ public class MotorRA188671 extends Motor {
 		}
 	}
 
+	// Avalia se a funcionalidade Investida está ativa para o jogo
 	private static boolean temInvestida() {
 		return FUNCIONALIDADES.contains(Funcionalidade.INVESTIDA);
 	}
 
+	// Avalia se a funcionalidade Provocar está ativa para o jogo
 	private static boolean temProvocar() {
 		return FUNCIONALIDADES.contains(Funcionalidade.PROVOCAR);
 	}
 
-	private static Integer getMaximoAtaquesTurno() {
-		return FUNCIONALIDADES.contains(Funcionalidade.ATAQUE_DUPLO) ? 2 : 1;
+	/**
+	 * Avalia o número máximo de ataques que um lacaio pode realizar em um turno, dado o estado do
+	 * motor
+	 * 
+	 * @param lacaio que deseja realizar um ataque
+	 * @return O número de ataque, dado o tipo de efeito do lacaio (ataque duplo) e se a
+	 *         funcionalidade está ativa para a partida
+	 */
+	private static Integer getMaximoAtaquesTurno(CartaLacaio lacaio) {
+		if (!FUNCIONALIDADES.contains(Funcionalidade.ATAQUE_DUPLO)) {
+			return 1;
+		}
+
+		return TipoEfeito.ATAQUE_DUPLO.equals(lacaio.getEfeito()) ? 2 : 1;
 	}
 
 	/**
 	 * Formata a String com os argumentos parametrizados
+	 * 
 	 * @param message uma string com interpolação
 	 * @param arguments parâmetros a serem evaludados na String
 	 * @return Uma mensagem com os valores evaluados
@@ -637,6 +668,13 @@ public class MotorRA188671 extends Motor {
 		return MessageFormat.format(message, arguments);
 	}
 
+	/**
+	 * Extrai os ids de uma coleção cartas para impressão
+	 * 
+	 * @param cartas a serem avaliadas
+	 * @param <T> Tipo de Carta
+	 * @return Uma String com os ids das cartas separados por ','
+	 */
 	private static <T extends Carta> String ids(Collection<T> cartas) {
 		return cartas.stream().map(Carta::getID).collect(Collectors.toList()).toString();
 	}
