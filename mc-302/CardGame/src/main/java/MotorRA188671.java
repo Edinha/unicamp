@@ -15,7 +15,8 @@ import java.util.stream.Collectors;
 /**
  * Trabalho 2
  *
- * RA : 188671 Nome: William Gonçalves da Cruz
+ * RA  : 188671
+ * Nome: William Gonçalves da Cruz
  *
  */
 
@@ -254,7 +255,6 @@ public class MotorRA188671 extends Motor {
 		private List<Carta> mao;
 
 		private Baralho baralho;
-		private List<Jogada> jogadas;
 		private List<CartaLacaio> lacaiosMesa;
 
 		private Jogador referencia;
@@ -272,7 +272,6 @@ public class MotorRA188671 extends Motor {
 			this.baralho = baralho;
 
 			this.mao = (List<Carta>) UnoptimizedDeepCopy.copy(mao);
-			this.jogadas = (List<Jogada>) UnoptimizedDeepCopy.copy(jogadas);
 
 			List<Carta> copiaLacaiosMesa = (List<Carta>) UnoptimizedDeepCopy.copy(lacaiosMesa);
 			this.lacaiosMesa = copiaLacaiosMesa.stream().map(l -> (CartaLacaio) l).collect(Collectors.toList());
@@ -300,13 +299,11 @@ public class MotorRA188671 extends Motor {
 		}
 
 		/**
-		 * Baixa uma carta da mão do jogador
-		 * 
+		 * Baixa um lacaio para a mesa
 		 * @param carta a ser baixada para a mesa
 		 */
-		void baixarCarta(Carta carta) {
-			this.mana -= carta.getMana();
-			this.mao.remove(carta);
+		void baixarLacaio(Carta carta) {
+			this.baixarCarta(carta);
 
 			CartaLacaio lacaio = (CartaLacaio) carta;
 			this.lacaiosMesa.add(lacaio);
@@ -319,6 +316,15 @@ public class MotorRA188671 extends Motor {
 		}
 
 		/**
+		 * Baixa uma carta da mão do jogador
+		 * @param carta a ser baixada para a mesa
+		 */
+		void baixarCarta(Carta carta) {
+			this.mana -= carta.getMana();
+			this.mao.remove(carta);
+		}
+
+		/**
 		 * Retorna verdadeiro caso o jogador possua mana suficiente para utilizar poder heróico
 		 */
 		boolean temManaSuficientePoderHeroico() {
@@ -328,7 +334,7 @@ public class MotorRA188671 extends Motor {
 		/**
 		 * Retorna verdadeiro caso o jogador possua mana suficiente para utilizar a carta
 		 * parametrizada
-		 * 
+		 *
 		 * @param carta a ser avaliada
 		 */
 		boolean temManaSuficiente(Carta carta) {
@@ -522,7 +528,7 @@ public class MotorRA188671 extends Motor {
 				throw new LamaException(4, jogada, mensagemErro, defensor.numeroJogador);
 			}
 
-			atacante.baixarCarta(lacaioBaixado);
+			atacante.baixarLacaio(lacaioBaixado);
 			return format("{0} baixou a carta {1} com custo de mana de {2}",
 				atacante.getNome(),
 				lacaioBaixado.getNome(),
@@ -580,6 +586,7 @@ public class MotorRA188671 extends Motor {
 				throw new LamaException(9, jogada, mensagem, defensor.numeroJogador);
 			}
 
+			atacante.baixarCarta(carta);
 			final CartaMagia magia = (CartaMagia) carta;
 			return MAGIA_JOGADA_MAPA.get(magia.getMagiaTipo()).processar(jogada, atacante, defensor);
 		}
@@ -613,10 +620,17 @@ public class MotorRA188671 extends Motor {
 			final Carta alvo = jogada.getCartaAlvo();
 			final CartaMagia magia = (CartaMagia) recuperarCartaJogada(jogada, atacante, defensor);
 
-			Optional<CartaLacaio> alvoOptional = defensor.lacaiosMesa.stream().filter(l -> l.equals(alvo)).findFirst();
-			if (!alvoOptional.isPresent()) {
+			if (alvo == null) {
 				defensor.sofrerDanoMagia(magia);
 				return format("{0} atacou o herói inimigo com a carta {1}", atacante.getNome(), magia.getNome());
+			}
+
+			Optional<CartaLacaio> alvoOptional = defensor.lacaiosMesa.stream().filter(l -> l.equals(alvo)).findFirst();
+			if (!alvoOptional.isPresent()) {
+				String mensagem = format("Tentativa de utilizar magia de alvo (id: {0}) em uma carta inexistente (id: {1})",
+						magia.getID(),
+						alvo.getID());
+				throw new LamaException(10, jogada, mensagem, defensor.numeroJogador);
 			}
 
 			final CartaLacaio lacaio = alvoOptional.get();
