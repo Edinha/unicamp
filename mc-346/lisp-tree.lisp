@@ -65,3 +65,15 @@
         )
     )
 )
+
+; Inserir na arvore
+(defun insert_tree (tree item)
+    (if (null tree) (list item '() '())
+        (let ((node (first tree))
+              (esq (first (rest tree)))
+              (dir (first (rest (rest tree))))
+             )
+             (if (> node item) (list node (insert_tree esq item) dir) (list node esq (insert_tree dir item)))
+        )
+    )
+)
