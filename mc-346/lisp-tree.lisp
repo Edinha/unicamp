@@ -77,3 +77,44 @@
         )
     )
 )
+
+; Metodo extrema direita
+(defun extreme_right (tree)
+    (let ((dir (first (rest (rest tree))))) 
+         (if (null dir) (first tree) (extreme_right dir))
+    )
+)
+
+(print (extreme_right '(3 () (8 (6 () (7 () ())) (11 () ())))))
+
+; Metodo auxiliar para corrigir arvore esquerda de onde foi retirado item para rotacionar
+(defun fix_tree_left (tree item)
+     (if (null tree) '()
+         (if (= (first tree) item) (list (first (rest tree))) (fix_tree (first (rest (rest tree)))) )
+     )
+)
+
+; Metodo principal deletar arvore
+; Nota: Não funciona sempre, fazer o outro lado (apenas a extrema direita da sub arvore esquerda é considerada)
+(defun delete_tree (tree item)
+    (if (null tree) '()
+        (let ((node (first tree))
+              (esq (first (rest tree)))
+              (dir (first (rest (rest tree))))
+             )
+             (if (eq node item)
+                 (let ((ex (extreme_right esq)))
+                      (list ex (fix_tree_left esq ex) dir)
+                 )
+                 
+                 (if (null esq) (list node esq (delete_tree dir item) )
+                     (if (null dir) (list node (delete_tree esq item) dir)
+                         (if (> node item) (list node (delete_tree esq item) dir) (list node esq (delete_tree dir item)) )
+                     )
+                 )                 
+             )
+        )
+    )
+)
+
+(print (delete_tree '(3 () (8 (6 () (7 () ())) (11 () ()))) 7 ))
