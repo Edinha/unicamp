@@ -87,15 +87,33 @@
 
 (print (extreme_right '(3 () (8 (6 () (7 () ())) (11 () ())))))
 
+; Metodo extrema esquerda
+(defun extreme_left (tree)
+    (let ((esq (first (rest tree)))) 
+         (if (null esq) (first tree) (extreme_left esq))
+    )
+)
+
 ; Metodo auxiliar para corrigir arvore esquerda de onde foi retirado item para rotacionar
 (defun fix_tree_left (tree item)
      (if (null tree) '()
-         (if (= (first tree) item) (list (first (rest tree))) (fix_tree (first (rest (rest tree)))) )
+         (if (= (first tree) item) (first (rest tree))
+             (list (first tree) (first (rest tree)) (fix_tree_left (first (rest (rest tree))) item))
+         )
+     )
+)
+
+; Metodo auxiliar para corrigir arvore direita de onde foi retirado item para rotacionar
+(defun fix_tree_right (tree item)
+     (if (null tree) '()
+         (if (= (first tree) item) (first (rest (rest tree)))
+             ; (fix_tree_right (first (rest tree)) item)
+             (list (first tree) (fix_tree_right (first (rest tree)) item) (first (rest (rest tree))))
+         )
      )
 )
 
 ; Metodo principal deletar arvore
-; Nota: Não funciona sempre, fazer o outro lado (apenas a extrema direita da sub arvore esquerda é considerada)
 (defun delete_tree (tree item)
     (if (null tree) '()
         (let ((node (first tree))
@@ -103,8 +121,11 @@
               (dir (first (rest (rest tree))))
              )
              (if (eq node item)
-                 (let ((ex (extreme_right esq)))
-                      (list ex (fix_tree_left esq ex) dir)
+                 (let ((ex_dir (extreme_right esq)) (ex_esq (extreme_left dir)))
+                      (if (null ex_dir)
+                          (list ex_esq esq (fix_tree_right dir ex_esq))
+                          (list ex_dir (fix_tree_left esq ex_esq) dir)
+                      )
                  )
                  
                  (if (null esq) (list node esq (delete_tree dir item) )
@@ -116,5 +137,3 @@
         )
     )
 )
-
-(print (delete_tree '(3 () (8 (6 () (7 () ())) (11 () ()))) 7 ))
