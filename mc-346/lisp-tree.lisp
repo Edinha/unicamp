@@ -11,7 +11,7 @@
 ; Infixa
 (defun infix (tree)
     (if (null tree) '()
-        (append (infix (first (rest tree))) (list (first tree)) (append (infix (first (rest (rest tree))))) )
+        (append (infix (first (rest tree))) (list (first tree)) (infix (first (rest (rest tree)))))
     )
 )
 
@@ -20,7 +20,7 @@
 ; Posfixa
 (defun posfix (tree)
     (if (null tree) '()
-        (append (list (first tree)) (posfix (first (rest tree))) (append (posfix (first (rest (rest tree))))) )
+        (append (list (first tree)) (posfix (first (rest tree))) (posfix (first (rest (rest tree)))))
     )
 )
 
@@ -36,7 +36,7 @@
                (dir_node (first dir))
                (esq_binary (is_binary_tree esq))
                (dir_binary (is_binary_tree dir))  )
-       
+
                (if esq_binary
                    (if dir_binary
                        (if (null esq_node) (if (null dir_node) T (< node dir_node))
@@ -80,7 +80,7 @@
 
 ; Metodo extrema direita
 (defun extreme_right (tree)
-    (let ((dir (first (rest (rest tree))))) 
+    (let ((dir (first (rest (rest tree)))))
          (if (null dir) (first tree) (extreme_right dir))
     )
 )
@@ -89,7 +89,7 @@
 
 ; Metodo extrema esquerda
 (defun extreme_left (tree)
-    (let ((esq (first (rest tree)))) 
+    (let ((esq (first (rest tree))))
          (if (null esq) (first tree) (extreme_left esq))
     )
 )
@@ -127,12 +127,12 @@
                           (list ex_dir (fix_tree_left esq ex_esq) dir)
                       )
                  )
-                 
+
                  (if (null esq) (list node esq (delete_tree dir item) )
                      (if (null dir) (list node (delete_tree esq item) dir)
                          (if (> node item) (list node (delete_tree esq item) dir) (list node esq (delete_tree dir item)) )
                      )
-                 )                 
+                 )
              )
         )
     )
