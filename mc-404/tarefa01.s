@@ -12,7 +12,7 @@ inicio:
   lesser .equ -100
   greater .equ 100 @ Inicializa os extremos necessários
 
-  ld r1,       @ Inicializa o registrador de contagem
+  ld r1, 0     @ Inicializa o registrador de contagem
   ld r0, compr @ Carrega no registrador a quantidade de iterações do programa
 
   set r3, sequencia - 4 @ Inicializa r3 para apontar para antes do começo da sequência
