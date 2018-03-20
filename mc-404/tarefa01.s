@@ -24,10 +24,10 @@ countdown:
 
 comparisons:
   cmp r2, greater @ Compara r2 com 100 (greater) e pula a contagem de resultado caso seja maior
-  jge tick
+  jg tick
 
-  cmp r2, lesser @ Compara r2 com -100 (lesser) e pula a contagem de resultado caso seja menor
-  jle tick
+  cmp r2, lesser  @ Compara r2 com -100 (lesser) e pula a contagem de resultado caso seja menor
+  jl tick
 
   add r1, 1 @ Aumenta a contagem em r1 caso as condições de intervalo sejam cumpridas
 

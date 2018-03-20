@@ -11,4 +11,7 @@ iw sequencia
 iw compr
 %8
 %.
-s inicio
+g inicio
+iw resultado
+%.
+q
