@@ -12,7 +12,7 @@ inicio:
   lesser .equ -100
   greater .equ 100 @ Inicializa os extremos necessários
 
-  ld r1, 0     @ Inicializa o registrador de contagem
+  set r1, 0    @ Inicializa o registrador de contagem
   ld r0, compr @ Carrega no registrador a quantidade de iterações do programa
 
   set r3, sequencia - 4 @ Inicializa r3 para apontar para antes do começo da sequência
@@ -23,13 +23,13 @@ countdown:
   ld r2, [r3] @ Carrega r2 com o valor do endereço salvo em r3
 
 comparisons:
-  cmp r2, greater @ Compara r2 com 100 (greater) e pula a contagem de resultado caso seja maior
-  jg tick
+  cmp r2, greater
+  jg tick         @ Compara r2 com 100 (greater) e pula a contagem de resultado caso seja maior
 
-  cmp r2, lesser  @ Compara r2 com -100 (lesser) e pula a contagem de resultado caso seja menor
-  jl tick
+  cmp r2, lesser
+  jl tick         @ Compara r2 com -100 (lesser) e pula a contagem de resultado caso seja menor
 
-  add r1, 1 @ Aumenta a contagem em r1 caso as condições de intervalo sejam cumpridas
+  add r1, 1       @ Aumenta a contagem em r1 caso as condições de intervalo sejam cumpridas
 
 tick:
   sub r0, 1     @ Conta em ordem decrescente o valor de r0 até 0
