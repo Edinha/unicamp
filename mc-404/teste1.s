@@ -36,7 +36,7 @@ loop_div_primeiro:
   sub r4, r3                    @ Subtrai o valor de divisor (r3) do número
 
   cmp r4, 0
-  jle div_segundo               @ Passa para a próxima divisão caso tenha passado do limite zero
+  jl div_segundo               @ Passa para a próxima divisão caso tenha passado do limite zero
 
   add r6, 1
   jmp loop_div_primeiro         @ Senão, é possível contar mais uma vez o número para a divisão
@@ -44,7 +44,7 @@ loop_div_primeiro:
 div_primeiro_negativo:
   add r4, r3
   cmp r4, 0
-  jge div_segundo               @ Passa para a próxima divisão caso tenha passado do limite zero
+  jg div_segundo               @ Passa para a próxima divisão caso tenha passado do limite zero
 
   sub r6, 1
   jmp div_primeiro_negativo     @ Senão, é possível contar mais uma vez o número para a divisão
@@ -52,14 +52,14 @@ div_primeiro_negativo:
 div_segundo:
   set r7, 0                     @ Iniciliza r7 para contar o valor da divisão
 
-  cmp r4, 0
+  cmp r5, 0
   jl  div_segundo_negativo      @ Caso r5 seja negativo, faz outro loop
 
 loop_div_segundo:
   sub r5, r3                    @ Subtrai o valor de divisor (r3) do número
 
   cmp r5, 0
-  jle contagem                  @ Passa para a próxima divisão caso tenha passado do limite zero
+  jl contagem                  @ Passa para a próxima divisão caso tenha passado do limite zero
 
   add r7, 1
   jmp loop_div_segundo          @ Senão, é possível contar mais uma vez o número para a divisão
@@ -67,7 +67,7 @@ loop_div_segundo:
 div_segundo_negativo:
   add r5, r3
   cmp r5, 0
-  jge contagem                  @ Passa para a próxima divisão caso tenha passado do limite zero
+  jg contagem                  @ Passa para a próxima divisão caso tenha passado do limite zero
 
   sub r7, 1
   jmp div_segundo_negativo      @ Senão, é possível contar mais uma vez o número para a divisão
@@ -79,8 +79,9 @@ contagem:
 
   add r2, 4                     @ Move r2 para a próxima palavra do vetor
 
-  sub r1, 1
-  jz fim
+  sub r1, 2
+  cmp r1, 0
+  jle fim                       @ Como cada palavra possui 2 números, subtrai 2 da contagem
 
   jmp loop_principal            @ Reitera sobre loop enquanto r1 náo chegar a zero
 

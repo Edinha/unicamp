@@ -1,17 +1,11 @@
-iw sequencia
-%0fffff830
-%0ffffffff
-%3
-%1
-%0
-%2bc
-%0
-%0fffffce0
-%.
-iw compr
+iw divisor
 %8
 %.
-g inicio
-iw resultado
+iw num_elem
+%3
 %.
-q
+iw vetor
+%f000f000
+%8000
+%.
+s inicio
