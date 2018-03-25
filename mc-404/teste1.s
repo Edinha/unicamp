@@ -13,6 +13,7 @@ inicio:
   ld r3, divisor                @ Carrega em r3 o valor para as divisões
 
   set r2, vetor                 @ Carrega em r2 a posição da primeira palavra do vetor
+  set r11, 0x8000               @ Divisor entre valores positivos e negativos de 16 bits
 
 loop_principal:
   ld r4, [r2]                   @ Carrega o valor apontado em r4 e r5, afim de separar
@@ -29,51 +30,48 @@ loop_principal:
 div_primeiro:
   set r6, 0                     @ Iniciliza r6 para contar o valor da divisão
 
-  cmp r4, 0
-  jl  div_primeiro_negativo     @ Caso r4 seja negativo, faz outro loop
+  set r12, 0                    @ Inicializa o limite para zero
+  set r13, 1                    @ Coloca o passo da divisão como 1 positivo
+
+  cmp r4, r11
+  jl loop_div_primeiro          @ Pula para o loop caso a inicialização seja positiva
+
+primeiro_negativo:
+  mov r12, r11                  @ Caso seja negativo, o limite é 0x8000 (r11)
+  set r13, -1                   @ Coloca o passo da divisão como 1 negativo
 
 loop_div_primeiro:
   sub r4, r3                    @ Subtrai o valor de divisor (r3) do número
 
-  cmp r4, 0
-  jl div_segundo               @ Passa para a próxima divisão caso tenha passado do limite zero
+  cmp r4, r12
+  jl div_segundo                @ Sai do loop caso tenha passado para baixo do limite
 
-  add r6, 1
-  jmp loop_div_primeiro         @ Senão, é possível contar mais uma vez o número para a divisão
-
-div_primeiro_negativo:
-  add r4, r3
-  cmp r4, 0
-  jg div_segundo               @ Passa para a próxima divisão caso tenha passado do limite zero
-
-  sub r6, 1
-  jmp div_primeiro_negativo     @ Senão, é possível contar mais uma vez o número para a divisão
+  add r6, r13                   @ Adiciona o passo ao contador
+  jmp loop_div_primeiro
 
 div_segundo:
   set r7, 0                     @ Iniciliza r7 para contar o valor da divisão
 
-  cmp r5, 0
-  jl  div_segundo_negativo      @ Caso r5 seja negativo, faz outro loop
+  set r12, 0                    @ Inicializa o limite para zero
+  set r13, 1                    @ Coloca o passo da divisão como 1 positivo
+
+  cmp r5, r11
+  jl loop_div_segundo           @ Pula para o loop caso a inicialização seja positiva
+
+segundo_negativo:
+  mov r12, r11                  @ Caso seja negativo, o limite é 0x8000 (r11)
+  set r13, -1                   @ Coloca o passo da divisão como 1 negativo
 
 loop_div_segundo:
-  sub r5, r3                    @ Subtrai o valor de divisor (r3) do número
+  sub r5, r3                    @ Subtrai o divisor em r3 para continuar o loop
 
-  cmp r5, 0
-  jl contagem                  @ Passa para a próxima divisão caso tenha passado do limite zero
+  cmp r5, r12
+  jl contagem                   @ Sai do loop caso tenha passado para baixo do limite
 
-  add r7, 1
-  jmp loop_div_segundo          @ Senão, é possível contar mais uma vez o número para a divisão
-
-div_segundo_negativo:
-  add r5, r3
-  cmp r5, 0
-  jg contagem                  @ Passa para a próxima divisão caso tenha passado do limite zero
-
-  sub r7, 1
-  jmp div_segundo_negativo      @ Senão, é possível contar mais uma vez o número para a divisão
+  add r7, r13                   @ Adiciona o passo ao contador
+  jmp loop_div_segundo
 
 contagem:
-
   add r0, r6
   add r0, r7                    @ Soma as divisões salvas em r6 e r7
 

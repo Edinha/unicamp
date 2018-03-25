@@ -1,11 +1,14 @@
 iw divisor
-%8
+%2
 %.
 iw num_elem
-%3
+%2
 %.
 iw vetor
-%f000f000
-%8000
+%000a0004
 %.
-s inicio
+g inicio
+r r0
+%
+q
+
