@@ -16,8 +16,8 @@ inicio:
   set r11, 0x8000               @ Divisor entre valores positivos e negativos de 16 bits
 
 loop_principal:
-  ld r4, [r2]                   @ Carrega o valor apontado em r4 e r5, afim de separar
-  mov r5, r4                    @ os dois números contidos nesta palavra
+  ld r4, [r2]                   @ Carrega o valor apontado em r2 para r4 e r5,
+  mov r5, r4                    @ afim de separar os dois números contidos nesta palavra
 
   set r6, 0x0ffff
   and r4, r6                    @ Isola os primeiros 16 bits em r4 (o primeiro número)
@@ -40,13 +40,15 @@ primeiro_negativo:
   mov r12, r11                  @ Caso seja negativo, o limite é 0x8000 (r11)
   set r13, -1                   @ Coloca o passo da divisão como 1 negativo
 
-loop_div_primeiro:
+loop_div_primeiro:              @ Este loop conta o número de vezes em que é possível subtrair de r4 o divisor (r3)
+                                @ até que ele chegue ao limite inferior (0x0 caso r4 seja positivo, 0x8000 caso contrário)
+
   sub r4, r3                    @ Subtrai o valor de divisor (r3) do número
 
   cmp r4, r12
-  jl div_segundo                @ Sai do loop caso tenha passado para baixo do limite
+  jl div_segundo                @ Sai do loop caso tenha passado para baixo do limite  inferior
 
-  add r6, r13                   @ Adiciona o passo ao contador
+  add r6, r13                   @ Adiciona o passo ao contador de divisão
   jmp loop_div_primeiro
 
 div_segundo:
@@ -62,18 +64,20 @@ segundo_negativo:
   mov r12, r11                  @ Caso seja negativo, o limite é 0x8000 (r11)
   set r13, -1                   @ Coloca o passo da divisão como 1 negativo
 
-loop_div_segundo:
+loop_div_segundo:               @ Este loop conta o número de vezes em que é possível subtrair de r5 o divisor (r3)
+                                @ até que ele chegue ao limite inferior (0x0 caso r5 seja positivo, 0x8000 caso contrário)
+
   sub r5, r3                    @ Subtrai o divisor em r3 para continuar o loop
 
   cmp r5, r12
-  jl contagem                   @ Sai do loop caso tenha passado para baixo do limite
+  jl contagem                   @ Sai do loop caso tenha passado para baixo do limite inferior
 
-  add r7, r13                   @ Adiciona o passo ao contador
+  add r7, r13                   @ Adiciona o passo ao contador de divisão
   jmp loop_div_segundo
 
 contagem:
   add r0, r6
-  add r0, r7                    @ Soma as divisões salvas em r6 e r7
+  add r0, r7                    @ Soma as divisões salvas em r6 e r7 para r0
 
   add r2, 4                     @ Move r2 para a próxima palavra do vetor
 
