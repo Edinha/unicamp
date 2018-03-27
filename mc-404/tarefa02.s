@@ -14,6 +14,8 @@ inicio:
 
   set r2, vetor                 @ Carrega em r2 a posição da primeira palavra do vetor
   set r11, 0x8000               @ Divisor entre valores positivos e negativos de 16 bits
+  set r12, 0xffff               @ Valor usado no xor para encontrar o complemento de 2 de um número
+  set r10, 0x0fffffff           @ Máscara para remover bit de sinal
 
 loop_principal:
   ld r4, [r2]                   @ Carrega o valor apontado em r2 para r4 e r5,
@@ -35,9 +37,11 @@ div_primeiro:
   jl loop_div_primeiro          @ Pula para o loop caso a inicialização seja positiva
 
 primeiro_negativo:
-  xor r4, 0x0000ffff
+  xor r4, r12
   add r4, 1                     @ Caso seja um número negativo, pega o complemento de 2
   set r13, -1                   @ Coloca o passo da divisão como 1 negativo
+
+  and r4, r10                   @ Remove o bit de sinal do número
 
 loop_div_primeiro:
   sub r4, r3                    @ Subtrai o valor de divisor (r3) do número
@@ -56,9 +60,11 @@ div_segundo:
   jl loop_div_segundo           @ Pula para o loop caso a inicialização seja positiva
 
 segundo_negativo:
-  xor r4, 0x0000ffff
-  add r4, 1                     @ Caso seja um número negativo, pega o complemento de 2
+  xor r5, r12
+  add r5, 1                     @ Caso seja um número negativo, pega o complemento de 2
   set r13, -1                   @ Coloca o passo da divisão como 1 negativo
+
+  and r5, r10                   @ Remove o bit de sinal do número
 
 loop_div_segundo:
   sub r5, r3                    @ Subtrai o divisor em r3 para continuar o loop

@@ -1,22 +1,12 @@
-fb cadeia 20 0
-ib cadeia
-%61
-%62
-%30
-%64
-%65
-%30
-%31
-%32
-%33
-%0
+iw divisor
+%8
 %.
-ib carac
-%30
+iw num_elem
+%20
 %.
+fw vetor 20 0f000f800
 g inicio
-iw index
-%.
-iw rindex
-%.
+r r0
+%
 q
+
