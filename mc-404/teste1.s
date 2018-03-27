@@ -8,8 +8,8 @@
   rindex: .skip 4
 
 inicio:
-  set r0, -1
-  set r1, -1                @ Inicializa r0 e r1 como os contadores do indices de aparição
+  set r0, -1                @ r0 será o índice inicial
+  set r1, -1                @ r1 será o índice final, ambos inicializados com -1 (não encontrado)
 
   set r11, 0                @ Posição atual da cadeia
 
@@ -28,15 +28,15 @@ loop:
   cmp r0, -1
   jg index_final            @ Caso o índice inicial já tenha valor, não o sobreescreve
 
-  mov r0, r11               @ Caso contrário, marca o primeira indice onde carac aparece
+  mov r0, r11               @ Caso contrário, marca o primeiro índice onde caracter aparece
 
 index_final:
-  mov r1, r11               @ Sempre sobreescreve o índice final com o último valor encontrado
+  mov r1, r11               @ Sempre sobreescreve o índice final com a última posição onde caracter foi encontrado
 
 continua_loop:
   add r2, 1                 @ Passa r2 para o próximo byte a ser lido
   add r11, 1                @ Aumenta a contagem de posições de r11
-  jmp loop                  @ Para continuar o loop
+  jmp loop
 
 fim:
   st index, r0
