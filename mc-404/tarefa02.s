@@ -1,4 +1,4 @@
-@@ Teste 01
+@@ Tarefa 02
 @@ William Gonçalves da Cruz, 188671
 
   vetor: .skip 4 * 64           @ O vetor tem no máximo 64 elementos
@@ -29,47 +29,41 @@ loop_principal:
 
 div_primeiro:
   set r6, 0                     @ Iniciliza r6 para contar o valor da divisão
-
-  set r12, 0                    @ Inicializa o limite para zero
   set r13, 1                    @ Coloca o passo da divisão como 1 positivo
 
   cmp r4, r11
   jl loop_div_primeiro          @ Pula para o loop caso a inicialização seja positiva
 
 primeiro_negativo:
-  mov r12, r11                  @ Caso seja negativo, o limite é 0x8000 (r11)
+  xor r4, 0x0000ffff
+  add r4, 1                     @ Caso seja um número negativo, pega o complemento de 2
   set r13, -1                   @ Coloca o passo da divisão como 1 negativo
 
-loop_div_primeiro:              @ Este loop conta o número de vezes em que é possível subtrair de r4 o divisor (r3)
-                                @ até que ele chegue ao limite inferior (0x0 caso r4 seja positivo, 0x8000 caso contrário)
-
+loop_div_primeiro:
   sub r4, r3                    @ Subtrai o valor de divisor (r3) do número
 
-  cmp r4, r12
-  jl div_segundo                @ Sai do loop caso tenha passado para baixo do limite  inferior
+  cmp r4, 0
+  jl div_segundo                @ Sai do loop caso tenha passado para baixo do limite inferior
 
   add r6, r13                   @ Adiciona o passo ao contador de divisão
   jmp loop_div_primeiro
 
 div_segundo:
   set r7, 0                     @ Iniciliza r7 para contar o valor da divisão
-
-  set r12, 0                    @ Inicializa o limite para zero
   set r13, 1                    @ Coloca o passo da divisão como 1 positivo
 
   cmp r5, r11
   jl loop_div_segundo           @ Pula para o loop caso a inicialização seja positiva
 
 segundo_negativo:
-  mov r12, r11                  @ Caso seja negativo, o limite é 0x8000 (r11)
+  xor r4, 0x0000ffff
+  add r4, 1                     @ Caso seja um número negativo, pega o complemento de 2
   set r13, -1                   @ Coloca o passo da divisão como 1 negativo
 
-loop_div_segundo:               @ Este loop conta o número de vezes em que é possível subtrair de r5 o divisor (r3)
-                                @ até que ele chegue ao limite inferior (0x0 caso r5 seja positivo, 0x8000 caso contrário)
-
+loop_div_segundo:
   sub r5, r3                    @ Subtrai o divisor em r3 para continuar o loop
 
-  cmp r5, r12
+  cmp r5, 0
   jl contagem                   @ Sai do loop caso tenha passado para baixo do limite inferior
 
   add r7, r13                   @ Adiciona o passo ao contador de divisão
