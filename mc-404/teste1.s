@@ -1,91 +1,45 @@
 @@ Teste 01
 @@ William Gonçalves da Cruz, 188671
 
-  vetor: .skip 4 * 64           @ O vetor tem no máximo 64 elementos
+  carac: .skip 1
+  cadeia: .skip 33          @ Guarda espaço para as entradas do programa
 
-  divisor: .word 1
-  num_elem: .word 1             @ Reserva espaço para as palavras divisor e número de elementos
+  index: .skip 4
+  rindex: .skip 4
 
 inicio:
-  set r0, 0                     @ Iniciliza o contador para as somas
+  set r0, -1
+  set r1, -1                @ Inicializa r0 e r1 como os contadores do indices de aparição
 
-  ld r1, num_elem               @ Carrega em r1 o número de elementos
-  ld r3, divisor                @ Carrega em r3 o valor para as divisões
+  set r11, 0                @ Posição atual da cadeia
 
-  set r2, vetor                 @ Carrega em r2 a posição da primeira palavra do vetor
-  set r11, 0x8000               @ Divisor entre valores positivos e negativos de 16 bits
+  set r2, cadeia            @ Coloca r2 no começo da cadeia
+  ldb r10, carac            @ Carrega r10 com o caracter desejado
 
-loop_principal:
-  ld r4, [r2]                   @ Carrega o valor apontado em r2 para r4 e r5,
-  mov r5, r4                    @ afim de separar os dois números contidos nesta palavra
+loop:
+  ldb r3, [r2]              @ Carrega em r3 o caracter atual da cadeia
 
-  set r6, 0x0ffff
-  and r4, r6                    @ Isola os primeiros 16 bits em r4 (o primeiro número)
+  cmp r3, 0x0
+  jz  fim                   @ Chegou ao fim da cadeia
 
-  set r6, 0xffff0000            @ Isola os últimos 16 bits em r5 (o segundo número)
-  and r5, r6                    @ e também zera os bits menos significativos
+  sub r3, r10
+  jnz continua_loop         @ Caso r3 não seja o caracter desejado, continua o loop
 
-  ror r5, 16                    @ Rotaciona r5 a direita a fim de ter o valor do segundo número
+  cmp r0, -1
+  jg index_final            @ Caso o índice inicial já tenha valor, não o sobreescreve
 
-div_primeiro:
-  set r6, 0                     @ Iniciliza r6 para contar o valor da divisão
+  mov r0, r11               @ Caso contrário, marca o primeira indice onde carac aparece
 
-  set r12, 0                    @ Inicializa o limite para zero
-  set r13, 1                    @ Coloca o passo da divisão como 1 positivo
+index_final:
+  mov r1, r11               @ Sempre sobreescreve o índice final com o último valor encontrado
 
-  cmp r4, r11
-  jl loop_div_primeiro          @ Pula para o loop caso a inicialização seja positiva
-
-primeiro_negativo:
-  mov r12, r11                  @ Caso seja negativo, o limite é 0x8000 (r11)
-  set r13, -1                   @ Coloca o passo da divisão como 1 negativo
-
-loop_div_primeiro:              @ Este loop conta o número de vezes em que é possível subtrair de r4 o divisor (r3)
-                                @ até que ele chegue ao limite inferior (0x0 caso r4 seja positivo, 0x8000 caso contrário)
-
-  sub r4, r3                    @ Subtrai o valor de divisor (r3) do número
-
-  cmp r4, r12
-  jl div_segundo                @ Sai do loop caso tenha passado para baixo do limite  inferior
-
-  add r6, r13                   @ Adiciona o passo ao contador de divisão
-  jmp loop_div_primeiro
-
-div_segundo:
-  set r7, 0                     @ Iniciliza r7 para contar o valor da divisão
-
-  set r12, 0                    @ Inicializa o limite para zero
-  set r13, 1                    @ Coloca o passo da divisão como 1 positivo
-
-  cmp r5, r11
-  jl loop_div_segundo           @ Pula para o loop caso a inicialização seja positiva
-
-segundo_negativo:
-  mov r12, r11                  @ Caso seja negativo, o limite é 0x8000 (r11)
-  set r13, -1                   @ Coloca o passo da divisão como 1 negativo
-
-loop_div_segundo:               @ Este loop conta o número de vezes em que é possível subtrair de r5 o divisor (r3)
-                                @ até que ele chegue ao limite inferior (0x0 caso r5 seja positivo, 0x8000 caso contrário)
-
-  sub r5, r3                    @ Subtrai o divisor em r3 para continuar o loop
-
-  cmp r5, r12
-  jl contagem                   @ Sai do loop caso tenha passado para baixo do limite inferior
-
-  add r7, r13                   @ Adiciona o passo ao contador de divisão
-  jmp loop_div_segundo
-
-contagem:
-  add r0, r6
-  add r0, r7                    @ Soma as divisões salvas em r6 e r7 para r0
-
-  add r2, 4                     @ Move r2 para a próxima palavra do vetor
-
-  sub r1, 2
-  cmp r1, 0
-  jle fim                       @ Como cada palavra possui 2 números, subtrai 2 da contagem
-
-  jmp loop_principal            @ Reitera sobre loop enquanto r1 náo chegar a zero
+continua_loop:
+  add r2, 1                 @ Passa r2 para o próximo byte a ser lido
+  add r11, 1                @ Aumenta a contagem de posições de r11
+  jmp loop                  @ Para continuar o loop
 
 fim:
+  st index, r0
+  st rindex, r1             @ Guarda os valores de r0 e r11 (posições) nas palavras designadas
+
   hlt
