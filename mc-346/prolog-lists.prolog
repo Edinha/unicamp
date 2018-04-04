@@ -6,14 +6,14 @@ ultimo([A], A).
 ultimo([_|R], U) :- ultimo(R, U).
 
 semultimo([_], []).
-semultimo([A|R], U) :- semultimo(R, X), U=[A|X].
+semultimo([A|R], [A|X]) :- semultimo(R, X).
 
 impares([], []).
 impares([A], [A]).
-impares([A,_|R], I) :- impares(R, X), I=[A|X].
+impares([A,_|R], [A|X]) :- impares(R, X).
 
 positivos([], []).
-positivos([A|R], P) :- A>=0, positivos(R, X), P=[A|X].
+positivos([A|R], [A|X]) :- A>=0, positivos(R, X).
 positivos([A|R], P) :- A<0, positivos(R, P).
 
 somapos([], 0).
@@ -25,7 +25,7 @@ crescente([_]).
 crescente([A,B|R]) :- B>A, crescente([B|R]).
 
 shift_right([], []).
-shift_right(L, P) :- ultimo(L, U), semultimo(L, S), P=[U|S].
+shift_right(L, [U|S]) :- ultimo(L, U), semultimo(L, S).
 
 shift_left([], []).
 shift_left([A|R], S) :- append(R, [A], S).
@@ -33,17 +33,16 @@ shift_left([A|R], S) :- append(R, [A], S).
 inverte([], []).
 inverte([A|R], I) :- inverte(R, X), append(X, [A], I).
 
-
 conta([],_, 0).
 conta([I|R], I, C) :- conta(R, I, X), C is X+1.
 conta([A|R], I, C) :- A =\= I, conta(R, I, C).
 
 remove([], _, []).
 remove([I|R], I, L) :- remove(R, I, L).
-remove([A|R], I, L) :- A =\= I, remove(R, I, X), L=[A|X].
+remove([A|R], I, [A|X]) :- A =\= I, remove(R, I, X).
 
 troca([], _, _, []).
-troca([I|R], I, T, L) :- troca(R, I, T, X), L=[T|X].
-troca([A|R], I, T, L) :- A =\= I, troca(R, I, T, X), L=[A|X].
+troca([I|R], I, T, [T|X]) :- troca(R, I, T, X).
+troca([A|R], I, T, [A|X]) :- A =\= I, troca(R, I, T, X).
 
 
