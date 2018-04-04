@@ -45,4 +45,10 @@ troca([], _, _, []).
 troca([I|R], I, T, [T|X]) :- troca(R, I, T, X).
 troca([A|R], I, T, [A|X]) :- A =\= I, troca(R, I, T, X).
 
+tamanho([], 0).
+tamanho([_|R], T) :- tamanho(R, X), T is X+1.
+
+pos(L, I, P) :- append(X, [I|_], L), tamanho(X, P).
+pos([], _, -1).
+
 
