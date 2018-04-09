@@ -52,3 +52,22 @@ pos(L, I, P) :- append(X, [I|_], L), tamanho(X, P).
 pos([], _, -1).
 
 
+////// ====================== Com acumuladores ========================= //////
+
+maior_acc([], -1).
+maior_acc([A|R], M) :- maior_aux(R, M, A).
+
+maior_aux([], Acc, Acc).
+maior_aux([A|R], M, Acc) :- A >= Acc, maior_aux(R, M, A).
+maior_aux([A|R], M, Acc) :- A < Acc, maior_aux(R, M, Acc).
+
+ultimo_acc(L, U) :- ultimo_aux(L, U, _).
+
+ultimo_aux([], Acc, Acc).
+ultimo_aux([A|R], U, _) :- ultimo_aux(R, U, A).
+
+semultimo_acc(L, S) :-semultimo_aux(L, S, []).
+
+semultimo_aux([], Acc, Acc).
+semultimo_aux([_], Acc, Acc).
+semultimo_aux([A,B|R], S, Acc) :- append(Acc, [A,B], P), semultimo_aux(R, S, P).
