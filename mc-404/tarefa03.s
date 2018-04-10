@@ -12,23 +12,23 @@ KEYBOARD_READY	 .equ 1               @ Constantes controle entrada teclado
 SUM_CODE         .equ 0x0B            @ Código para '#'
 END_CODE       	 .equ 0x0A            @ Código para '*'
 
-digits: .byte 0x7E,0x30,0x6D,0x79,0x33,0x5B,0x5F,0x70,0x7F,0x7B,0x77,0x1F,0x4E,0x3D,0x4F,0x47
+DIGITS: .byte 0x7E,0x30,0x6D,0x79,0x33,0x5B,0x5F,0x70,0x7F,0x7B,0x77,0x1F,0x4E,0x3D,0x4F,0x47
 
 read:
   inb r11, KEYBOARD_STAT
-  cmp r11, r10                        @ Espera a leitura do primeiro dígito do teclado
+  tst r11, r10                        @ Espera a leitura do primeiro dígito do teclado
   jz read
   inb r0, KEYBOARD_DATA               @ Guarda o valor hexadecimal em r0
 
 read_second:
   inb r11, KEYBOARD_STAT
-  cmp r11, r10                        @ Espera a leitura do segundo dígito do teclado
+  tst r11, r10                        @ Espera a leitura do segundo dígito do teclado
   jz read_second
   inb r1, KEYBOARD_DATA               @ Guarda '#' ou '*' em r1
   ret
 
 display:
-  set r12, digits
+  set r12, DIGITS
   add r12, r0                         @ Move r12 até a posição do dígito desejado
 
   ldb r11, [r12]
