@@ -1,4 +1,4 @@
-#7segs Resultado
+%7segs Resultado
 0x40
 
 %keyboard CalcPlus
