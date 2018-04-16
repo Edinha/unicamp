@@ -43,4 +43,22 @@ avl_aux(vazia).
 avl_aux(arv(_, E, D)) :- avl_aux(E), avl_aux(D), depth(E, DE), depth(D, DD), L is abs(DE - DD), L < 2.
     					 
 
+remove_abb(vazia, _, vazia).
+remove_abb(arv(N, E, D), I, arv(N, AE, D)) :- I < N, remove_abb(E, I, AE).
+remove_abb(arv(N, E, D), I, arv(N, E, AD)) :- I > N, remove_abb(D, I, AD).
 
+remove_abb(arv(I, vazia, vazia), I, vazia).
+remove_abb(arv(I, vazia, D), I, R) :- D =/= vazia,
+    			  	      extreme_left(D, LED),
+    				      remove_abb(D, LED, AD), 
+    				      R = arv(LED, vazia, AD).
+
+remove_abb(arv(I, E, vazia), I, R) :- E =/= vazia,
+    				      extreme_right(E, LED),
+    				      remove_abb(E, LED, AE), 
+    				      R = arv(LED, AE, vazia).
+
+remove_abb(arv(I, E, D), I, R) :- E =/= vazia, D =/= vazia,
+                                  extreme_right(E, LED),
+                                  remove_abb(E, LED, AE), 
+                                  R = arv(LED, AE, D).
