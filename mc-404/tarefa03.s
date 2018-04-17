@@ -18,7 +18,7 @@ read:
   inb r11, KEYBOARD_STAT
   tst r11, r10                        @ Espera a leitura do primeiro dígito do teclado
   jz read
-  inb r0, KEYBOARD_DATA               @ Guarda o valor hexadecimal em r0
+  inb r0, KEYBOARD_DATA               @ Guarda o próximo valor hexadecimal da soma em r0
 
 read_second:
   inb r11, KEYBOARD_STAT
@@ -42,8 +42,8 @@ inicio:
   set r10, KEYBOARD_READY             @ Inicializa r10 com o status de ready do teclado
 
   set r4, 0                           @ Inicializa r4 para ser o acumulador de soma
-  set r0, 0
-  call display                        @ Inicializa o display com a soma atual
+  mov r0, r4
+  call display                        @ Inicializa o display com zero
 
 loop:
   call read                           @ Lê uma entrada
