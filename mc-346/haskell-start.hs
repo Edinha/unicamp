@@ -43,3 +43,19 @@ position x l = posaux x l 0
 remover a l = [x | x <- l, x /= a]
 
 trocar a b l = [y | x <- l, let y = if x == a then b else x]
+
+
+######### Acumuladores
+
+maior_acc (x:xs) = maior_acc_aux x xs
+
+maior_acc_aux a [] = a
+maior_acc_aux a (x:xs) = maior_acc_aux (if a > x then a else x) xs
+
+soma_acc l = soma_acc_aux l 0
+soma_acc_aux [] s = s
+soma_acc_aux (x:xs) s = soma_acc_aux xs (s + x)
+
+appears_acc i l = appears_acc_aux i l 0
+appears_acc_aux _ [] c = c
+appears_acc_aux i (x:xs) c = appears_acc_aux i xs (c + (if i == x then 1 else 0))
