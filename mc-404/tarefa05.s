@@ -14,7 +14,7 @@ RED .equ 0x04
 GREEN .equ 0x01
 YELLOW .equ 0x02                              @ Inicializa as cores possíveis para o semáforo
 
-END_MEMORY .equ 0x8000
+END_MEMORY .equ 0x1000
 
 intervalo: .skip 4                            @ Endereço do intervalo em ms do temporizador
 first_color: .skip 4
