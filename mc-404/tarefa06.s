@@ -10,6 +10,7 @@ TIMER .equ 0x50                               @ Endereço do timer
 FIRST_SEMAPHORE .equ 0x90
 SECOND_SEMAPHORE .equ 0x91                    @ Endereços semáforos
 
+TIMER_COUNT .equ 0x1E                         @ Valor para contagem de 30 interrupções
 FIRST_DISPLAY .equ 0x40
 SECOND_DISPLAY .equ 0x41                      @ Endereços displays
 
@@ -35,16 +36,19 @@ TENTH_DIGITS:
 
 tick_time:
   set r13, UNIT_DIGITS
-  add r13, r12
+  add r13, r0
   ld r13, [r13]
   outb SECOND_DISPLAY, r13
 
   set r13, TENTH_DIGITS
-  add r13, r12
+  add r13, r0
   ld r13, [r13]
   outb FIRST_DISPLAY, r13
 
-  add r12, 1
+  sub r0, 1                                   @ Subtrai do contador de tick a iteração atual
+  jnz end_tick_time                           @ Pula para o final caso não tenha chego a zero\
+
+  set r0, TIMER_COUNT                         @ Reinicializa r12 para ser o contador de ticks
 
 end_tick_time:
   iret
@@ -67,7 +71,7 @@ invert_colors:
   st second_color, r5                         @ Guarda o valor para a próxima iteração
 
 end_recolor_semaphores:
-  ret                                        @ Retorna da interrupção ao final
+  ret                                         @ Retorna da interrupção ao final
 
 yellow_both_semaphores:
   set r4, YELLOW
@@ -88,13 +92,13 @@ inicio:
   set r4, GREEN                               @ Inicializa a cor dos dois semáforos
   call color_semaphores
 
+  set r0, TIMER_COUNT                         @ Reinicializa r0 para ser o contador de ticks
+
   st first_color, r4
   st second_color, r5                         @ Guarda o valor para a próxima iteração
 
   ld r0, intervalo
   out TIMER, r0                               @ Escreve o intervalo no temporizador
-
-  set r12, 0                                  @ Reinicializa r0 para ser o contador de ticks
 
 loop:
   jmp loop                                    @ Espera a interrupção acontecer
