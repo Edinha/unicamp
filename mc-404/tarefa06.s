@@ -13,8 +13,8 @@ SECOND_SEMAPHORE .equ 0x91                    @ Endereços semáforos
 TIMER_COUNT_FINAL .equ 0x1E                   @ Valor para contagem de 30 interrupções
 TIMER_COUNT_YELLOW .equ 0x19                  @ Valor para trocar os semáforos para amarelo (25 segundos)
 
-FIRST_DISPLAY .equ 0x40
-SECOND_DISPLAY .equ 0x41                      @ Endereços displays
+UNIT_DISPLAY .equ 0x40                        @ Endereço mostrador dígito menos significativo
+TENTH_DISPLAY .equ 0x41                       @ Endereço mostrador dígito mais significativo
 
 RED .equ 0x04
 GREEN .equ 0x01
@@ -53,11 +53,11 @@ final_timer_count:
 
 end_tick_time:
   set r13, TENTH_DIGITS                       @ Chamada do display para dígito mais significativo
-  set r12, FIRST_DISPLAY
+  set r12, TENTH_DISPLAY
   call display_digit
 
   set r13, UNIT_DIGITS                        @ Chamada do display para dígito menos significativo
-  set r12, SECOND_DISPLAY
+  set r12, UNIT_DISPLAY
   call display_digit
 
   add r0, 1                                   @ Adiciona um ao contador de tick
