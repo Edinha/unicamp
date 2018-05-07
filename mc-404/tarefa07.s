@@ -1,3 +1,5 @@
+@@ Tarefa 07
+@@ William Gonçalves da Cruz, 188671
 
 .global _start
 .org 0x1000                 @ Pula para endereço necessário
@@ -30,4 +32,4 @@ msg:
     .ascii      "Um teste\nsimples\n\n"
     .byte       0
 
-test: .word msg
+test: .word msg             @ Mensagem de testes
