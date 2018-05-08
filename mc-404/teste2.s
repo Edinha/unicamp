@@ -1,8 +1,8 @@
 @@ Teste 2
 @@ William Gonçalves da Cruz, 188671
 
-.global _start
-.org 0x1000                 @ Pula para endereço necessário
+  .global _start
+  .org 0x1000               @ Pula para endereço necessário
 
 strncpy:
   mov r3, r0                @ Copia o endereço de começo da cadeia para r3
@@ -39,8 +39,9 @@ _start:
   mov r7, #1
   swi #0x55                 @ Retorno ARM
 
-msg_copy: .skip 0x100
-          .byte 0
+msg_copy:
+    .skip 0x100
+    .byte 0
 
 copy: .word msg_copy        @ Endereço cópias teste
 
