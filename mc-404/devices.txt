@@ -2,17 +2,17 @@
 %leds Safe
 rg 0x90000
 
-%7segs UNIT
-0xa0000
-
-%7segs TENTH
-0xa0001
+%7segs THOUSAND
+0xa0003
 
 %7segs HUNDRED
 0xa0002
 
-%7segs THOUSAND
-0xa0003
+%7segs TENTH
+0xa0001
+
+%7segs UNIT
+0xa0000
 
 %keyboard KEYBOARD
 0xb0001 0xb0000 0x0
