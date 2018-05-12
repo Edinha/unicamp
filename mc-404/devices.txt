@@ -1,12 +1,24 @@
-%leds Rua1
-ryg 0x90
 
-%leds Rua2
-ryg 0x91
+%leds Safe
+rg 0x90000
+
+%7segs UNIT
+0xa0000
+
+%7segs TENTH
+0xa0001
+
+%7segs HUNDRED
+0xa0002
+
+%7segs THOUSAND
+0xa0003
+
+%keyboard KEYBOARD
+0xb0001 0xb0000 0x0
 
 %timer
-0x50 0x10
+0xc0000 7
 
-%7segs Cronometer
-0x41
-0x40
+%buttons Lock
+Push 0xd0000

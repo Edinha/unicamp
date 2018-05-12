@@ -1,2 +1,2 @@
 arm-none-eabi-mac-as -o mounted tarefa07.s
-arm-none-eabi-mac-ld -o compiled mounted
+arm-none-eabi-mac-ld -o compiled -Tmapa.lds mounted
