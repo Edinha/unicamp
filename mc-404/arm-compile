@@ -1,2 +1,3 @@
-arm-none-eabi-mac-as -o mounted tarefa07.s
+arm-none-eabi-mac-as -o mounted $1
 arm-none-eabi-mac-ld -o compiled -Tmapa.lds mounted
+armsim -l compiled -d devices.txt
