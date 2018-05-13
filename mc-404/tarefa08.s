@@ -11,6 +11,7 @@
   b button_press
   b timer_tick                      @ Configura as interupções
 
+  .align 2
 read_keyboard:
   ldr r1, =KEYBOARD_STATE
   ldr r1, [r1]
@@ -21,7 +22,6 @@ read_keyboard:
   ldr r1, [r1]
   bx lr                             @ Retorna do procedimento
 
-  .align 2
 write_next_digit:
   ldr r2, =digits
   ldrb r2, [r2, r1]                 @ Salva em r2 o dígito representativo do número teclado
@@ -39,11 +39,17 @@ write_next_digit:
   str r0, [r2]                      @ Salva a próxima casa decimal
   bx lr
 
-  .align 2
 button_press:
+  ldr r8, =safe_state
+  ldr r9, =SAFE_CLOSED_WAITING
+  strb r9, [r8]                     @ Fecha o cofre no clique do botao
+
+  ldr r8, =LEDS
+  ldr r9, =GREEN
+  str r9, [r8]                      @ Muda o led para verde, mostrar que espera uma senha
+
   movs pc, lr
 
-  .align 2
 timer_tick:
   movs pc, lr
 
@@ -54,15 +60,30 @@ _start:
   ldr r1, =actual_digit
   str r0, [r1]                      @ Iniciliza a posição de dígito atual do mostrador
 
+  ldr r0, =safe_state
+  ldr r1, =SAFE_OPEN
+  strb r1, [r0]                     @ Inicializa estado do cofre
+
+  mov r0, #0x10
+  bic r0, r0, #(IRQ+FIQ)            @ Habilita interrupções
+  msr cpsr,r0                       @ Move processador para modo usuário
+
+waiting_close_safe_loop:
+  ldr r1, =SAFE_OPEN
+  ldr r0, safe_state
+  cmp r0, r1
+  beq waiting_close_safe_loop       @ Continua em loop enquanto o estado do cofre é aberto
+
 loop:
   bl read_keyboard
   bl write_next_digit
-  b loop
+  b loop                            @ Espera a senha ser digitada
 
   mov r0, #0                        @ status -> 0
   mov r7, #1                        @ exit is syscall #1
   swi #0x55                         @ invoke syscall
 
+safe_state: .skip 1
 actual_digit: .skip 4
 
 digits:
@@ -81,3 +102,7 @@ digits:
 
 .equ TIMER, 0xc0000                 @ Endereço timer
 .equ BUTTON, 0xd0000                @ Endereço botão
+
+.equ SAFE_OPEN, 0x00
+.equ SAFE_CLOSED_LOCKED, 0x01
+.equ SAFE_CLOSED_WAITING, 0x02

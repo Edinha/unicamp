@@ -20,5 +20,5 @@ rg 0x90000
 %timer
 0xc0000 7
 
-%buttons Lock
-Push 0xd0000
+%buttons Buttons
+Push 0xd0000 6 P
