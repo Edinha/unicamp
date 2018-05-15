@@ -75,6 +75,8 @@ waiting_close_safe_loop:
   beq waiting_close_safe_loop       @ Continua em loop enquanto o estado do cofre é aberto
 
   @@ TODO disable keyboard click before this point
+  ldr r1, =KEYBOARD_DATA
+  ldr r1, [r1]                      @ Desabilita cliques do teclado que vieram antes desse ponto
 
   ldr r3, =password_save            @ Coloca em r3 a posição para salvar a senha
 
@@ -93,7 +95,12 @@ loop:
   strb r1, [r0]                     @ Entra no estado travado
 
 reset_display:
+  mov r1, #10
+  bl write_next_digit               @ Escreve o dígito vazio no display
 
+  ldr r3, =THOUSAND_DIGIT
+  cmp r0, r3
+  bne reset_display                 @ Continua o loop enquanto não escrever em todas as casas decimais
 
   mov r0, #0                        @ status -> 0
   mov r7, #1                        @ exit is syscall #1
@@ -105,7 +112,7 @@ actual_digit: .skip 4               @ Próximo display dos dígitos da senha
 password_save: .skip 4              @ Variável para salvar a senha
 
 digits:
-  .byte 0x7E,0x30,0x6D,0x79,0x33,0x5B,0x5F,0x70,0x7F,0x7B
+  .byte 0x7E,0x30,0x6D,0x79,0x33,0x5B,0x5F,0x70,0x7F,0x7B,0x0
 
 .equ RED, 0x02
 .equ GREEN, 0x01                    @ Cores para os leds
