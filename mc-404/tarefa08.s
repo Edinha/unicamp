@@ -70,9 +70,11 @@ _start:
 
 waiting_close_safe_loop:
   ldr r1, =SAFE_OPEN
-  ldr r0, safe_state
+  ldrb r0, safe_state
   cmp r0, r1
   beq waiting_close_safe_loop       @ Continua em loop enquanto o estado do cofre é aberto
+
+  @@ TODO disable keyboard click before this point
 
   ldr r3, =password_save            @ Coloca em r3 a posição para salvar a senha
 
@@ -82,7 +84,16 @@ loop:
 
   strb r1, [r3], #1                 @ Guarda o valor do dígito de senha atual em password_save
 
-  b loop                            @ Espera a senha ser digitada
+  ldr r4, =THOUSAND_DIGIT
+  cmp r0, r4
+  bne loop                          @ Espera a senha ser digitada até resetar novamente para o dígito de milhar (ciclo completo)
+
+  ldr r0, =LEDS
+  ldr r1, =RED
+  strb r1, [r0]                     @ Entra no estado travado
+
+reset_display:
+
 
   mov r0, #0                        @ status -> 0
   mov r7, #1                        @ exit is syscall #1
