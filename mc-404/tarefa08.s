@@ -5,7 +5,7 @@
 
   .set IRQ, 0x6
   .set FIQ, 0x7
-  .set STACK, 0x8000000             @ Posição inicial da pilha
+  .set STACK, 0x8000                @ Posição inicial da pilha
 
   .org IRQ*4
   b button_press
@@ -41,12 +41,15 @@ write_next_digit:
 
 reset_display:
   mov r1, #10                       @ Dígito que apaga o display
+  mov r9, lr                        @ Guarda o endereço de retorno da função
+
   bl write_next_digit
   bl write_next_digit
   bl write_next_digit
   bl write_next_digit               @ Escreve o dígito vazio no display 4 vezes para limpá-lo
 
-  bx lr
+  mov lr, r9
+  bx lr                             @ Retorna da função
 
 disable_previous_keyboard:
   ldr r1, =KEYBOARD_DATA
@@ -109,13 +112,7 @@ configure_password_loop:
 
   @@ TODO change safe_state variable for further compares
 
-  bl reset_display                  @ Reseta o display
-  @ mov r1, #10                       @ Dígito que apaga o display
-  @ bl write_next_digit               @ Escreve o dígito vazio no display 4 vezes para limpá-lo
-  @ bl write_next_digit
-  @ bl write_next_digit
-  @ bl write_next_digit
-
+  bl reset_display                  @ Reseta o display após configuração da senha
 
   ldr r3, =password_unblock         @ Coloca em r3 a posição de memória para variável de desbloquear cofre
 
