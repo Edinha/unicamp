@@ -32,11 +32,26 @@ write_next_digit:
   sub r0, #1                        @ Diminue o valor para o mostrador da próxima casa
 
   ldr r2, =UNIT_DIGIT
-  cmp r0, r2                        @ Compara a casa decimal atual com as das unidadesCa
+  cmp r0, r2                        @ Compara a casa decimal atual com as das unidades
   ldrcc r0, =THOUSAND_DIGIT         @ Caso seja menor, volta para milhares
 
   ldr r2, =actual_digit
   str r0, [r2]                      @ Salva a próxima casa decimal
+  bx lr
+
+reset_display:
+  mov r1, #10                       @ Dígito que apaga o display
+  bl write_next_digit
+  bl write_next_digit
+  bl write_next_digit
+  bl write_next_digit               @ Escreve o dígito vazio no display 4 vezes para limpá-lo
+
+  bx lr
+
+disable_previous_keyboard:
+  ldr r1, =KEYBOARD_DATA
+  ldr r1, [r1]                      @ Desabilita cliques do teclado que vieram antes desse ponto
+
   bx lr
 
 button_press:
@@ -74,33 +89,51 @@ waiting_close_safe_loop:
   cmp r0, r1
   beq waiting_close_safe_loop       @ Continua em loop enquanto o estado do cofre é aberto
 
-  @@ TODO disable keyboard click before this point
-  ldr r1, =KEYBOARD_DATA
-  ldr r1, [r1]                      @ Desabilita cliques do teclado que vieram antes desse ponto
+  bl disable_previous_keyboard
 
   ldr r3, =password_save            @ Coloca em r3 a posição para salvar a senha
 
-loop:
+configure_password_loop:
   bl read_keyboard
-  bl write_next_digit
+  bl write_next_digit               @ Espera e escreve próximo dígito de configuração da senha
 
   strb r1, [r3], #1                 @ Guarda o valor do dígito de senha atual em password_save
 
   ldr r4, =THOUSAND_DIGIT
   cmp r0, r4
-  bne loop                          @ Espera a senha ser digitada até resetar novamente para o dígito de milhar (ciclo completo)
+  bne configure_password_loop       @ Espera a senha ser digitada até resetar novamente para o dígito de milhar (ciclo completo)
 
   ldr r0, =LEDS
   ldr r1, =RED
   strb r1, [r0]                     @ Entra no estado travado
 
-reset_display:
-  mov r1, #10
-  bl write_next_digit               @ Escreve o dígito vazio no display
+  @@ TODO change safe_state variable for further compares
 
-  ldr r3, =THOUSAND_DIGIT
-  cmp r0, r3
-  bne reset_display                 @ Continua o loop enquanto não escrever em todas as casas decimais
+  bl reset_display                  @ Reseta o display
+  @ mov r1, #10                       @ Dígito que apaga o display
+  @ bl write_next_digit               @ Escreve o dígito vazio no display 4 vezes para limpá-lo
+  @ bl write_next_digit
+  @ bl write_next_digit
+  @ bl write_next_digit
+
+
+  ldr r3, =password_unblock         @ Coloca em r3 a posição de memória para variável de desbloquear cofre
+
+unlock_safe_loop:
+  bl read_keyboard
+  bl write_next_digit               @ Espera e escreve próximo dígito de desbloqueio
+
+  strb r1, [r3], #1                 @ Guarda o valor do dígito de senha atual em password_unblock
+
+  ldr r4, =THOUSAND_DIGIT
+  cmp r0, r4
+  bne unlock_safe_loop              @ Espera a senha ser digitada antes de testar a igualdade
+
+  ldr r1, password_save
+  ldr r2, password_unblock          @ Ao final do loop, deve comparar as senhas para desbloquear cofre
+
+  cmp r1, r2
+  moveq r10, #0x66                  @ Compara as duas senhas para desviar o fluxo
 
   mov r0, #0                        @ status -> 0
   mov r7, #1                        @ exit is syscall #1
@@ -110,6 +143,7 @@ safe_state: .skip 1                 @ Estado do cofre salvo
 actual_digit: .skip 4               @ Próximo display dos dígitos da senha
 
 password_save: .skip 4              @ Variável para salvar a senha
+password_unblock: .skip 4           @ Variável para salvar a tentativa de desbloquear o cofre
 
 digits:
   .byte 0x7E,0x30,0x6D,0x79,0x33,0x5B,0x5F,0x70,0x7F,0x7B,0x0
@@ -130,4 +164,4 @@ digits:
 
 .equ SAFE_OPEN, 0x00
 .equ SAFE_CLOSED_LOCKED, 0x01
-.equ SAFE_CLOSED_WAITING, 0x02
+.equ SAFE_CLOSED_WAITING, 0x02      @ Estados do cofre para controle de desvios
