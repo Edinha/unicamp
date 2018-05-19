@@ -41,9 +41,13 @@ write_next_digit:
   bx lr
 
 reset_display:
-  mov r1, #10                       @ Dígito que apaga o display
   push { lr }                       @ Guarda o endereço de retorno da função
 
+  ldr r1, =actual_digit
+  ldr r0, =THOUSAND_DIGIT
+  strb r0, [r1]                     @ Move para a primeira posição do display
+
+  mov r1, #10                       @ Dígito que apaga o display
   bl write_next_digit
   bl write_next_digit
   bl write_next_digit
@@ -80,22 +84,46 @@ timer_tick:
   cmp r8, r9
   beq timer_tick_reset_display      @ Caso seja o estado de timer para reset de display, desvia o fluxo
 
+  ldr r9, =SAFE_CLOSED_WAITING      @ Caso esteja configurando a senha, espera de tempo demais
+  cmp r8, r9
+  beq timer_tick_too_long_password
+
+  ldr r9, =SAFE_UNLOCK_FLOW         @ Caso esteja desbloqueando a senha, espera de tempo demais
+  cmp r8, r9
+  beq timer_tick_too_long_password
+
   b timer_tick_final                @ Náo faz nada caso não seja nenhum dos casos de timer
+
+timer_tick_too_long_password:
+  add r5, #1                        @ Adiciona 1 ao contador de tempo
+  cmp r5, #10
+  bcc timer_tick_final              @ Caso não tenha chego a 10, não faz nada
+
+  mov r5, #0
+  bl reset_display                  @ Reseta o display por completo
+
+  ldr r9, =SAFE_CLOSED_WAITING      @ Caso seja configuração de senha, move para configure_password_process
+  cmp r8, r9
+  ldreq lr, =configure_password_process
+
+  ldr r9, =SAFE_UNLOCK_FLOW         @ Caso seja desbloqueamento de senha, move para unlock_safe_process
+  cmp r8, r9
+  ldreq lr, =unlock_safe_process
+
+  b timer_tick_final                @ Move o endereço de retorno para o começo da configuração de senha
 
 timer_tick_reset_display:
   add r5, #1                        @ Adiciona 1 ao contador de tempo
-
   cmp r5, #5
-  bne timer_tick_final              @ Caso não tenha chego em 5, não faz nada
+  bcc timer_tick_final              @ Caso não tenha chego em 5, não faz nada
 
   mov r5, #0                        @ Caso contrário, chegou ao final de seu timer
   ldr r8, =safe_state
   ldr r9, =SAFE_TIMER_FINISHED
   strb r9, [r8]                     @ Escreve o estado em que o cofre pode avançar, o timer de reset acabou
 
-  pop { r8, r9 }
-
 timer_tick_final:
+  pop { r8, r9 }
   movs pc, lr
 
 _start:
@@ -150,6 +178,7 @@ configure_password_loop:
   ldr r1, =RED
   strb r1, [r0]                     @ Entra no estado travado
 
+  mov r5, #0                        @ Reinicializa o timer
   ldr r0, =safe_state
   ldr r1, =SAFE_TIMER_WAITING
   strb r1, [r0]                     @ Configura espera pelo timer para apagar display
@@ -160,6 +189,7 @@ waiting_timer_loop:
   cmp r0, r1
   beq waiting_timer_loop            @ Espera em loop o timer contar 5 vezes antes de apagar o display
 
+  mov r5, #0                        @ Reinicializa o timer
   ldr r0, =safe_state
   ldr r1, =SAFE_UNLOCK_FLOW
   strb r1, [r0]                     @ Configura cofre no estado de desbloquear cofre
@@ -184,7 +214,7 @@ unlock_safe_loop:
   ldr r2, password_unblock          @ Ao final do loop, deve comparar as senhas para desbloquear cofre
 
   cmp r1, r2
-  moveq r10, #0x66                 @ Compara as duas senhas para desviar o fluxo
+  moveq r10, #0x66                  @ Compara as duas senhas para desviar o fluxo
   bne unlock_safe_process           @ Caso sejam diferentes, retorna ao fluxo de desbloquear
 
   mov r0, #0                        @ status -> 0
