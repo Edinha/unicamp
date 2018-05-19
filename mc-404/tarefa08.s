@@ -5,7 +5,8 @@
 
   .set IRQ, 0x6
   .set FIQ, 0x7
-  .set STACK, 0x8000                @ Posição inicial da pilha
+  .set STACK, 0x80000               @ Posição inicial da pilha
+  .set INTERVAL, 1000               @ Intervalo da interrupção de timer
 
   .org IRQ*4
   b button_press
@@ -41,14 +42,14 @@ write_next_digit:
 
 reset_display:
   mov r1, #10                       @ Dígito que apaga o display
-  mov r9, lr                        @ Guarda o endereço de retorno da função
+  push { lr }                       @ Guarda o endereço de retorno da função
 
   bl write_next_digit
   bl write_next_digit
   bl write_next_digit
   bl write_next_digit               @ Escreve o dígito vazio no display 4 vezes para limpá-lo
 
-  mov lr, r9
+  pop { lr }
   bx lr                             @ Retorna da função
 
 disable_previous_keyboard:
@@ -58,6 +59,8 @@ disable_previous_keyboard:
   bx lr
 
 button_press:
+  push { r8, r9 }
+
   ldr r8, =safe_state
   ldr r9, =SAFE_CLOSED_WAITING
   strb r9, [r8]                     @ Fecha o cofre no clique do botao
@@ -66,14 +69,36 @@ button_press:
   ldr r9, =GREEN
   str r9, [r8]                      @ Muda o led para verde, mostrar que espera uma senha
 
+  pop { r8, r9 }
   movs pc, lr
 
 timer_tick:
+  push { r8, r9 }
+
+  ldrb r8, safe_state
+  ldr r9, =SAFE_TIMER_WAITING
+  cmp r8, r9
+  beq timer_tick_reset_display      @ Caso seja o estado de timer para reset de display, desvia o fluxo
+
+  b timer_tick_final                @ Náo faz nada caso não seja nenhum dos casos de timer
+
+timer_tick_reset_display:
+  add r5, #1                        @ Adiciona 1 ao contador de tempo
+
+  cmp r5, #5
+  bne timer_tick_final              @ Caso não tenha chego em 5, não faz nada
+
+  mov r5, #0                        @ Caso contrário, chegou ao final de seu timer
+  ldr r8, =safe_state
+  ldr r9, =SAFE_TIMER_FINISHED
+  strb r9, [r8]                     @ Escreve o estado em que o cofre pode avançar, o timer de reset acabou
+
+  pop { r8, r9 }
+
+timer_tick_final:
   movs pc, lr
 
 _start:
-  mov sp, #STACK                    @ Inicializa a pilha
-
   ldr r0, =THOUSAND_DIGIT
   ldr r1, =actual_digit
   str r0, [r1]                      @ Iniciliza a posição de dígito atual do mostrador
@@ -82,9 +107,23 @@ _start:
   ldr r1, =SAFE_OPEN
   strb r1, [r0]                     @ Inicializa estado do cofre
 
+  mov r0, #0x12                     @ IRQ Mode
+  msr cpsr, r0
+  mov sp, #0x72000                  @ Configura pilha modo IRQ
+
+  mov r0, #0x11                     @ FIQ mode
+  msr cpsr, r0
+  mov sp, #0x70000                  @ Configura pilha modo FIQ
+
   mov r0, #0x10
   bic r0, r0, #(IRQ+FIQ)            @ Habilita interrupções
   msr cpsr,r0                       @ Move processador para modo usuário
+  mov sp, #STACK                    @ Inicializa a pilha
+
+  mov r5, #0                        @ Inicializa contador timer
+  ldr r0, =TIMER
+  ldr r1, =INTERVAL
+  str r1, [r0]                      @ Inicializa intervalo timer
 
 waiting_close_safe_loop:
   ldr r1, =SAFE_OPEN
@@ -92,6 +131,7 @@ waiting_close_safe_loop:
   cmp r0, r1
   beq waiting_close_safe_loop       @ Continua em loop enquanto o estado do cofre é aberto
 
+configure_password_process:
   bl disable_previous_keyboard
 
   ldr r3, =password_save            @ Coloca em r3 a posição para salvar a senha
@@ -110,8 +150,22 @@ configure_password_loop:
   ldr r1, =RED
   strb r1, [r0]                     @ Entra no estado travado
 
-  @@ TODO change safe_state variable for further compares
+  ldr r0, =safe_state
+  ldr r1, =SAFE_TIMER_WAITING
+  strb r1, [r0]                     @ Configura espera pelo timer para apagar display
 
+waiting_timer_loop:
+  ldr r1, =SAFE_TIMER_WAITING
+  ldrb r0, safe_state
+  cmp r0, r1
+  beq waiting_timer_loop            @ Espera em loop o timer contar 5 vezes antes de apagar o display
+
+  ldr r0, =safe_state
+  ldr r1, =SAFE_UNLOCK_FLOW
+  strb r1, [r0]                     @ Configura cofre no estado de desbloquear cofre
+
+unlock_safe_process:
+  bl disable_previous_keyboard
   bl reset_display                  @ Reseta o display após configuração da senha
 
   ldr r3, =password_unblock         @ Coloca em r3 a posição de memória para variável de desbloquear cofre
@@ -130,7 +184,8 @@ unlock_safe_loop:
   ldr r2, password_unblock          @ Ao final do loop, deve comparar as senhas para desbloquear cofre
 
   cmp r1, r2
-  moveq r10, #0x66                  @ Compara as duas senhas para desviar o fluxo
+  moveq r10, #0x66                 @ Compara as duas senhas para desviar o fluxo
+  bne unlock_safe_process           @ Caso sejam diferentes, retorna ao fluxo de desbloquear
 
   mov r0, #0                        @ status -> 0
   mov r7, #1                        @ exit is syscall #1
@@ -159,6 +214,8 @@ digits:
 .equ TIMER, 0xc0000                 @ Endereço timer
 .equ BUTTON, 0xd0000                @ Endereço botão
 
-.equ SAFE_OPEN, 0x00
-.equ SAFE_CLOSED_LOCKED, 0x01
-.equ SAFE_CLOSED_WAITING, 0x02      @ Estados do cofre para controle de desvios
+.equ SAFE_OPEN, 0x00                @ Estados do cofre para controle de desvios
+.equ SAFE_TIMER_WAITING, 0x01
+.equ SAFE_TIMER_FINISHED, 0x02
+.equ SAFE_CLOSED_WAITING, 0x03
+.equ SAFE_UNLOCK_FLOW,    0x04
