@@ -69,10 +69,6 @@ button_press:
   ldr r9, =SAFE_CLOSED_WAITING
   strb r9, [r8]                     @ Fecha o cofre no clique do botao
 
-  ldr r8, =LEDS
-  ldr r9, =GREEN
-  str r9, [r8]                      @ Muda o led para verde, mostrar que espera uma senha
-
   pop { r8, r9 }
   movs pc, lr
 
@@ -135,6 +131,10 @@ _start:
   ldr r1, =SAFE_OPEN
   strb r1, [r0]                     @ Inicializa estado do cofre
 
+  ldr r0, =password_tries
+  mov r1, #0
+  strb r1, [r0]                     @ Inicializa o contador de senhas erradas
+
   mov r0, #0x12                     @ IRQ Mode
   msr cpsr, r0
   mov sp, #0x72000                  @ Configura pilha modo IRQ
@@ -158,6 +158,10 @@ waiting_close_safe_loop:
   ldrb r0, safe_state
   cmp r0, r1
   beq waiting_close_safe_loop       @ Continua em loop enquanto o estado do cofre é aberto
+
+  ldr r8, =LEDS
+  ldr r9, =GREEN
+  str r9, [r8]                      @ Muda o led para verde, mostrar que espera uma senha
 
 configure_password_process:
   bl disable_previous_keyboard
@@ -213,10 +217,37 @@ unlock_safe_loop:
   ldr r1, password_save
   ldr r2, password_unblock          @ Ao final do loop, deve comparar as senhas para desbloquear cofre
 
-  cmp r1, r2
-  moveq r10, #0x66                  @ Compara as duas senhas para desviar o fluxo
-  bne unlock_safe_process           @ Caso sejam diferentes, retorna ao fluxo de desbloquear
+  cmp r1, r2                        @ Compara as duas senhas
+  beq correct_password              @ Caso sejam iguais, desvia para o final
 
+  ldr r3, =password_tries           @ Caso sejam diferentes, aumenta o contador de senhas erradas em 1
+  ldrb r4, password_tries
+  add r4, #1
+  cmp r4, #3
+  bcs end                           @ Caso tenha chego em 3, trava o cofre para sempre
+
+  strb r4, [r3]                     @ Senão, salva o novo número
+  b unlock_safe_process             @ Para senhas diferentes, retorna ao fluxo de desbloquear
+
+correct_password:
+  ldr r0, =LEDS
+  ldr r1, =GREEN
+  strb r1, [r0]                     @ Entra no estado fechado
+
+waiting_button_restart_flow:
+  ldrb r0, safe_state
+  ldr r1, =SAFE_CLOSED_WAITING
+  cmp r0, r1
+  bne waiting_button_restart_flow   @ Espera o botão ser clicado para resetar tudo
+
+  ldr r0, =LEDS
+  mov r1, #0x00
+  strb r1, [r0]                     @ Reseta os leds
+
+  bl reset_display
+  b _start                          @ Volta ao começo de tudo
+
+end:
   mov r0, #0                        @ status -> 0
   mov r7, #1                        @ exit is syscall #1
   swi #0x55                         @ invoke syscall
@@ -224,6 +255,7 @@ unlock_safe_loop:
 safe_state: .skip 1                 @ Estado do cofre salvo
 actual_digit: .skip 4               @ Próximo display dos dígitos da senha
 
+password_tries: .skip 1             @ Tentativas de salvar senha
 password_save: .skip 4              @ Variável para salvar a senha
 password_unblock: .skip 4           @ Variável para salvar a tentativa de desbloquear o cofre
 
