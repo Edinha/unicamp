@@ -1,6 +1,5 @@
 import Data.List (sort, lines, groupBy, sortBy, intercalate)
 import Data.Map ((!), findWithDefault, insert, adjust, toList, empty, delete)
-import Data.List.Split (splitOn)
 
 data Vertex = Vertex String [Float] deriving (Ord, Show)
 data Edge = Edge Float Vertex Vertex deriving (Eq, Ord, Show)
@@ -18,13 +17,12 @@ edges (x:xs) = (foldl (\acc y -> (Edge (distance x y) x y) : acc) [] xs) ++ edge
 get_edges l = sort $ edges l
 
 init_sets l = foldl (\acc (Vertex key _) -> insert key [key] acc) empty l
-same_set m (Vertex first _) (Vertex second _) = (findWithDefault [] first m) == (findWithDefault [] second m)
+same_set m (Vertex first _) (Vertex second _) = (m ! first) == (m ! second)
 
-unify_sets m (Vertex first _) (Vertex second _)
-  | null first_group = delete first $ adjust (\l -> first_group ++ l) second m
-  | otherwise        = delete second $ adjust (\l -> second_group ++ l) first m
-  where first_group = findWithDefault [] first m
-        second_group = findWithDefault [] second m
+unify [] _ m = m
+unify (x:xs) key m = adjust (\_ -> m ! key) x $ unify xs key m
+
+unify_sets m (Vertex first _) (Vertex second _) = unify (m ! first) second $ adjust (\l -> l ++ (m ! first)) second m
 
 kruskal _ 0  m = m
 kruskal [] _ m = m
@@ -50,4 +48,4 @@ main = do
   putStrLn k
 
   -- TODO example of graph entry, run in ghci
-  -- get_edges [ (Vertex "a" [0, 0] "a"), (Vertex "b" [0, 1] "b"), (Vertex "c" [0, 2] "c") ]
+  -- get_edges [ (Vertex "a" [0, 0]), (Vertex "b" [0, 1]), (Vertex "c" [0, 2]) ]
