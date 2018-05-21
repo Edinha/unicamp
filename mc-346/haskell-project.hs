@@ -1,5 +1,6 @@
-import Data.List (sort, lines, groupBy, sortBy, intercalate)
-import Data.Map ((!), findWithDefault, insert, adjust, toList, empty, delete)
+import Data.List (sort, lines, group, intercalate)
+import Data.Map ((!), insert, adjust, toList, empty)
+import Data.List.Split (splitOn)
 
 data Vertex = Vertex String [Float] deriving (Ord, Show)
 data Edge = Edge Float Vertex Vertex deriving (Eq, Ord, Show)
@@ -31,21 +32,30 @@ kruskal ((Edge _ v y):rest) k m
   | otherwise      = kruskal rest (k-1) (unify_sets m v y)
 
 
-minimal_spanning_tree e v k = kruskal e ((length v) - (k - 1)) (init_sets v)
+minimal_spanning_tree v k = kruskal (get_edges v) ((length v) - k) (init_sets v)
 
-extract_groups l = map (\(_, x) -> x) $ toList l
+extract_groups l = map (\b -> head b) $ group $ sort $ map (\(_, x) -> x) $ toList l
+convert_vertex = map (\l -> read l :: Float)
 
 main = do
   c <- getContents
 
   let contents = lines c
   let k = head contents
-  let v = []
-
-  -- TODO read vertexes
+  let v = map (\l -> (Vertex (head l) (convert_vertex $ tail l))) (map (\l -> splitOn " " l) (tail contents))
+  let g = extract_groups $ minimal_spanning_tree v (read k :: Int)
 
   putStrLn "k"
   putStrLn k
 
+  putStrLn "vertexes"
+  putStrLn (intercalate " " (map (\(Vertex a _) -> a) v))
+
+  putStrLn "distances"
+  putStrLn (intercalate " -- " (map (\(Vertex _ a) -> show a) v))
+
+  putStrLn "response"
+  putStrLn (intercalate "\n" (map (intercalate " ") g))
+
   -- TODO example of graph entry, run in ghci
-  -- get_edges [ (Vertex "a" [0, 0]), (Vertex "b" [0, 1]), (Vertex "c" [0, 2]) ]
+  -- get_edges [ (Vertex "a" [1, 2]), (Vertex "b" [0, 1]), (Vertex "c" [0, 2]) ]
