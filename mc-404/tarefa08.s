@@ -63,13 +63,19 @@ disable_previous_keyboard:
   bx lr
 
 button_press:
-  push { r8, r9 }
+  push { r8, r9, lr }
+
+  ldrb r8, safe_state
+  ldr r9, =SAFE_CLOSED_WAITING
+
+  teq r8, r9                        @ Testa se o cofre foi aberto antes da senha ser digitada
+  ldreq lr, =_start
+  moveqs pc, lr                     @ Volta ao começo do programa
 
   ldr r8, =safe_state
-  ldr r9, =SAFE_CLOSED_WAITING
-  strb r9, [r8]                     @ Fecha o cofre no clique do botao
+  strb r9, [r8]                     @ Fecha o cofre no clique do botão caso contrário
 
-  pop { r8, r9 }
+  pop { r8, r9, lr }
   movs pc, lr
 
 timer_tick:
@@ -131,6 +137,10 @@ _start:
   ldr r1, =SAFE_OPEN
   strb r1, [r0]                     @ Inicializa estado do cofre
 
+  ldr r0, =LEDS
+  mov r1, #0x00
+  strb r1, [r0]                     @ Reseta os leds
+
   ldr r0, =password_tries
   mov r1, #0
   strb r1, [r0]                     @ Inicializa o contador de senhas erradas
@@ -172,6 +182,7 @@ configure_password_loop:
   bl read_keyboard
   bl write_next_digit               @ Espera e escreve próximo dígito de configuração da senha
 
+  mov r5, #0                        @ Reseta o timer de 10 segundos para cada novo dígito
   strb r1, [r3], #1                 @ Guarda o valor do dígito de senha atual em password_save
 
   ldr r4, =THOUSAND_DIGIT
@@ -182,7 +193,7 @@ configure_password_loop:
   ldr r1, =RED
   strb r1, [r0]                     @ Entra no estado travado
 
-  mov r5, #0                        @ Reinicializa o timer
+  mov r5, #0                        @ Reinicializa o timer para ser apagado em 5 segundos
   ldr r0, =safe_state
   ldr r1, =SAFE_TIMER_WAITING
   strb r1, [r0]                     @ Configura espera pelo timer para apagar display
@@ -208,6 +219,7 @@ unlock_safe_loop:
   bl read_keyboard
   bl write_next_digit               @ Espera e escreve próximo dígito de desbloqueio
 
+  mov r5, #0                        @ Reseta o timer de 10 segundos para cada novo dígito
   strb r1, [r3], #1                 @ Guarda o valor do dígito de senha atual em password_unblock
 
   ldr r4, =THOUSAND_DIGIT
@@ -239,10 +251,6 @@ waiting_button_restart_flow:
   ldr r1, =SAFE_CLOSED_WAITING
   cmp r0, r1
   bne waiting_button_restart_flow   @ Espera o botão ser clicado para resetar tudo
-
-  ldr r0, =LEDS
-  mov r1, #0x00
-  strb r1, [r0]                     @ Reseta os leds
 
   bl reset_display
   b _start                          @ Volta ao começo de tudo
