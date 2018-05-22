@@ -23,7 +23,8 @@ same_set m (Vertex first _) (Vertex second _) = (m ! first) == (m ! second)
 unify [] _ m = m
 unify (x:xs) key m = adjust (\_ -> m ! key) x $ unify xs key m
 
-unify_sets m (Vertex first _) (Vertex second _) = unify (m ! first) second $ adjust (\l -> l ++ (m ! first)) second m
+unify_sets m (Vertex first _) (Vertex second _) = unify (new_map ! second) second new_map
+  where new_map = adjust (\l -> l ++ (m ! first)) second m
 
 kruskal _ 0  m = m
 kruskal [] _ m = m
@@ -34,7 +35,7 @@ kruskal ((Edge _ v y):rest) k m
 
 minimal_spanning_tree v k = kruskal (get_edges v) ((length v) - k) (init_sets v)
 
-extract_groups l = map (\b -> head b) $ group $ sort $ map (\(_, x) -> x) $ toList l
+extract_groups l = map (\b -> head b) $ group $ sort $ map sort $ map (\(_, x) -> x) $ toList l
 convert_vertex = map (\l -> read l :: Float)
 
 main = do
