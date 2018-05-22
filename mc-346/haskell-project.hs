@@ -15,8 +15,6 @@ distance (Vertex _ a) (Vertex _ b) =
 edges [] = []
 edges (x:xs) = (foldl (\acc y -> (Edge (distance x y) x y) : acc) [] xs) ++ edges xs
 
-get_edges l = sort $ edges l
-
 init_sets l = foldl (\acc (Vertex key _) -> insert key [key] acc) empty l
 same_set m (Vertex first _) (Vertex second _) = (m ! first) == (m ! second)
 
@@ -33,10 +31,10 @@ kruskal ((Edge _ v y):rest) k m
   | otherwise      = kruskal rest (k-1) (unify_sets m v y)
 
 
-minimal_spanning_tree v k = kruskal (get_edges v) ((length v) - k) (init_sets v)
+minimal_spanning_tree v k = kruskal (sort $ edges v) ((length v) - k) (init_sets v)
 
-extract_groups l = map (\b -> head b) $ group $ sort $ map sort $ map (\(_, x) -> x) $ toList l
-convert_vertex = map (\l -> read l :: Float)
+extract_groups l = map head $ group $ sort $ map sort $ map (\(_, x) -> x) $ toList l
+convert_vertex   = map (\x -> read x :: Float)
 
 main = do
   c <- getContents
@@ -49,14 +47,15 @@ main = do
   putStrLn "k"
   putStrLn k
 
-  putStrLn "vertexes"
-  putStrLn (intercalate " " (map (\(Vertex a _) -> a) v))
-
-  putStrLn "distances"
-  putStrLn (intercalate " -- " (map (\(Vertex _ a) -> show a) v))
+  -- putStrLn "Rest of file"
+  -- putStrLn (intercalate "\n" (map (intercalate "-") (map (\l -> splitOn " " l) (tail contents))))
+  -- putStrLn "vertexes"
+  -- putStrLn (intercalate " " (map (\(Vertex a _) -> a) v))
+  -- putStrLn "distances"
+  -- putStrLn (intercalate " -- " (map (\(Vertex _ a) -> show a) v))
 
   putStrLn "response"
   putStrLn (intercalate "\n" (map (intercalate " ") g))
 
   -- TODO example of graph entry, run in ghci
-  -- get_edges [ (Vertex "a" [1, 2]), (Vertex "b" [0, 1]), (Vertex "c" [0, 2]) ]
+  -- get_edges [ (Vertex "a" [1, 2.1]), (Vertex "b" [0.5, 1]), (Vertex "c" [0, 2]) ]
