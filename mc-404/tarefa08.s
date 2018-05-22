@@ -137,6 +137,8 @@ _start:
   ldr r1, =SAFE_OPEN
   strb r1, [r0]                     @ Inicializa estado do cofre
 
+  bl reset_display                  @ Limpa o display
+
   ldr r0, =LEDS
   mov r1, #0x00
   strb r1, [r0]                     @ Reseta os leds
@@ -158,7 +160,7 @@ _start:
   msr cpsr,r0                       @ Move processador para modo usuário
   mov sp, #STACK                    @ Inicializa a pilha
 
-  mov r5, #0                        @ Inicializa contador timer
+  mov r5, #0                        @ Inicializa contador timer de espera por senha
   ldr r0, =TIMER
   ldr r1, =INTERVAL
   str r1, [r0]                      @ Inicializa intervalo timer
@@ -204,7 +206,6 @@ waiting_timer_loop:
   cmp r0, r1
   beq waiting_timer_loop            @ Espera em loop o timer contar 5 vezes antes de apagar o display
 
-  mov r5, #0                        @ Reinicializa o timer
   ldr r0, =safe_state
   ldr r1, =SAFE_UNLOCK_FLOW
   strb r1, [r0]                     @ Configura cofre no estado de desbloquear cofre
@@ -213,6 +214,7 @@ unlock_safe_process:
   bl disable_previous_keyboard
   bl reset_display                  @ Reseta o display após configuração da senha
 
+  mov r5, #0                        @ Reinicializa o timer de espera por senha
   ldr r3, =password_unblock         @ Coloca em r3 a posição de memória para variável de desbloquear cofre
 
 unlock_safe_loop:
@@ -246,19 +248,19 @@ correct_password:
   ldr r1, =GREEN
   strb r1, [r0]                     @ Entra no estado fechado
 
+  bl reset_display                  @ Limpa display após senha correta
+
 waiting_button_restart_flow:
   ldrb r0, safe_state
   ldr r1, =SAFE_CLOSED_WAITING
   cmp r0, r1
   bne waiting_button_restart_flow   @ Espera o botão ser clicado para resetar tudo
 
-  bl reset_display
   b _start                          @ Volta ao começo de tudo
 
 end:
-  mov r0, #0                        @ status -> 0
-  mov r7, #1                        @ exit is syscall #1
-  swi #0x55                         @ invoke syscall
+  bl reset_display
+  b end                             @ Mantém em estado de erro infinitamente
 
 safe_state: .skip 1                 @ Estado do cofre salvo
 actual_digit: .skip 4               @ Próximo display dos dígitos da senha
@@ -284,8 +286,8 @@ digits:
 .equ TIMER, 0xc0000                 @ Endereço timer
 .equ BUTTON, 0xd0000                @ Endereço botão
 
-.equ SAFE_OPEN, 0x00                @ Estados do cofre para controle de desvios
-.equ SAFE_TIMER_WAITING, 0x01
+.equ SAFE_OPEN,           0x00      @ Estados do cofre para controle de desvios
+.equ SAFE_TIMER_WAITING,  0x01
 .equ SAFE_TIMER_FINISHED, 0x02
 .equ SAFE_CLOSED_WAITING, 0x03
 .equ SAFE_UNLOCK_FLOW,    0x04
