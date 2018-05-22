@@ -44,18 +44,4 @@ main = do
   let v = map (\l -> (Vertex (head l) (convert_vertex $ tail l))) (map (\l -> splitOn " " l) (tail contents))
   let g = extract_groups $ minimal_spanning_tree v (read k :: Int)
 
-  putStrLn "k"
-  putStrLn k
-
-  -- putStrLn "Rest of file"
-  -- putStrLn (intercalate "\n" (map (intercalate "-") (map (\l -> splitOn " " l) (tail contents))))
-  -- putStrLn "vertexes"
-  -- putStrLn (intercalate " " (map (\(Vertex a _) -> a) v))
-  -- putStrLn "distances"
-  -- putStrLn (intercalate " -- " (map (\(Vertex _ a) -> show a) v))
-
-  putStrLn "response"
   putStrLn (intercalate "\n" (map (intercalate " ") g))
-
-  -- TODO example of graph entry, run in ghci
-  -- get_edges [ (Vertex "a" [1, 2.1]), (Vertex "b" [0.5, 1]), (Vertex "c" [0, 2]) ]
