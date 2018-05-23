@@ -1,6 +1,5 @@
 import Data.List (sort, lines, group, intercalate)
 import Data.Map ((!), insert, adjust, toList, empty)
-import Data.List.Split (splitOn)
 
 data Vertex = Vertex String [Float] deriving (Ord, Show)
 data Edge = Edge Float Vertex Vertex deriving (Eq, Ord, Show)
@@ -41,7 +40,7 @@ main = do
 
   let contents = lines c
   let k = head contents
-  let v = map (\l -> (Vertex (head l) (convert_vertex $ tail l))) (map (\l -> splitOn " " l) (tail contents))
+  let v = map (\l -> (Vertex (head l) (convert_vertex $ tail l))) (map words (tail contents))
   let g = extract_groups $ minimal_spanning_tree v (read k :: Int)
 
   putStrLn (intercalate "\n" (map (intercalate " ") g))
