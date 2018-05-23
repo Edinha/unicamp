@@ -17,6 +17,7 @@ edges (x:xs) = (foldl (\acc y -> (Edge (distance x y) x y) : acc) [] xs) ++ edge
 init_sets l = foldl (\acc (Vertex key _) -> insert key [key] acc) empty l
 same_set m (Vertex first _) (Vertex second _) = (m ! first) == (m ! second)
 
+-- As próximas duas funções unificam o conjunto recentemente adquirido pelo algoritmo
 unify [] _ m = m
 unify (x:xs) key m = adjust (\_ -> m ! key) x $ unify xs key m
 
