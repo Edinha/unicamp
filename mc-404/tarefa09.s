@@ -52,11 +52,16 @@ msg_size_loop:
   pop { r0, r1 }
   bx lr
 
+change_ride_state:                  @ Muda o estado do transporte baseado no valor de r1
+  ldr r0, =on_ride_state
+  strb r1, [r0]
+  bx lr
+
 wait_departure_buttons:             @ Esse método espera um clique no botão de partida e retorna o endereço do clicado
   ldr r0, arrival_button_address
   ldr r0, [r0, #1]
   cmp r0, #1
-  bne wait_departure_buttons          @ Espera em loop até que o botão levante a flag de clicado
+  bne wait_departure_buttons        @ Espera em loop até que o botão levante a flag de clicado
 
   bx lr
 
@@ -106,15 +111,14 @@ _start:
   ldr r1, =FIRST_STOP_ARRIVAL
   str r1, [r0]                      @ Inicializa o endereço atual do botão de parada
 
-  ldr r0, =on_ride_state
-  ldr r1, =ON_TRAVEL
-  strb r1, [r0]                     @ Inicializa o estado atual do transporte
-
   ldr r0, =third_stop_name
   ldr r1, =THIRD_STOP_ARRIVAL
   push { r0, r1 }                   @ Salva as informações para a troca no loop
 
 main_loop:
+  ldr r1, =ON_TRAVEL
+  bl change_ride_state              @ Muda o estado para andando
+
   ldr r1, =next_stop_msg
   bl write_console                  @ Escreve próximia parada no console
 
@@ -123,9 +127,8 @@ main_loop:
 
   bl wait_arrival_buttons           @ Espera o clique de um botão de arrival
 
-  ldr r0, =on_ride_state
   ldr r1, =STOPPED
-  strb r1, [r0]                     @ Muda o estado para parado
+  bl change_ride_state              @ Muda o estado para parado
 
   ldr r1, =arrival_msg
   bl write_console                  @ Mensagem de chegada ao ponto
@@ -135,12 +138,36 @@ main_loop:
 
   bl wait_departure_buttons         @ Espera o clique de um botão de departure
 
-  ldr r0, =on_ride_state
   ldr r1, =ON_TRAVEL
-  strb r1, [r0]                     @ Muda o estado para andando novamente
+  bl change_ride_state              @ Muda o estado para andando novamente
 
-main_loop_middle_stop:
-  @@ TODO the middle stop point here
+  ldr r3, arrival_button_address
+  ldr r0, =arrival_button_address
+  ldr r1, =SECOND_STOP_ARRIVAL
+  str r1, [r0]                      @ Muda o valor da variável apenas para o loop do meio
+
+main_loop_middle_stop:              @ Parte específica do loop para o ponto do meio
+  ldr r1, =next_stop_msg            @ Executa as mesmas ações porém tendo certeza de que é o meio
+  bl write_console
+
+  ldr r1, =second_stop_name
+  bl write_console
+
+  bl wait_arrival_buttons
+
+  ldr r1, =STOPPED
+  bl change_ride_state              @ Muda o estado para parado
+
+  ldr r1, =arrival_msg
+  bl write_console                  @ Mensagem de chegada ao ponto
+
+  ldr r1, =second_stop_name
+  bl write_console
+
+  bl wait_departure_buttons         @ Espera o clique de um botão de departure
+
+  ldr r0, =arrival_button_address
+  str r3, [r0]                      @ Volta ao valor anterior
 
   bl invert_ways                    @ Inverte o caminho para o próximo loop
   b main_loop                       @ Continua em loop eterno
