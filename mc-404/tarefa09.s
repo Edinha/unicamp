@@ -52,41 +52,37 @@ msg_size_loop:
   pop { r0, r1 }
   bx lr
 
-wait_departure_buttons:             @ Esse método espera um clique nos botões de partida e retorna o endereço do clicado
-  ldr r0, =FIRST_STOP_DEPARTURE
-  ldr r1, [r0]
-  cmp r1, #1
-  bxeq lr                           @ Caso seja o primero ponto de chegada
+wait_departure_buttons:             @ Esse método espera um clique no botão de partida e retorna o endereço do clicado
+  ldr r0, arrival_button_address
+  ldr r0, [r0, #1]
+  cmp r0, #1
+  bne wait_departure_buttons          @ Espera em loop até que o botão levante a flag de clicado
 
-  ldr r0, =SECOND_STOP_DEPARTURE
-  ldr r1, [r0]
-  cmp r1, #1
-  bxeq lr                           @ Caso seja o segundo ponto de chegada
+  bx lr
 
-  ldr r0, =THIRD_STOP_DEPARTURE
-  ldr r1, [r0]
-  cmp r1, #1
-  bxeq lr                           @ Caso seja o terceiro ponto de chegada
+wait_arrival_buttons:               @ Esse método espera um clique no botão de chegada e retorna o endereço do clicado
+  ldr r0, arrival_button_address
+  ldr r0, [r0]
+  cmp r0, #1
+  bne wait_arrival_buttons          @ Espera em loop até que o botão levante a flag de clicado
 
-  b wait_departure_buttons          @ Espera em loop infinito caso não retorne em nenhum dos três casos
+  bx lr
 
-wait_arrival_buttons:               @ Esse método espera um clique nos botões de chegada e retorna o endereço do clicado
-  ldr r0, =FIRST_STOP_ARRIVAL
-  ldr r1, [r0]
-  cmp r1, #1
-  bxeq lr                           @ Caso seja o primero ponto de chegada
+invert_ways:                        @ Esse método inverte os caminhos que os transportes farão para continuar em loop
+  pop { r0, r1 }
+  mov r5, r0
+  mov r6, r1                        @ Desempilha informações inicializadas
 
-  ldr r0, =SECOND_STOP_ARRIVAL
-  ldr r1, [r0]
-  cmp r1, #1
-  bxeq lr                           @ Caso seja o segundo ponto de chegada
+  ldr r0, stop_name_address
+  ldr r1, arrival_button_address
+  push { r0, r1 }                   @ Coloca as atuais na própria pilha para próxima inversão
 
-  ldr r0, =THIRD_STOP_ARRIVAL
-  ldr r1, [r0]
-  cmp r1, #1
-  bxeq lr                           @ Caso seja o terceiro ponto de chegada
+  ldr r0, =stop_name_address
+  ldr r1, =arrival_button_address
+  str r5, [r0]
+  str r6, [r1]                      @ Salva as informações da pilha nos lugares relevantes
 
-  b wait_arrival_buttons            @ Espera em loop infinito caso não retorne em nenhum dos três casos
+  bx lr
 
 _start:
   mov r0, #0x12                     @ IRQ Mode
@@ -106,9 +102,17 @@ _start:
   ldr r1, =first_stop_name
   str r1, [r0]                      @ Inicializa o nome da parada atual na variável
 
+  ldr r0, =arrival_button_address
+  ldr r1, =FIRST_STOP_ARRIVAL
+  str r1, [r0]                      @ Inicializa o endereço atual do botão de parada
+
   ldr r0, =on_ride_state
   ldr r1, =ON_TRAVEL
   strb r1, [r0]                     @ Inicializa o estado atual do transporte
+
+  ldr r0, =third_stop_name
+  ldr r1, =THIRD_STOP_ARRIVAL
+  push { r0, r1 }                   @ Salva as informações para a troca no loop
 
 main_loop:
   ldr r1, =next_stop_msg
@@ -129,15 +133,16 @@ main_loop:
   ldr r1, stop_name_address
   bl write_console
 
-  bl wait_departure_buttons        @ Espera o clique de um botão de departure
+  bl wait_departure_buttons         @ Espera o clique de um botão de departure
 
   ldr r0, =on_ride_state
   ldr r1, =ON_TRAVEL
   strb r1, [r0]                     @ Muda o estado para andando novamente
 
-  mov r0, #0x10
-  bic r0, r0, #(IRQ)                @ Habilita interrupções novamente caso uma parada já tenho sido solicitada
+main_loop_middle_stop:
+  @@ TODO the middle stop point here
 
+  bl invert_ways                    @ Inverte o caminho para o próximo loop
   b main_loop                       @ Continua em loop eterno
 
 end:
@@ -171,6 +176,7 @@ third_stop_name:
 
 on_ride_state: .skip 1              @ Estado para saber se está em trânsito ou não
 stop_name_address: .skip 4          @ Variável para guardar o endreço do nome da próxima parada
+arrival_button_address: .skip 4     @ Variável para guardar o endreço do botão da próxima parada
 
 .equ STDOUT, 1
 .equ WRITE_FLAG, 4                  @ Flags para configurar saída no console
