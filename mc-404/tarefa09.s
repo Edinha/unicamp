@@ -11,7 +11,7 @@
   b stop_button_press               @ Configura as interupções
 
 stop_button_press:
-  push { r1, lr }
+  push { r0, r1, lr }
 
   ldrb r1, on_ride_state
 
@@ -19,7 +19,11 @@ stop_button_press:
   ldreq r1, =request_stop_msg
   bleq write_console                @ Escreve a mensagem de parada solicitada
 
-  pop { r1, lr }
+  ldreq r0, =on_ride_state
+  ldreq r1, =CALLED
+  streqb r1, [r0]                   @ Muda o estado para não poder mais solicitar paradas após a primeira
+
+  pop { r0, r1, lr }
   movs pc, lr
 
 write_console:
@@ -131,6 +135,9 @@ main_loop:
   ldr r1, =ON_TRAVEL
   strb r1, [r0]                     @ Muda o estado para andando novamente
 
+  mov r0, #0x10
+  bic r0, r0, #(IRQ)                @ Habilita interrupções novamente caso uma parada já tenho sido solicitada
+
   b main_loop                       @ Continua em loop eterno
 
 end:
@@ -148,7 +155,7 @@ next_stop_msg:                      @ "Proxima parada "
   .byte 0x50, 0x72, 0x6F, 0x78, 0x69, 0x6D, 0x61, 0x20, 0x70, 0x61, 0x72, 0x61, 0x64, 0x61, 0x20, 0x0
 
 request_stop_msg:                   @ "Parada solicitada "
-  .byte 0x50, 0x61, 0x72, 0x61, 0x64, 0x61, 0x20, 0x73, 0x6F, 0x6C, 0x69, 0x6C, 0x63, 0x74, 0x61, 0x64, 0x61, 0x0A, 0x0
+  .byte 0x50, 0x61, 0x72, 0x61, 0x64, 0x61, 0x20, 0x73, 0x6F, 0x6C, 0x69, 0x63, 0x69, 0x74, 0x61, 0x64, 0x61, 0x0A, 0x0
 
 arrival_msg:                        @ "Chegamos a "
   .byte 0x43, 0x68, 0x65, 0x67, 0x61, 0x6D, 0x6F, 0x73, 0x20, 0x61, 0x20, 0x0
@@ -169,7 +176,8 @@ stop_name_address: .skip 4          @ Variável para guardar o endreço do nome 
 .equ WRITE_FLAG, 4                  @ Flags para configurar saída no console
 
 .equ STOPPED,   0x01
-.equ ON_TRAVEL, 0x02                @ Estados para
+.equ CALLED,    0x02
+.equ ON_TRAVEL, 0x03                @ Estados para controlar o transporte
 
 .equ FIRST_STOP_ARRIVAL,  0xa0001
 .equ SECOND_STOP_ARRIVAL, 0xa0003
