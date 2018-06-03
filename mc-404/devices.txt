@@ -2,9 +2,9 @@
 SolicitarParada 0xa0000 6 P
 
 %buttons Trajeto
-UnicampChegada 0xa0001 0 P
-UnicampPartida 0xa0002 0 P
-BaraoChegada 0xa0003 0 P
-BaraoPartida 0xa0004 0 P
+UnimartChegada 0xa0001 0 P
+UnimartPartida 0xa0002 0 P
+CambuiChegada 0xa0003 0 P
+CambuiPartida 0xa0004 0 P
 CentroChegada 0xa0005 0 P
 CentroPartida 0xa0006 0 P
