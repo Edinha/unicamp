@@ -74,6 +74,7 @@ wait_arrival_buttons:               @ Esse método espera um clique no botão de
   bx lr
 
 invert_ways:                        @ Esse método inverte os caminhos que os transportes farão para continuar em loop
+  @@ TODO make circular way here
   pop { r0, r1 }
   mov r5, r0
   mov r6, r1                        @ Desempilha informações inicializadas
