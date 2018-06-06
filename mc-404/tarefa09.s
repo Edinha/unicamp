@@ -73,6 +73,19 @@ wait_arrival_buttons:               @ Esse método espera um clique no botão de
 
   bx lr
 
+unable_previous_button_clicks:      @ Desabilita os cliques prévios para todos os botões disponíveis que não são de interrupção
+  ldr r0, =FIRST_STOP_ARRIVAL
+  ldr r1, =THIRD_STOP_DEPARTURE     @ Carrega as constantes para loop e comparação
+
+unable_previous_buttons_loop:
+  ldr r2, [r0]                      @ Lê o endereço do botão para desabilitar um clique prévio
+
+  cmp r0, r1
+  addnes r0, #1
+  bne unable_previous_buttons_loop  @ Continua em loop enquanto não chega ao final
+
+  bx lr                             @ Retorna do método
+
 invert_ways:                        @ Esse método mantém os caminhos em loop
   ldr r2, stop_name_address
   ldr r1, =THIRD_STOP_ARRIVAL
@@ -128,6 +141,7 @@ main_loop:
   bl write_console                  @ Nome da próxima parada
 
   bl wait_arrival_buttons           @ Espera o clique de um botão de arrival
+  bl unable_previous_button_clicks
 
   ldr r1, =STOPPED
   bl change_ride_state              @ Muda o estado para parado
@@ -140,6 +154,7 @@ main_loop:
   bl write_console                  @ Nome da próxima parada
 
   bl wait_departure_buttons         @ Espera o clique de um botão de departure
+  bl unable_previous_button_clicks
 
   bl invert_ways
   b main_loop                       @ Continua em loop eterno
