@@ -73,20 +73,24 @@ wait_arrival_buttons:               @ Esse método espera um clique no botão de
 
   bx lr
 
-invert_ways:                        @ Esse método inverte os caminhos que os transportes farão para continuar em loop
-  @@ TODO make circular way here
-  pop { r0, r1 }
-  mov r5, r0
-  mov r6, r1                        @ Desempilha informações inicializadas
+invert_ways:                        @ Esse método mantém os caminhos em loop
+  ldr r2, stop_name_address
+  ldr r1, =THIRD_STOP_ARRIVAL
+  ldr r0, arrival_button_address    @ Carrega as posições do último nome para mudá-las
 
-  ldr r0, stop_name_address
-  ldr r1, arrival_button_address
-  push { r0, r1 }                   @ Coloca as atuais na própria pilha para próxima inversão
+  cmp r0, r1                        @ Compara o ponto atual com o último
 
-  ldr r0, =stop_name_address
+  ldreq r2, =first_stop_name_ref
+  ldreq r0, =FIRST_STOP_ARRIVAL     @ Caso seja igual, volta ao primeiro
+
+  addnes r2, #4
+  addnes r0, #2                     @ Senão, avança ao próximo
+
   ldr r1, =arrival_button_address
-  str r5, [r0]
-  str r6, [r1]                      @ Salva as informações da pilha nos lugares relevantes
+  str r0, [r1]                      @ Salva o próximo endereço
+
+  ldr r1, =stop_name_address
+  str r2, [r1]                      @ Salva o nome do próximo ponto
 
   bx lr
 
@@ -105,16 +109,12 @@ _start:
   mov sp, #STACK                    @ Inicializa a pilha
 
   ldr r0, =stop_name_address
-  ldr r1, =first_stop_name
+  ldr r1, =first_stop_name_ref
   str r1, [r0]                      @ Inicializa o nome da parada atual na variável
 
   ldr r0, =arrival_button_address
   ldr r1, =FIRST_STOP_ARRIVAL
   str r1, [r0]                      @ Inicializa o endereço atual do botão de parada
-
-  ldr r0, =third_stop_name
-  ldr r1, =THIRD_STOP_ARRIVAL
-  push { r0, r1 }                   @ Salva as informações para a troca no loop
 
 main_loop:
   ldr r1, =ON_TRAVEL
@@ -124,6 +124,7 @@ main_loop:
   bl write_console                  @ Escreve próximia parada no console
 
   ldr r1, stop_name_address
+  ldr r1, [r1]
   bl write_console                  @ Nome da próxima parada
 
   bl wait_arrival_buttons           @ Espera o clique de um botão de arrival
@@ -135,49 +136,18 @@ main_loop:
   bl write_console                  @ Mensagem de chegada ao ponto
 
   ldr r1, stop_name_address
-  bl write_console
+  ldr r1, [r1]
+  bl write_console                  @ Nome da próxima parada
 
   bl wait_departure_buttons         @ Espera o clique de um botão de departure
 
-  ldr r1, =ON_TRAVEL
-  bl change_ride_state              @ Muda o estado para andando novamente
-
-  ldr r3, arrival_button_address
-  ldr r0, =arrival_button_address
-  ldr r1, =SECOND_STOP_ARRIVAL
-  str r1, [r0]                      @ Muda o valor da variável apenas para o loop do meio
-
-main_loop_middle_stop:              @ Parte específica do loop para o ponto do meio
-  ldr r1, =next_stop_msg            @ Executa as mesmas ações porém tendo certeza de que é o meio
-  bl write_console
-
-  ldr r1, =second_stop_name
-  bl write_console
-
-  bl wait_arrival_buttons
-
-  ldr r1, =STOPPED
-  bl change_ride_state              @ Muda o estado para parado
-
-  ldr r1, =arrival_msg
-  bl write_console                  @ Mensagem de chegada ao ponto
-
-  ldr r1, =second_stop_name
-  bl write_console
-
-  bl wait_departure_buttons         @ Espera o clique de um botão de departure
-
-  ldr r0, =arrival_button_address
-  str r3, [r0]                      @ Volta ao valor anterior
-
-  bl invert_ways                    @ Inverte o caminho para o próximo loop
+  bl invert_ways
   b main_loop                       @ Continua em loop eterno
 
 end:
   mov r0, #0
   mov r7, #1
   swi #0x55                         @ Finaliza o programa
-
 
 next_stop_msg:                      @ Começo constantes para mensagens do console
   .ascii "Proxima parada "
@@ -202,6 +172,15 @@ second_stop_name:
 third_stop_name:
   .ascii "Centro"
   .byte 0x0A, 0x0
+
+first_stop_name_ref:
+  .word first_stop_name
+
+second_stop_name_ref:
+  .word second_stop_name
+
+third_stop_name_ref:
+  .word third_stop_name             @ Referências para os endereços das constantes de nome
 
 on_ride_state: .skip 1              @ Estado para saber se está em trânsito ou não
 stop_name_address: .skip 4          @ Variável para guardar o endreço do nome da próxima parada
