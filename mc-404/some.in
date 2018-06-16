@@ -1,12 +1,19 @@
-iw divisor
-%8
+# MC404 - Teste3
+# 
+#  verifica palíndromo
+
+# monta "chamada" para função (que deve estar no endereço 0x1000)
+iw 100
+%eb0003be
+%e3a07001
+%ef000055
 %.
-iw num_elem
-%20
-%.
-fw vetor 20 0f000f800
-g inicio
+
+# prepara parâmetro em r0
 r r0
-%
+%fff87fff
+g 100
+r r0
+%.
 q
 
