@@ -11,4 +11,4 @@ CentroPartida 0xa0006 0 P
 
 
 %lcd QuadroDeAvisos
-0xb0000 0xb0001 amber 16x2
+0xb0000 0xb0001 amber 20x4

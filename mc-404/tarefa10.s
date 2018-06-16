@@ -14,31 +14,22 @@ stop_button_press:
   push { r0, r1, lr }
 
   ldrb r1, on_ride_state
+  cmp r1, #ON_TRAVEL
+  bne stop_button_press_end         @ Caso não esteja em trânsito, não executa a lógica de parada solicitada
 
-  cmp r1, #ON_TRAVEL                @ Apenas executa caso esteja em trânsito, e não parado
-  ldreq r1, =request_stop_msg
-  @ bleq write_console                @ Escreve a mensagem de parada solicitada
+  mov r0, #LCD_THIRD_LINE
+  bl config_lcd                     @ Muda para a linha do lcd onde pode escrever a mensagem
 
-  ldreq r0, =on_ride_state
-  ldreq r1, =CALLED
-  streqb r1, [r0]                   @ Muda o estado para não poder mais solicitar paradas após a primeira
+  ldr r1, =request_stop_msg
+  bl write_msg_lcd                  @ Escreve a mensagem de parada solicitada
 
+  ldr r0, =on_ride_state
+  ldr r1, =CALLED
+  strb r1, [r0]                     @ Muda o estado para não poder mais solicitar paradas após a primeira
+
+stop_button_press_end:
   pop { r0, r1, lr }
   movs pc, lr
-
-@ TODO REMOVE THIS HERE ======
-@ CHANGE TO WRITE IN LCD
-@ write_console:
-@   push { lr }
-
-@   bl msg_size                       @ Descobre o tamanho da mensagem em r1
-
-@   ldr r0, =STDOUT
-@   ldr r7, =WRITE_FLAG               @ Carrega as flags necessárias
-@   swi #0x55                         @ Faz a chamada de sistema
-
-@   pop { lr }
-@   bx lr
 
 config_lcd:
   ldr r6, =LCD_DISPLAYPORT
@@ -50,21 +41,30 @@ config_lcd:
   strb r0, [r6]                     @ Configura o LCD com o valor das flag rm r0
   bx lr
 
-write_lcd:                          @ Função para escrever no LCD
+write_byte_lcd:                     @ Escreve um byte na porta de dados do lcd
+  ldr r6, =LCD_DISPLAYPORT
+  ldrb r6, [r6]
+  tst r6, #LCD_BUSY
+  beq write_byte_lcd                @ Espera o LCD não estar ocupado para escrever
+
+  ldr r6, =LCD_DATAPORT             @ Escreve o byte salvo em r0 no lcd
+  strb r0, [r6]
   bx lr
 
-msg_size:                           @ Descobre o tamanho da mensagem cujo endreço inicial está em r1
-  push { r0, r1 }
-  mov r2, #0                        @ Inicializa o contador de tamanho
+write_msg_lcd:                      @ Função para escrever no LCD mensagem em loop no lcd
+  push { r0, lr }
 
-msg_size_loop:
+write_msg_loop:
   ldrb r0, [r1]
-  cmp r0, #0x0                      @ Carrega o char atual, caso seja nulo (0x0), termina o loop
-  addne r2, #1                      @ Caso contrário, soma 1 ao tamanho e continua
-  addne r1, #1
-  bne msg_size_loop
+  cmp r0, #0
+  beq write_msg_end                 @ Caso seja um byte 0, chegou ao final
 
-  pop { r0, r1 }
+  bl write_byte_lcd
+  add r1, #1                        @ Vai para o próximo endereço da cadeia
+  b write_msg_loop                  @ Continua a loop de escrever a mensagem
+
+write_msg_end:
+  pop { r0, lr }
   bx lr
 
 change_ride_state:                  @ Muda o estado do transporte baseado no valor de r1
@@ -158,27 +158,39 @@ main_loop:
   bl change_ride_state              @ Muda o estado para andando
 
   ldr r1, =next_stop_msg
-  @ bl write_console                  @ Escreve próximia parada no console
+  bl write_msg_lcd                  @ Escreve próxima parada no lcd
+
+  mov r0, #LCD_SECOND_LINE          @ Pula para a segunda linha
+  bl config_lcd
 
   ldr r1, stop_name_address
   ldr r1, [r1]
-  @ bl write_console                  @ Nome da próxima parada
+  bl write_msg_lcd                  @ Nome da próxima parada
 
   bl wait_arrival_buttons           @ Espera o clique de um botão de arrival
   bl unable_previous_button_clicks
+
+  mov r0, #LCD_CLEAR
+  bl config_lcd                     @ Limpa o lcd para o estado de chegada
 
   ldr r1, =STOPPED
   bl change_ride_state              @ Muda o estado para parado
 
   ldr r1, =arrival_msg
-  @ bl write_console                  @ Mensagem de chegada ao ponto
+  bl write_msg_lcd                  @ Mensagem de chegada ao ponto
+
+  mov r0, #LCD_SECOND_LINE          @ Pula para a segunda linha
+  bl config_lcd
 
   ldr r1, stop_name_address
   ldr r1, [r1]
-  @ bl write_console                  @ Nome da próxima parada
+  bl write_msg_lcd                  @ Nome da próxima parada
 
   bl wait_departure_buttons         @ Espera o clique de um botão de departure
   bl unable_previous_button_clicks
+
+  mov r0, #LCD_CLEAR
+  bl config_lcd                     @ Limpa o lcd para a saida da próxima viagem
 
   bl invert_ways
   b main_loop                       @ Continua em loop eterno
@@ -189,28 +201,22 @@ end:
   swi #0x55                         @ Finaliza o programa
 
 next_stop_msg:                      @ Começo constantes para mensagens do console
-  .ascii "Proxima parada "
-  .byte 0
+  .asciz "Proxima parada "
 
 request_stop_msg:
-  .ascii "Parada solicitada "
-  .byte 0xA, 0x0
+  .asciz "Parada solicitada "
 
 arrival_msg:
-  .ascii "Chegamos a "
-  .byte 0
+  .asciz "Chegamos a parada "
 
 first_stop_name:
-  .ascii "Unimart"
-  .byte 0x0A, 0x0
+  .asciz "Unimart"
 
 second_stop_name:
-  .ascii "Cambui"
-  .byte 0x0A, 0x0
+  .asciz "Cambui"
 
 third_stop_name:
-  .ascii "Centro"
-  .byte 0x0A, 0x0
+  .asciz "Centro"
 
 first_stop_name_ref:
   .word first_stop_name
@@ -224,9 +230,6 @@ third_stop_name_ref:
 on_ride_state: .skip 1              @ Estado para saber se está em trânsito ou não
 stop_name_address: .skip 4          @ Variável para guardar o endreço do nome da próxima parada
 arrival_button_address: .skip 4     @ Variável para guardar o endreço do botão da próxima parada
-
-.equ STDOUT, 1
-.equ WRITE_FLAG, 4                  @ Flags para configurar saída no console
 
 .equ STOPPED,   0x01
 .equ CALLED,    0x02
@@ -248,10 +251,10 @@ arrival_button_address: .skip 4     @ Variável para guardar o endreço do botã
 .equ LCD_CLEAR, 0x01
 .equ LCD_DISPLAYCONTROL, 0x08
 .equ LCD_BUSY, 0x80
-
-.equ LCD_HOME, 0x02
 .equ LCD_FUNCTIONSET, 0x20
 
 .equ LCD_TWOLINE, 0x08
 .equ LCD_8BIT, 0x10
 .equ LCD_8DOTS, 0x00
+.equ LCD_THIRD_LINE, 0x94
+.equ LCD_SECOND_LINE, 0xC0
