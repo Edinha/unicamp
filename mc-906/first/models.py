@@ -9,10 +9,10 @@ goal = (50, 50)
 board = [[0 for col in range(60)] for row in range (60)]
 
 for i in range(60):
-    board[i][0] = -1
-    board[0][i] = -1
-    board[i][len(board) - 1] = -1
-    board[len(board) - 1][i] = -1
+    board[i][0] = 1
+    board[0][i] = 1
+    board[i][len(board) - 1] = 1
+    board[len(board) - 1][i] = 1
 
 def go_up(state):
     (x, y) = state
@@ -47,6 +47,7 @@ class RobotProblem(Problem):
         if y - 1 > 0 and board[x][y - 1] < 1:
             possible.append(go_down)
 
+        # REMADE ACTION FOR APPEDING IN LIST ONCE BFS
         return possible
 
     def result(self, state, action):
@@ -60,7 +61,7 @@ class RobotProblem(Problem):
         return x == goal_x and y == goal_y
 
     def path_cost(self, c, state1, action, state2):
-        return 0
+        return c + 1
 
-    def value(self, state):
-        return 0
+    # def value(self, state):
+    #     return 0
