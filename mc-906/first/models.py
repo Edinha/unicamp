@@ -1,6 +1,6 @@
 import sys
 import math
-# sys.path.append('/Users/williamcruz/aima-python')
+sys.path.append('/Users/williamcruz/aima-python')
 sys.path.append('/home/william.cruz/aima-python')
 
 from search import *
@@ -38,6 +38,9 @@ def go_right(state):
     return (x + 1, y)
 
 class RobotProblem(Problem):
+    a = 0
+    n = 0
+
     def actions(self, state):
         possible = []
         (x, y) = state
@@ -58,6 +61,7 @@ class RobotProblem(Problem):
             board[x][y - 1] = 1
             possible.append(go_down)
 
+        self.n += len(possible)
         return possible
 
     def result(self, state, action):
@@ -65,6 +69,7 @@ class RobotProblem(Problem):
         return action(state)
 
     def goal_test(self, state):
+        self.a += 1
         (x, y) = state
         (goal_x, goal_y) = goal
         return x == goal_x and y == goal_y
@@ -83,3 +88,9 @@ class RobotProblem(Problem):
         (x, y) = node.state
         (goal_x, goal_y) = goal
         return int(math.sqrt((x - goal_x)**2 + (y - goal_y)**2))
+
+    def evaluated(self):
+        return self.a
+
+    def listed(self):
+        return self.n
