@@ -6,6 +6,9 @@ sys.path.append('/home/william.cruz/aima-python')
 from search import *
 from notebook import *
 
+import matplotlib.pyplot as plt
+import matplotlib.colors as ListedColormap
+
 goal = (50, 50)
 board = [[0 for col in range(60)] for row in range (60)]
 
@@ -46,19 +49,15 @@ class RobotProblem(Problem):
         (x, y) = state
 
         if x + 1 < len(board) and board[x + 1][y] < 1:
-            board[x + 1][y] = 1
             possible.append(go_right)
 
         if x - 1 > 0 and board[x - 1][y] < 1:
-            board[x - 1][y] = 1
             possible.append(go_left)
 
         if y + 1 < len(board) and board[x][y + 1] < 1:
-            board[x][y + 1] = 1
             possible.append(go_up)
 
         if y - 1 > 0 and board[x][y - 1] < 1:
-            board[x][y - 1] = 1
             possible.append(go_down)
 
         self.n += len(possible)
@@ -72,6 +71,7 @@ class RobotProblem(Problem):
         self.a += 1
         (x, y) = state
         (goal_x, goal_y) = goal
+        board[x][y] = 1
         return x == goal_x and y == goal_y
 
     def path_cost(self, c, state1, action, state2):
@@ -94,3 +94,28 @@ class RobotProblem(Problem):
 
     def listed(self):
         return self.n
+
+    def plot(self, solution):
+        for i in solution.path():
+            (x, y) = i.state
+            board[x][y] = 4
+
+        board[50][50] = 3
+        board[10][10] = 3
+        plt.matshow(board, cmap=ListedColormap.ListedColormap(['lightgrey', 'grey', 'black', 'blue', 'yellow']))
+        plt.show()
+
+class BFSRobotProblem(RobotProblem):
+    def actions(self, state):
+        a = super().actions(state)
+        for s in a:
+            (x, y) = s(state)
+            board[x][y] = 1
+
+        return a
+
+    def evaluated(self):
+        return super().evaluated()
+
+    def listed(self):
+        return super().listed()

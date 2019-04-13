@@ -18,3 +18,5 @@ print ('ELAPSED TIME: ', time.time() - start)
 print ('DFS: ', len(solution.path()))
 print ('DFS NODES LISTED: ', instance.listed())
 print ('DFS NODES EVALUATED: ', instance.evaluated())
+
+instance.plot(solution)

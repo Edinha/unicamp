@@ -8,7 +8,7 @@ from search import *
 from notebook import *
 
 state = (10, 10)
-instance = RobotProblem(state)
+instance = BFSRobotProblem(state)
 
 import time
 start = time.time()
@@ -18,3 +18,5 @@ print ('ELAPSED TIME: ', time.time() - start)
 print ('BFS PATH SIZE: ', len(solution.path()))
 print ('BFS NODES LISTED: ', instance.listed())
 print ('BFS NODES EVALUATED: ', instance.evaluated())
+
+instance.plot(solution)
