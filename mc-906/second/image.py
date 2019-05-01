@@ -1,6 +1,9 @@
 from PIL import Image
 from random import randint
 
+mask = 0x07
+SIGNIFICANT_BITS = 6
+
 class ImageWrapper:
 	img = None
 	count = {}
@@ -13,7 +16,8 @@ class ImageWrapper:
 
 	def get(self, point):
 		(x, y) = point
-		return self.pixels[x,y]
+		r, g, b = self.pixels[x,y][:3]
+		return (r & ~mask, g & ~mask, b & ~mask)
 
 	def random_color(self):
 		width, height = self.img.size
@@ -42,6 +46,11 @@ class ColorPalletProblem:
 	def crossover(self, other):
 		crossover_point = randint(1, 2)
 		new_pallet = self.pallet[:crossover_point] + other.pallet[crossover_point:]
+
+		new_pallet = list(set(new_pallet))
+		if len(new_pallet) < len(self.pallet):
+			return ColorPalletProblem(self.pallet)
+
 		return ColorPalletProblem(new_pallet)
 
 	def mutate(self, image):

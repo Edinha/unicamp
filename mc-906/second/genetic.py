@@ -6,7 +6,7 @@ BOARD_SIZE = 8
 COLOR_PALLET_SIZE = 3
 POPULATION_INITIAL_SIZE = 1000
 
-MAX_GENERATION_COUNT = 10
+MAX_GENERATION_COUNT = 100
 
 MUTATION_CHANCE = 0.1
 REPRODUCTION_CHANCE = 0.6
@@ -16,13 +16,19 @@ class GeneticAlgorithm:
 	population = []
 
 	def __init__(self):
-		self.image = ImageWrapper('rainbow.png')
+		self.image = ImageWrapper('logo.png')
 		for i in range(0, POPULATION_INITIAL_SIZE):
 			self.population.append(self.random_init())
 
 	def random_init(self):
 		# return QueenProblem([ randint(1, BOARD_SIZE) for i in range(0, BOARD_SIZE) ])
-		return ColorPalletProblem([ self.image.random_color() for i in range(0, COLOR_PALLET_SIZE) ])
+
+		pallet = []
+		while len(pallet) < COLOR_PALLET_SIZE:
+			pallet.append(self.image.random_color())
+			pallet = list(set(pallet))
+
+		return ColorPalletProblem(pallet)
 
 	def has_reach_end(self, generation):
 		# IMplement has solution
@@ -43,9 +49,10 @@ class GeneticAlgorithm:
 
 		new_population.extend(self.population)
 
-		for individual in new_population:
+		## SOLUCAO PALEOTATIVA DE MUTACAO POR ENQUANTO ##
+		for individual in self.population:
 			if uniform(0, 1) > MUTATION_CHANCE * (1 - generation/MAX_GENERATION_COUNT):
-				individual.mutate(self.image)
+				new_population.append(self.random_init())
 
 		## Implement rules of reproduction
 		new_population.sort(key=self.fitness, reverse=True)
