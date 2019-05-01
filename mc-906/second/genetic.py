@@ -1,31 +1,69 @@
-from random import randint
+from random import randint, uniform
 from queens import QueenProblem
+from image import ImageWrapper, ColorPalletProblem
 
 BOARD_SIZE = 8
+COLOR_PALLET_SIZE = 3
 POPULATION_INITIAL_SIZE = 1000
 
+MAX_GENERATION_COUNT = 10
+
+MUTATION_CHANCE = 0.1
+REPRODUCTION_CHANCE = 0.6
+
 class GeneticAlgorithm:
+	image = None
 	population = []
 
 	def __init__(self):
+		self.image = ImageWrapper('rainbow.png')
 		for i in range(0, POPULATION_INITIAL_SIZE):
-			positions = self.random_init()
-			self.population.append(QueenProblem(positions))
+			self.population.append(self.random_init())
 
 	def random_init(self):
-		return [ randint(1, BOARD_SIZE) for i in range(0, BOARD_SIZE) ]
+		# return QueenProblem([ randint(1, BOARD_SIZE) for i in range(0, BOARD_SIZE) ])
+		return ColorPalletProblem([ self.image.random_color() for i in range(0, COLOR_PALLET_SIZE) ])
 
-	def has_solution(self):
+	def has_reach_end(self, generation):
 		# IMplement has solution
-		return True
+		return generation > MAX_GENERATION_COUNT
 
-	def generate_new_population(self):
+	def fitness(self, individual):
+		return individual.fitness(self.image)
+
+	def find_pair(self, individual):
+		###### TODO SEE IF RANDOM WORKS OR APPLY LOGIC ######
+		return self.population[randint(0, len(self.population) - 1)]
+
+	def create_new_population(self, generation):
+		new_population = []
+		for individual in self.population:
+			if uniform(0, 1) > REPRODUCTION_CHANCE:
+				new_population.append(individual.crossover(self.find_pair(individual)))
+
+		new_population.extend(self.population)
+
+		for individual in new_population:
+			if uniform(0, 1) > MUTATION_CHANCE * (1 - generation/MAX_GENERATION_COUNT):
+				individual.mutate(self.image)
+
 		## Implement rules of reproduction
-		return self.population
+		new_population.sort(key=self.fitness, reverse=True)
+		return new_population[:POPULATION_INITIAL_SIZE]
 
 	def run(self):
-		while not self.has_solution():
-			self.population = self.generate_new_population()
+		generation = 1
+		while not self.has_reach_end(generation):
+			generation += 1
+			self.population = self.create_new_population(generation)
+
+		## TODO EXTRACT SOME DATA HERE ##
+		# self.population.sort(key=self.fitness, reverse=True)
+		best_individual = self.population[0]
+		print ('BEST INDIVIDUAL: ', best_individual)
+
+		for i in range(0, COLOR_PALLET_SIZE):
+			print ('COLOR %s %d COUNT: %d' % (best_individual.pallet[i], i, self.image.count.get(best_individual.pallet[i])))
 
 
 ####### RUN METHODS ######
