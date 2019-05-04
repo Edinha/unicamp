@@ -15,8 +15,8 @@ class GeneticAlgorithm:
 	image = None
 	population = []
 
-	def __init__(self):
-		self.image = ImageWrapper('logo.png')
+	def __init__(self, path):
+		self.image = ImageWrapper(path)
 		for i in range(0, POPULATION_INITIAL_SIZE):
 			self.population.append(self.random_init())
 
@@ -28,14 +28,14 @@ class GeneticAlgorithm:
 			pallet.append(self.image.random_color())
 			pallet = list(set(pallet))
 
-		return ColorPalletProblem(pallet)
+		return ColorPalletProblem(pallet, self.image)
 
 	def has_reach_end(self, generation):
 		# IMplement has solution
 		return generation > MAX_GENERATION_COUNT
 
 	def fitness(self, individual):
-		return individual.fitness(self.image)
+		return individual.fitness()
 
 	def find_pair(self, individual):
 		###### TODO SEE IF RANDOM WORKS OR APPLY LOGIC ######
@@ -44,14 +44,14 @@ class GeneticAlgorithm:
 	def create_new_population(self, generation):
 		new_population = []
 		for individual in self.population:
-			if uniform(0, 1) > REPRODUCTION_CHANCE:
+			if uniform(0, 1) < REPRODUCTION_CHANCE:
 				new_population.append(individual.crossover(self.find_pair(individual)))
 
 		new_population.extend(self.population)
 
 		## SOLUCAO PALEOTATIVA DE MUTACAO POR ENQUANTO ##
 		for individual in self.population:
-			if uniform(0, 1) > MUTATION_CHANCE * (1 - generation/MAX_GENERATION_COUNT):
+			if uniform(0, 1) < MUTATION_CHANCE * (1 - generation/MAX_GENERATION_COUNT):
 				new_population.append(self.random_init())
 
 		## Implement rules of reproduction
@@ -75,5 +75,5 @@ class GeneticAlgorithm:
 
 ####### RUN METHODS ######
 
-g = GeneticAlgorithm()
+g = GeneticAlgorithm('rainbow.jpg')
 g.run()
