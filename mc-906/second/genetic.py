@@ -3,7 +3,7 @@ from queens import QueenProblem
 from image import ImageWrapper, ColorPalletProblem
 
 BOARD_SIZE = 8
-COLOR_PALLET_SIZE = 3
+COLOR_PALLET_SIZE = 6
 POPULATION_INITIAL_SIZE = 1000
 
 MAX_GENERATION_COUNT = 100

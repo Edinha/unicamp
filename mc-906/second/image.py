@@ -2,6 +2,7 @@ from PIL import Image
 from random import randint, uniform
 
 mask = 0x07
+CUBE_DIVIDE = 32
 
 class ImageWrapper:
 	img = None
@@ -16,7 +17,13 @@ class ImageWrapper:
 	def get(self, point):
 		(x, y) = point
 		r, g, b = self.pixels[x,y][:3]
-		return (r & ~mask, g & ~mask, b & ~mask)
+		# return (r & ~mask, g & ~mask, b & ~mask)
+		return ( self.normalize(r), self.normalize(g), self.normalize(b) )
+
+	def normalize(self, value):
+		lower = int(CUBE_DIVIDE * (value / CUBE_DIVIDE))
+		upper = max(255, int(lower + CUBE_DIVIDE / 2))
+		return (lower + upper) // 2
 
 	def random_color(self):
 		width, height = self.img.size
