@@ -23,7 +23,7 @@ class ImageWrapper:
 	def normalize(self, value):
 		lower = int(CUBE_DIVIDE * (value / CUBE_DIVIDE))
 		upper = max(255, int(lower + CUBE_DIVIDE / 2))
-		return (lower + upper) // 2
+		return max(255, min(0, (lower + upper) // 2))
 
 	def random_color(self):
 		width, height = self.img.size
