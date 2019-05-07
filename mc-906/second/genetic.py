@@ -52,7 +52,7 @@ class GeneticAlgorithm:
 		## SOLUCAO PALEOTATIVA DE MUTACAO POR ENQUANTO ##
 		for individual in self.population:
 			if uniform(0, 1) < MUTATION_CHANCE * (1 - generation/MAX_GENERATION_COUNT):
-				new_population.append(self.random_init())
+				individual.mutate()
 
 		## Implement rules of reproduction
 		new_population.sort(key=self.fitness, reverse=True)
@@ -75,5 +75,5 @@ class GeneticAlgorithm:
 
 ####### RUN METHODS ######
 
-g = GeneticAlgorithm('rainbow.jpg')
+g = GeneticAlgorithm('persona_5_makoto.png')
 g.run()

@@ -31,12 +31,7 @@ class ImageWrapper:
 		for x in range(0, width):
 			for y in range(0, height):
 				color = self.get((x, y))
-				if not self.is_white_or_black(color):
-					self.count[color] = self.count.get(color, 0) + 1
-
-	def is_white_or_black(self, color):
-		(r, g, b) = color
-		return (r <= 8 and g <= 8 and b <= 8) or (r >= 248 and b >= 248 and g >= 248)
+				self.count[color] = self.count.get(color, 0) + 1
 
 	def percentage(self, color):
 		width, height = self.img.size
@@ -80,10 +75,10 @@ class ColorPalletProblem:
 
 		return ColorPalletProblem(new_pallet, self.img)
 
-	def crossover_single(self, other): ### escolhe um ponto aleatório do indivíduo e troca os genes###
+	def crossover_single(self, other): ### escolhe um ponto aleatorio do individuo e troca os genes###
 		new_pallet = []
 
-		j = randint(1, len(self.pallet) - 1) ### deve ser entre 1 e 5, se 0 nao faz crossover aí nao vale, se 6 copia tudo tambem nao vale ###
+		j = randint(1, len(self.pallet) - 1) ### deve ser entre 1 e 5, se 0 nao faz crossover ai nao vale, se 6 copia tudo tambem nao vale ###
 		for i in range(0, len(self.pallet)):
 			if i < j:
 				new_pallet.append(other.pallet[i])
@@ -96,6 +91,11 @@ class ColorPalletProblem:
 
 		return ColorPalletProblem(new_pallet, self.img)
 
-	def mutate(self, image):
-		position = randint(0, 2)
-		self.pallet[position] = image.random_color()
+	def mutate(self):
+		position = randint(0, len(self.pallet) - 1)
+		new_color = self.pallet[position]
+
+		while new_color in self.pallet:
+			new_color = self.img.random_color()
+
+		self.pallet[position] = new_color
