@@ -45,7 +45,7 @@ class GeneticAlgorithm:
 		new_population = []
 		for individual in self.population:
 			if uniform(0, 1) < REPRODUCTION_CHANCE:
-				new_population.append(individual.crossover(self.find_pair(individual)))
+				new_population.append(individual.crossover_single(self.find_pair(individual)))
 
 		new_population.extend(self.population)
 
@@ -75,5 +75,5 @@ class GeneticAlgorithm:
 
 ####### RUN METHODS ######
 
-g = GeneticAlgorithm('persona_5_makoto.png')
+g = GeneticAlgorithm('rainbow.jpg')
 g.run()

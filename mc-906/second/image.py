@@ -57,7 +57,7 @@ class ColorPalletProblem:
 		r, g, b = color
 		return abs(r - g) * abs(g - b) * abs(r - b)
 
-	def crossover(self, other):
+	def crossover_uniform(self, other):
 		new_pallet = []
 
 		for i in range(0, len(self.pallet)):
@@ -73,6 +73,22 @@ class ColorPalletProblem:
 				new_pallet.append(my_color)
 			else:
 				new_pallet.append(other_color)
+
+		new_pallet = list(set(new_pallet))
+		if len(new_pallet) < len(self.pallet):
+			return ColorPalletProblem(self.pallet, self.img)
+
+		return ColorPalletProblem(new_pallet, self.img)
+
+	def crossover_single(self, other): ### escolhe um ponto aleatório do indivíduo e troca os genes###
+		new_pallet = []
+
+		j = randint(1, len(self.pallet) - 1) ### deve ser entre 1 e 5, se 0 nao faz crossover aí nao vale, se 6 copia tudo tambem nao vale ###
+		for i in range(0, len(self.pallet)):
+			if i < j:
+				new_pallet.append(other.pallet[i])
+			else:
+				new_pallet.append(self.pallet[i])
 
 		new_pallet = list(set(new_pallet))
 		if len(new_pallet) < len(self.pallet):
