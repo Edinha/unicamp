@@ -75,5 +75,5 @@ class GeneticAlgorithm:
 
 ####### RUN METHODS ######
 
-g = GeneticAlgorithm('rainbow.jpg')
+g = GeneticAlgorithm('persona_5_makoto.png')
 g.run()

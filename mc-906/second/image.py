@@ -1,7 +1,6 @@
 from PIL import Image
 from random import randint, uniform
 
-mask = 0x07
 CUBE_DIVIDE = 32
 
 class ImageWrapper:
@@ -10,20 +9,18 @@ class ImageWrapper:
 	pixels = []
 
 	def __init__(self, path):
-		self.img = Image.open(path)
+		self.img = Image.open(path).convert('RGB')
 		self.pixels = self.img.load()
 		self.load_count()
 
 	def get(self, point):
 		(x, y) = point
 		r, g, b = self.pixels[x,y][:3]
-		# return (r & ~mask, g & ~mask, b & ~mask)
 		return ( self.normalize(r), self.normalize(g), self.normalize(b) )
 
 	def normalize(self, value):
-		lower = int(CUBE_DIVIDE * (value / CUBE_DIVIDE))
-		upper = max(255, int(lower + CUBE_DIVIDE / 2))
-		return max(255, min(0, (lower + upper) // 2))
+		lower = int(CUBE_DIVIDE * (value // CUBE_DIVIDE))
+		return int(lower + CUBE_DIVIDE / 2)
 
 	def random_color(self):
 		width, height = self.img.size
@@ -54,7 +51,11 @@ class ColorPalletProblem:
 		self.pallet = pallet
 
 	def fitness(self):
-		return sum([ self.img.percentage(color) for color in self.pallet ])
+		return sum([ self.img.percentage(color) * self.grey_scale(color) for color in self.pallet ])
+
+	def grey_scale(self, color):
+		r, g, b = color
+		return abs(r - g) * abs(g - b) * abs(r - b)
 
 	def crossover(self, other):
 		new_pallet = []
@@ -67,7 +68,6 @@ class ColorPalletProblem:
 			other_color_count = self.img.count.get(other_color, 0)
 
 			first_chance = (my_color_count / float(my_color_count + other_color_count + 1))
-			# second_chance = (my_color_count / float(my_color_count + other_color_count))
 
 			if uniform(0, 1) < first_chance:
 				new_pallet.append(my_color)
@@ -79,15 +79,6 @@ class ColorPalletProblem:
 			return ColorPalletProblem(self.pallet, self.img)
 
 		return ColorPalletProblem(new_pallet, self.img)
-
-		# crossover_point = randint(1, len(self.pallet))
-		# new_pallet = self.pallet[:crossover_point] + other.pallet[crossover_point:]
-
-		# new_pallet = list(set(new_pallet))
-		# if len(new_pallet) < len(self.pallet):
-		# 	return ColorPalletProblem(self.pallet)
-
-		# return ColorPalletProblem(new_pallet)
 
 	def mutate(self, image):
 		position = randint(0, 2)
