@@ -1,14 +1,11 @@
 from random import randint, uniform
 from image import ImageWrapper, ColorPalletProblem
 
-BOARD_SIZE = 8
 COLOR_PALLET_SIZE = 6
 POPULATION_INITIAL_SIZE = 1000
 
-MAX_GENERATION_COUNT = 100
-
-MUTATION_CHANCE = 0.1
-REPRODUCTION_CHANCE = 0.6
+MUTATION_CHANCE = 0.9
+REPRODUCTION_CHANCE = 0.8
 
 class GeneticAlgorithm:
 	image = None
@@ -29,10 +26,6 @@ class GeneticAlgorithm:
 
 		return ColorPalletProblem(pallet, self.image)
 
-	def has_reach_end(self, generation):
-		# IMplement has solution
-		return generation > MAX_GENERATION_COUNT
-
 	def fitness(self, individual):
 		return individual.fitness()
 
@@ -40,7 +33,7 @@ class GeneticAlgorithm:
 		###### TODO SEE IF RANDOM WORKS OR APPLY LOGIC ######
 		return self.population[randint(0, len(self.population) - 1)]
 
-	def create_new_population(self, generation):
+	def create_new_population(self):
 		new_population = []
 		for individual in self.population:
 			if uniform(0, 1) < REPRODUCTION_CHANCE:
@@ -50,7 +43,7 @@ class GeneticAlgorithm:
 
 		## SOLUCAO PALEOTATIVA DE MUTACAO POR ENQUANTO ##
 		for individual in self.population:
-			if uniform(0, 1) < MUTATION_CHANCE * (1 - generation/MAX_GENERATION_COUNT):
+			if uniform(0, 1) < MUTATION_CHANCE:
 				individual.mutate()
 
 		## Selection by elitism
@@ -60,10 +53,9 @@ class GeneticAlgorithm:
 		## Selection by tournament
 		index_list = [] ## lista com os indices que ja foram escolhidos
 		j = len(new_population) - 1 ## j eh o numero de individuos na nova populacao
-		print(j)
 		index1 = 1
 		index2 = 1
-		for i in range(0, int(j*0.6)):
+		for i in range(0, POPULATION_INITIAL_SIZE):
 			while index1 == index2 or index1 in index_list or index2 in index_list:	## enquanto nao forem dois individuos diferentes e que sao repetidos roda esse loop
 				index1 = randint(0, j)
 				index2 = randint(0, j)
@@ -79,10 +71,25 @@ class GeneticAlgorithm:
 		return new_population[j:]
 
 	def run(self):
+		## criterio de parada
+		cnt = -1
+		gen_cnt = 10
 		generation = 1
-		while not self.has_reach_end(generation):
+		new_value = 2
+		while cnt != int(0.1*gen_cnt):
 			generation += 1
-			self.population = self.create_new_population(generation)
+			old_value = new_value
+			self.population = self.create_new_population()
+			self.population.sort(key=self.fitness, reverse=True)
+			new_value = self.fitness(self.population[0])
+			print("generation ", generation)
+			print("new value = ", new_value)
+			if generation >= 20:
+				if old_value != new_value:
+					cnt = 1
+					gen_cnt = generation
+				else:
+					cnt = cnt + 1
 
 		## TODO EXTRACT SOME DATA HERE ##
 		##self.population.sort(key=self.fitness, reverse=True)
@@ -92,7 +99,6 @@ class GeneticAlgorithm:
 
 		for i in range(0, COLOR_PALLET_SIZE):
 			print ('COLOR %s %d COUNT: %d' % (best_individual.pallet[i], i, self.image.count.get(best_individual.pallet[i])))
-
 
 ####### RUN METHODS ######
 
