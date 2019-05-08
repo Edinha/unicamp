@@ -58,17 +58,20 @@ class GeneticAlgorithm:
 		##return new_population[:POPULATION_INITIAL_SIZE]
 
 		## Selection by tournament
-		j = len(new_population) - 1
+		j = len(new_population) - 1 ## j eh o numero de individuos na nova populacao
+		print(j)
 		index1 = 1
 		index2 = 1
-		for i in range(0, j):
-			while index1 == index2:
+		for i in range(0, j // 2): ## corta metade da populacao
+			while index1 == index2:	## enquanto nao forem dois individuos diferentes roda esse loop
 				index1 = randint(0, j)
 				index2 = randint(0, j)
 			person1 = new_population[index1]
 			person2 = new_population[index2]
-			if self.fitness(person1) < self.fitness(person2):
+			if self.fitness(person1) < self.fitness(person2): ## escolhe o individuo com a melhor fitness
 				new_population.append(person2)
+			else:
+				new_population.append(person1)
 
 		return new_population[j:]
 
@@ -91,4 +94,3 @@ class GeneticAlgorithm:
 
 g = GeneticAlgorithm('rainbow.jpg')
 g.run()
-print("fim")
