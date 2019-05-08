@@ -1,5 +1,4 @@
 from random import randint, uniform
-from queens import QueenProblem
 from image import ImageWrapper, ColorPalletProblem
 
 BOARD_SIZE = 8
@@ -55,8 +54,23 @@ class GeneticAlgorithm:
 				individual.mutate()
 
 		## Implement rules of reproduction
-		new_population.sort(key=self.fitness, reverse=True)
-		return new_population[:POPULATION_INITIAL_SIZE]
+		##new_population.sort(key=self.fitness, reverse=True)
+		##return new_population[:POPULATION_INITIAL_SIZE]
+
+		## Selection by tournament
+		j = len(new_population) - 1
+		index1 = 1
+		index2 = 1
+		for i in range(0, j):
+			while index1 == index2:
+				index1 = randint(0, j)
+				index2 = randint(0, j)
+			person1 = new_population[index1]
+			person2 = new_population[index2]
+			if self.fitness(person1) < self.fitness(person2):
+				new_population.append(person2)
+
+		return new_population[j:]
 
 	def run(self):
 		generation = 1
@@ -75,5 +89,6 @@ class GeneticAlgorithm:
 
 ####### RUN METHODS ######
 
-g = GeneticAlgorithm('persona_5_makoto.png')
+g = GeneticAlgorithm('rainbow.jpg')
 g.run()
+print("fim")
