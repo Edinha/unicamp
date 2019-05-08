@@ -99,3 +99,12 @@ class ColorPalletProblem:
 			new_color = self.img.random_color()
 
 		self.pallet[position] = new_color
+
+	def mutate2(self):
+		new_pallet = []
+
+		while len(new_pallet) < len(self.pallet):
+			new_pallet.append(self.img.random_color())
+			new_pallet = list(set(new_pallet))
+
+		self.pallet = new_pallet

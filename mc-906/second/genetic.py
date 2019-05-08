@@ -96,5 +96,4 @@ class GeneticAlgorithm:
 
 ####### RUN METHODS ######
 
-g = GeneticAlgorithm('equal.jpg')
-g.run()
+GeneticAlgorithm('equal.jpg').run()
