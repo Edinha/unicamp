@@ -66,8 +66,13 @@ class GeneticAlgorithm:
 		## TODO EXTRACT SOME DATA HERE ##
 		# self.population.sort(key=self.fitness, reverse=True)
 		best_individual = self.population[0]
+		print("best", self.fitness(best_individual))
 		print ('BEST INDIVIDUAL: ', best_individual)
-
+		print("generation = ", generation)
+		sum = 0
+		for individual in self.population:
+			sum = sum + self.fitness(individual)
+		print("fitness media = ", sum / len(self.population))
 		for i in range(0, COLOR_PALLET_SIZE):
 			print ('COLOR %s %d COUNT: %d' % (best_individual.pallet[i], i, self.image.count.get(best_individual.pallet[i])))
 
@@ -75,5 +80,5 @@ class GeneticAlgorithm:
 ####### RUN METHODS ######
 
 start_time = time.time()
-GeneticAlgorithm('pq-chico-mendes-osasco.jpg.jpg').run()
+GeneticAlgorithm('pq-chico-mendes-osasco.jpg').run()
 print(time.time() - start_time)

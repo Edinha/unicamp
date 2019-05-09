@@ -69,30 +69,30 @@ class GeneticAlgorithm:
 
 	def run(self):
 		## criterio de parada
-		cnt = -1
-		gen_cnt = 10
+		cnt = 0
 		generation = 1
-		new_value = 2
-		while cnt != int(0.1*gen_cnt):
+		new_value = 0
+		while cnt != 10:
 			generation += 1
 			old_value = new_value
 			self.population = self.create_new_population()
 			self.population.sort(key=self.fitness, reverse=True)
 			new_value = self.fitness(self.population[0])
-			print("value = ", new_value)
-			print("generation = ", generation)
-			if generation >= 30:
-				if int(old_value) != int(new_value):
-					cnt = 1
-					gen_cnt = generation
-				else:
-					cnt = cnt + 1
+			if new_value - old_value > 1:
+				cnt = 0
+			else:
+				cnt = cnt + 1
 
 		## TODO EXTRACT SOME DATA HERE ##
 		##self.population.sort(key=self.fitness, reverse=True)
 		best_individual = self.population[0]
+		print("best", self.fitness(best_individual))
 		print('BEST INDIVIDUAL: ', best_individual)
-
+		print("generation = ", generation)
+		sum = 0
+		for individual in self.population:
+			sum = sum + self.fitness(individual)
+		print("fitness media = ", sum/len(self.population))
 		for i in range(0, COLOR_PALLET_SIZE):
 			print ('COLOR %s %d COUNT: %d' % (best_individual.pallet[i], i, self.image.count.get(best_individual.pallet[i])))
 
