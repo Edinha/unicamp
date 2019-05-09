@@ -1,8 +1,9 @@
 from random import randint, uniform
 from image import ImageWrapper, ColorPalletProblem
+import time
 
 COLOR_PALLET_SIZE = 6
-POPULATION_INITIAL_SIZE = 1000
+POPULATION_INITIAL_SIZE = 1500
 
 MUTATION_CHANCE = 0.9
 REPRODUCTION_CHANCE = 0.8
@@ -46,10 +47,6 @@ class GeneticAlgorithm:
 			if uniform(0, 1) < MUTATION_CHANCE:
 				individual.mutate()
 
-		## Selection by elitism
-		##new_population.sort(key=self.fitness, reverse=True)
-		##return new_population[:POPULATION_INITIAL_SIZE]
-
 		## Selection by tournament
 		index_list = [] ## lista com os indices que ja foram escolhidos
 		j = len(new_population) - 1 ## j eh o numero de individuos na nova populacao
@@ -82,10 +79,10 @@ class GeneticAlgorithm:
 			self.population = self.create_new_population()
 			self.population.sort(key=self.fitness, reverse=True)
 			new_value = self.fitness(self.population[0])
-			print("generation ", generation)
-			print("new value = ", new_value)
-			if generation >= 20:
-				if old_value != new_value:
+			print("value = ", new_value)
+			print("generation = ", generation)
+			if generation >= 30:
+				if int(old_value) != int(new_value):
 					cnt = 1
 					gen_cnt = generation
 				else:
@@ -94,7 +91,6 @@ class GeneticAlgorithm:
 		## TODO EXTRACT SOME DATA HERE ##
 		##self.population.sort(key=self.fitness, reverse=True)
 		best_individual = self.population[0]
-		print(self.fitness(best_individual))
 		print('BEST INDIVIDUAL: ', best_individual)
 
 		for i in range(0, COLOR_PALLET_SIZE):
@@ -102,4 +98,6 @@ class GeneticAlgorithm:
 
 ####### RUN METHODS ######
 
-GeneticAlgorithm('equal.jpg').run()
+start_time = time.time()
+GeneticAlgorithm('pq-chico-mendes-osasco.jpg').run()
+print(time.time() - start_time)
