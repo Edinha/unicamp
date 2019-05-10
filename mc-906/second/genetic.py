@@ -65,6 +65,8 @@ class GeneticAlgorithm:
 				new_population.append(person1)
 				index_list.append(index1)
 
+		best_elem = max(new_population, key=lambda x: x.fitness())
+		new_population.append(best_elem)
 		return new_population[j:]
 
 	def run(self):
