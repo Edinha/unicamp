@@ -72,12 +72,13 @@ class GeneticAlgorithm:
 		cnt = 0
 		generation = 1
 		new_value = 0
+		avg_fitness_gen = []
 		while cnt != 10:
 			generation += 1
 			old_value = new_value
 			self.population = self.create_new_population()
-			self.population.sort(key=self.fitness, reverse=True)
-			new_value = self.fitness(self.population[0])
+			avg_fitness_gen.append(sum([ p.fitness() for p in self.population ])/len(self.population))
+			new_value = max([ p.fitness() for p in self.population ])
 			if new_value - old_value > 1:
 				cnt = 0
 			else:
@@ -89,15 +90,16 @@ class GeneticAlgorithm:
 		print("best", self.fitness(best_individual))
 		print('BEST INDIVIDUAL: ', best_individual)
 		print("generation = ", generation)
-		sum = 0
-		for individual in self.population:
-			sum = sum + self.fitness(individual)
-		print("fitness media = ", sum/len(self.population))
+		print("AVG FITNESS BY GENERATION: ", avg_fitness_gen)
+		print("fitness media = ", sum([ p.fitness() for p in self.population ])/len(self.population))
 		for i in range(0, COLOR_PALLET_SIZE):
 			print ('COLOR %s %d COUNT: %d' % (best_individual.pallet[i], i, self.image.count.get(best_individual.pallet[i])))
 
 ####### RUN METHODS ######
 
 start_time = time.time()
-GeneticAlgorithm('pq-chico-mendes-osasco.jpg').run()
+g = GeneticAlgorithm('persona_5_makoto.png')
+g.run()
 print(time.time() - start_time)
+
+g.image.save('out.png')

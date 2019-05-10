@@ -20,7 +20,7 @@ class ImageWrapper:
 
 	def normalize(self, value):
 		lower = int(CUBE_DIVIDE * (value // CUBE_DIVIDE))
-		return int(lower + CUBE_DIVIDE / 2)
+		return int(lower + CUBE_DIVIDE // 2)
 
 	def random_color(self):
 		width, height = self.img.size
@@ -36,6 +36,14 @@ class ImageWrapper:
 	def percentage(self, color):
 		width, height = self.img.size
 		return self.count.get(color, 0) / float(width * height)
+
+	def save(self, path):
+		width, height = self.img.size
+		for x in range(0, width):
+			for y in range(0, height):
+				self.pixels[x,y] = self.get((x, y))
+
+		self.img.save(path)
 
 class ColorPalletProblem:
 	img = None
