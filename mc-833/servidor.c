@@ -20,27 +20,36 @@ int main (int argc, char **argv) {
    time_t ticks;
    struct sockaddr_in socket_info;
 
+   //cria o socket TCP associado ao servidor
    if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
       perror("socket");
       exit(1);
    }
 
+   //inicializa com zero os campos da struct associada ao socket do servidor.
    bzero(&servaddr, sizeof(servaddr));
+   //Comunicação IPV4
    servaddr.sin_family      = AF_INET;
+   //Receber a conexão de clientes rodandno em qualquer porta
    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-   servaddr.sin_port        = htons(22122);   
+   //seta a porta associada ao processo do servidor
+   servaddr.sin_port        = htons(22122);
 
+
+   //associa a conexão às respectivas portas e IPs descritos na estrutura
    if (bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) == -1) {
       perror("bind");
       exit(1);
    }
-   
+
+   //verifica se o socket não está ouvindo
    if (listen(listenfd, LISTENQ) == -1) {
       perror("listen");
       exit(1);
    }
 
    for ( ; ; ) {
+     /**/
       if ((connfd = accept(listenfd, (struct sockaddr *) NULL, NULL)) == -1 ) {
          perror("accept");
          exit(1);
