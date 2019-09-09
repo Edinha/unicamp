@@ -49,23 +49,27 @@ int main (int argc, char **argv) {
    }
 
    for ( ; ; ) {
-     /**/
+     /*erro ao obter os dados e retirar da fila a conexão concluída*/
       if ((connfd = accept(listenfd, (struct sockaddr *) NULL, NULL)) == -1 ) {
          perror("accept");
          exit(1);
       }
 
+      //printa as informações de data e hora
       ticks = time(NULL);
       snprintf(buf, sizeof(buf), "%.24s\r\n", ctime(&ticks));
       write(connfd, buf, strlen(buf));
-
+      
+      //inicializa a estrutura que será usada para obter informações da conexão
       bzero(&socket_info, sizeof(socket_info));
       int len = sizeof(socket_info);
+      //recupera as informações do socket do cliente na conexão
       if (getsockname(connfd, (struct sockaddr *) &socket_info, (socklen_t *) &len) < 0) {
          perror("getsockname error");
          exit(1);
       }
 
+      //imprime as informações do socket do cliente
       printf("\nClient Socket Family %u", socket_info.sin_family);
       printf("\nClient Socket Port %u", socket_info.sin_port);
       printf("\nClient Socket Address %s\n", inet_ntoa(socket_info.sin_addr));
