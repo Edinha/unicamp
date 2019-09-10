@@ -10,15 +10,25 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
+#define MAXLINE 4096
 #define LISTENQ 10
 #define MAXDATASIZE 100
 
 int main (int argc, char **argv) {
+
    int    listenfd, connfd;
    struct sockaddr_in servaddr;
-   char   buf[MAXDATASIZE];
-   time_t ticks;
+   char   recvline[MAXLINE + 1];
+   char   error[MAXLINE + 1];
    struct sockaddr_in socket_info;
+
+   if (argc != 2) { // Se IP do server não fornecido
+      strcpy(error,"uso: ");
+      strcat(error,argv[0]);
+      strcat(error," <port>");
+      perror(error);
+      exit(1); //encerre
+   }
 
    //cria o socket TCP associado ao servidor
    if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
@@ -33,7 +43,7 @@ int main (int argc, char **argv) {
    //Receber a conexão de clientes rodandno em qualquer porta
    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
    //seta a porta associada ao processo do servidor
-   servaddr.sin_port        = htons(22122);
+   servaddr.sin_port        = htons(atoi(argv[1]));
 
 
    //associa a conexão às respectivas portas e IPs descritos na estrutura
@@ -54,12 +64,26 @@ int main (int argc, char **argv) {
          perror("accept");
          exit(1);
       }
-
+      //fork
       //printa as informações de data e hora
-      ticks = time(NULL);
-      snprintf(buf, sizeof(buf), "%.24s\r\n", ctime(&ticks));
-      write(connfd, buf, strlen(buf));
-      
+      int n;
+      while ( (n = read(connfd, recvline, MAXLINE)) > 0) {
+         //coloca um final para a string
+         recvline[n] = 0;
+         //escreve no saída padrão a mensagem recebida
+         if (fputs(recvline, stdout) == EOF) {
+            perror("fputs error");
+            exit(1);
+         }
+
+         write(connfd, recvline, strlen(recvline));
+      }
+
+      if (n < 0) {
+         perror("read error");
+         exit(1);
+      }
+
       //inicializa a estrutura que será usada para obter informações da conexão
       bzero(&socket_info, sizeof(socket_info));
       int len = sizeof(socket_info);
@@ -73,7 +97,6 @@ int main (int argc, char **argv) {
       printf("\nClient Socket Family %u", socket_info.sin_family);
       printf("\nClient Socket Port %u", socket_info.sin_port);
       printf("\nClient Socket Address %s\n", inet_ntoa(socket_info.sin_addr));
-
       close(connfd);
    }
    return(0);
