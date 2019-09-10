@@ -64,7 +64,7 @@ int main (int argc, char **argv) {
       bzero(&socket_info, sizeof(socket_info));
       int len = sizeof(socket_info);
       //recupera as informações do socket do cliente na conexão
-      if (getsockname(connfd, (struct sockaddr *) &socket_info, (socklen_t *) &len) < 0) {
+      if (getpeername(connfd, (struct sockaddr *) &socket_info, (socklen_t *) &len) < 0) {
          perror("getsockname error");
          exit(1);
       }
