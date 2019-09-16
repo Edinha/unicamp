@@ -92,6 +92,7 @@ int main(int argc, char **argv) {
             /*fecha a conexão com o cliente*/
             if (strcmp(recvline, EXIT_CMD) == 0) {
                 close(connfd);
+                exit(0);
             }
         }
 

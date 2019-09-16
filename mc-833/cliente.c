@@ -55,6 +55,10 @@ int main(int argc, char **argv) {
 
     for (;;) {
         fgets(command, MAX_COMMAND_SIZE, stdin);
+        int cmd_len = strlen(command);
+        if (cmd_len > 0 && command[cmd_len - 1] == '\n') {
+            command[cmd_len - 1] = '\0';
+        }
         write(sockfd, command, strlen(command));
 
         //enquanto há mensagens enviadas do servidor
