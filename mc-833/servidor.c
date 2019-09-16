@@ -17,10 +17,17 @@
 #define MAXDATASIZE 100
 
 void print_new_connect_client_socket_info(struct sockaddr_storage addr) {
-    char ipstr[MAXLINE + 1];
+    char ipstr[MAXLINE + 1], time_buffer[MAXLINE + 1];
     struct sockaddr_in *s = (struct sockaddr_in *) &addr;
     inet_ntop(AF_INET, &s->sin_addr, ipstr, sizeof ipstr);
-    printf("New connected client (IP: %s, Port: %d) \n", ipstr, s->sin_port);
+    
+    time_t ticks = time(NULL);
+    snprintf(time_buffer, sizeof(time_buffer), "%.24s", ctime(&ticks));
+
+    printf("\n\n=================== NEW CLIENT CONNECTION =================== \n");
+    printf("Client Address (IP: %s, Port: %d) \n", ipstr, s->sin_port);
+    printf("Connection time: %s \n", time_buffer);
+    printf("============================================================= \n");
 }
 
 int main(int argc, char **argv) {
@@ -111,6 +118,6 @@ int main(int argc, char **argv) {
             exit(1);
         }
     }
-    
+
     return (0);
 }

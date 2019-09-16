@@ -64,12 +64,6 @@ int main(int argc, char **argv) {
         if ((n = read(sockfd, recvline, MAXLINE)) > 0) {
             //coloca um final para a string
             recvline[n] = 0;
-            //escreve no saída padrão a mensagem recebida
-            if (fputs(recvline, stdout) == EOF) {
-                perror("fputs error");
-                exit(1);
-            }
-
             if (strcmp(recvline, EXIT_CMD) == 0) {
                 close(sockfd);
                 exit(0);
@@ -86,6 +80,9 @@ int main(int argc, char **argv) {
             exit(1);
         }
         
+        printf("\n\n=================== NEW SERVER RESPONSE =================== \n");
+        printf("Client command sent: %s \n", command);
+        printf("Client command received: %s \n", recvline);
         printf("Client socket (IP: %s, Port: %u) \n", inet_ntoa(socket_info.sin_addr), socket_info.sin_port);
         
         // Reinicia socket info para usar mesma referência para informações do server
@@ -96,6 +93,7 @@ int main(int argc, char **argv) {
         }
 
         printf("Server socket (IP: %s, Port: %u) \n", inet_ntoa(socket_info.sin_addr), socket_info.sin_port);
+        printf("=========================================================== \n");
 
         if (n < 0) {
             perror("read error");
