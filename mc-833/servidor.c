@@ -14,12 +14,16 @@
 #define MAXLINE 4096
 #define EXIT_CMD "exit"
 #define LISTENQ 10
+#define READ_CMD_MODE "r"
 #define MAXDATASIZE 100
 
 int main(int argc, char **argv) {
 
     int listenfd, connfd;
+
     struct sockaddr_in servaddr;
+    char cmd_output[MAXLINE + 1];
+    char cmd_local_output[MAXDATASIZE];
     char recvline[MAXLINE + 1];
     char error[MAXLINE + 1];
     struct sockaddr_in socket_info;
@@ -87,12 +91,26 @@ int main(int argc, char **argv) {
                 perror("fputs error");
                 exit(1);
             }
-
             write(connfd, recvline, strlen(recvline));
             /*fecha a conexão com o cliente*/
             if (strcmp(recvline, EXIT_CMD) == 0) {
                 close(connfd);
                 exit(0);
+            }
+
+
+            /*executa o comando */
+            FILE *f = popen(recvline, READ_CMD_MODE);
+            bzero(cmd_output, sizeof(cmd_output));
+            strcpy(cmd_output, "\nretorno do comando: \n");
+            while (fgets(cmd_local_output, MAXLINE, f)) {
+                strcat(cmd_output, cmd_local_output);
+//                printf("%s", cmd_output);
+            }
+
+            if (strlen(cmd_output) > 0) {
+                printf("%s", cmd_output);
+                write(connfd, cmd_output, strlen(cmd_output));
             }
         }
 
