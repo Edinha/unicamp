@@ -37,7 +37,6 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-
     //inicializa com 0 a struct que representa o socket servidor.
     bzero(&servaddr, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
@@ -86,16 +85,23 @@ int main(int argc, char **argv) {
             perror("getsockname error");
             exit(1);
         }
+        
+        printf("Client socket (IP: %s, Port: %u) \n", inet_ntoa(socket_info.sin_addr), socket_info.sin_port);
+        
+        // Reinicia socket info para usar mesma referência para informações do server
+        bzero(&socket_info, len);
+        if (getpeername(sockfd, (struct sockaddr *) &socket_info, (socklen_t *) &len) < 0) {
+            perror("getsockname error");
+            exit(1);
+        }
 
-//        //printa as informações do socket do cliente obtidas
-//        printf("\nSocket Family %u", socket_info.sin_family);
-//        printf("\nSocket Port %u", socket_info.sin_port);
-//        printf("\nSocket Address %s\n", inet_ntoa(socket_info.sin_addr));
+        printf("Server socket (IP: %s, Port: %u) \n", inet_ntoa(socket_info.sin_addr), socket_info.sin_port);
 
         if (n < 0) {
             perror("read error");
             exit(1);
         }
     }
+
     exit(0);
 }

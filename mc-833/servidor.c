@@ -16,14 +16,21 @@
 #define LISTENQ 10
 #define MAXDATASIZE 100
 
+void print_new_connect_client_socket_info(struct sockaddr_storage addr) {
+    char ipstr[MAXLINE + 1];
+    struct sockaddr_in *s = (struct sockaddr_in *) &addr;
+    inet_ntop(AF_INET, &s->sin_addr, ipstr, sizeof ipstr);
+    printf("New connected client (IP: %s, Port: %d) \n", ipstr, s->sin_port);
+}
+
 int main(int argc, char **argv) {
 
     int listenfd, connfd;
     struct sockaddr_in servaddr;
     char recvline[MAXLINE + 1];
     char error[MAXLINE + 1];
-    struct sockaddr_in socket_info;
     pid_t procPid;
+    struct sockaddr_storage client_addr;
 
     if (argc != 2) { // Se IP do server não fornecido
         strcpy(error, "uso: ");
@@ -48,7 +55,6 @@ int main(int argc, char **argv) {
     //seta a porta associada ao processo do servidor
     servaddr.sin_port = htons(atoi(argv[1]));
 
-
     //associa a conexão às respectivas portas e IPs descritos na estrutura
     if (bind(listenfd, (struct sockaddr *) &servaddr, sizeof(servaddr)) == -1) {
         perror("bind");
@@ -60,18 +66,22 @@ int main(int argc, char **argv) {
         perror("listen");
         exit(1);
     }
+
     /*loop para aceitar a conexão dos filhos*/
     for (;;) {
         /*forka ao aceitar uma conexao, se o PID nao for o do pai, da break*/
-        if ((connfd = accept(listenfd, (struct sockaddr *) NULL, NULL)) == -1) {
+        int len = sizeof client_addr;
+        if ((connfd = accept(listenfd, (struct sockaddr *)&client_addr, (socklen_t *)&len)) == -1) {
             perror("accept");
             exit(1);
         }
-        procPid = fork();
 
+        procPid = fork();
         if (procPid == CHILD_PROCESS)
             break;
     }
+
+    print_new_connect_client_socket_info(client_addr);
 
     // filhos
     for (;;) {
@@ -100,21 +110,7 @@ int main(int argc, char **argv) {
             perror("read error");
             exit(1);
         }
-
-        //inicializa a estrutura que será usada para obter informações da conexão
-        bzero(&socket_info, sizeof(socket_info));
-        int len = sizeof(socket_info);
-        //recupera as informações do socket do cliente na conexão
-        if (getpeername(connfd, (struct sockaddr *) &socket_info, (socklen_t *) &len) < 0) {
-            perror("getsockname error");
-            exit(1);
-        }
-
-//        //imprime as informações do socket do cliente
-//        printf("\nClient Socket Family %u", socket_info.sin_family);
-//        printf("\nClient Socket Port %u", socket_info.sin_port);
-//        printf("\nClient Socket Address %s\n", inet_ntoa(socket_info.sin_addr));
-//        //close(connfd);
     }
+    
     return (0);
 }
