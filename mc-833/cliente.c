@@ -37,7 +37,6 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-
     //inicializa com 0 a struct que representa o socket servidor.
     bzero(&servaddr, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
@@ -65,12 +64,6 @@ int main(int argc, char **argv) {
         if ((n = read(sockfd, recvline, MAXLINE)) > 0) {
             //coloca um final para a string
             recvline[n] = 0;
-            //escreve no saída padrão a mensagem recebida
-            if (fputs(recvline, stdout) == EOF) {
-                perror("fputs error");
-                exit(1);
-            }
-
             if (strcmp(recvline, EXIT_CMD) == 0) {
                 close(sockfd);
                 exit(0);
@@ -86,16 +79,27 @@ int main(int argc, char **argv) {
             perror("getsockname error");
             exit(1);
         }
+        
+        printf("\n\n=================== NEW SERVER RESPONSE =================== \n");
+        printf("Client command sent: %s \n", command);
+        printf("Client command received: %s \n", recvline);
+        printf("Client socket (IP: %s, Port: %u) \n", inet_ntoa(socket_info.sin_addr), socket_info.sin_port);
+        
+        // Reinicia socket info para usar mesma referência para informações do server
+        bzero(&socket_info, len);
+        if (getpeername(sockfd, (struct sockaddr *) &socket_info, (socklen_t *) &len) < 0) {
+            perror("getsockname error");
+            exit(1);
+        }
 
-//        //printa as informações do socket do cliente obtidas
-//        printf("\nSocket Family %u", socket_info.sin_family);
-//        printf("\nSocket Port %u", socket_info.sin_port);
-//        printf("\nSocket Address %s\n", inet_ntoa(socket_info.sin_addr));
+        printf("Server socket (IP: %s, Port: %u) \n", inet_ntoa(socket_info.sin_addr), socket_info.sin_port);
+        printf("=========================================================== \n");
 
         if (n < 0) {
             perror("read error");
             exit(1);
         }
     }
+
     exit(0);
 }
