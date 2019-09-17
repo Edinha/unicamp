@@ -109,6 +109,9 @@ int main(int argc, char **argv) {
         procPid = fork();
         if (procPid == CHILD_PROCESS)
             break;
+        else{
+            close(connfd);
+        }
     }
 
     connected = time(NULL);
