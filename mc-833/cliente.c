@@ -13,9 +13,11 @@
 #define MAXLINE 4096
 #define MAX_COMMAND_SIZE 1000
 #define EXIT_CMD "exit"
+#define MAX_COMMAND_OUT 1000
 
 int main(int argc, char **argv) {
     char command[MAX_COMMAND_SIZE];
+    char command_output[MAX_COMMAND_OUT + 1];
     int sockfd, n;
     char recvline[MAXLINE + 1];
     char error[MAXLINE + 1];
@@ -70,6 +72,11 @@ int main(int argc, char **argv) {
             }
         }
 
+        if ((n = read(sockfd, command_output, MAX_COMMAND_OUT)) > 0) {
+            //coloca um final para a string
+            command_output[n] = 0;
+        }
+
         //inicializa com 0 a struct que representa a informação do socket local
         bzero(&socket_info, sizeof(socket_info));
         // associa a len o tamanho da struct que descreve o socket
@@ -79,12 +86,12 @@ int main(int argc, char **argv) {
             perror("getsockname error");
             exit(1);
         }
-        
+
         printf("\n\n=================== NEW SERVER RESPONSE =================== \n");
         printf("Client command sent: %s \n", command);
         printf("Client command received: %s \n", recvline);
         printf("Client socket (IP: %s, Port: %u) \n", inet_ntoa(socket_info.sin_addr), socket_info.sin_port);
-        
+
         // Reinicia socket info para usar mesma referência para informações do server
         bzero(&socket_info, len);
         if (getpeername(sockfd, (struct sockaddr *) &socket_info, (socklen_t *) &len) < 0) {
@@ -93,7 +100,9 @@ int main(int argc, char **argv) {
         }
 
         printf("Server socket (IP: %s, Port: %u) \n", inet_ntoa(socket_info.sin_addr), socket_info.sin_port);
+        printf("%s", command_output);
         printf("=========================================================== \n");
+
 
         if (n < 0) {
             perror("read error");
