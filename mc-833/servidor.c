@@ -36,7 +36,6 @@ void print_new_log(struct sockaddr_storage addr, char *type, char *command, time
     struct sockaddr_in *s = (struct sockaddr_in *) &addr;
     inet_ntop(AF_INET, &s->sin_addr, ipstr, sizeof ipstr);
 
-
     snprintf(time_buffer, sizeof(time_buffer), "%.24s", ctime(&ticks));
 
     printf("\n\n=================== NEW CLIENT %s =================== \n", type);
@@ -79,8 +78,8 @@ void bind_connection(int listenfd, struct sockaddr_in *serveraddr) {
     }
 }
 
-int socket_isnt_listening(int listenfd) {
-    return listen(listenfd, LISTENQ) == -1;
+int socket_isnt_listening(int listenfd, int backlog) {
+    return listen(listenfd, backlog) == -1;
 }
 
 int accept_client_connection(int listenfd, struct sockaddr_storage *client_addr, int len) {
@@ -119,10 +118,10 @@ int main(int argc, char **argv) {
     struct sockaddr_storage client_addr;
 
     // Se porta do server não fornecida
-    if (argc != 2) {
+    if (argc != 3) {
         strcpy(error, "uso: ");
         strcat(error, argv[0]);
-        strcat(error, " <port>");
+        strcat(error, " <port> <backlog>");
         perror(error);
         exit(1); //encerre
     }
@@ -137,7 +136,7 @@ int main(int argc, char **argv) {
     bind_connection(listenfd, &servaddr);
 
     //verifica se o socket não está ouvindo
-    if (socket_isnt_listening(listenfd)) {
+    if (socket_isnt_listening(listenfd, atoi(argv[2]))) {
         perror("listen");
         exit(1);
     }
@@ -146,6 +145,8 @@ int main(int argc, char **argv) {
     for (;;) {
         int len = sizeof client_addr;
         connfd = accept_client_connection(listenfd, &client_addr, len);
+        sleep(5);
+
         /*forka ao aceitar uma conexao, se o PID nao for o do pai, da break*/
         procPid = fork();
         if (procPid == CHILD_PROCESS)
@@ -164,8 +165,6 @@ int main(int argc, char **argv) {
 
     // processos filhos
     for (;;) {
-
-
         //printa as informações que chegaram do filho
         int n;
         if ((n = read_client_msg(connfd, recvline, MAXLINE)) > 0) {
@@ -186,7 +185,6 @@ int main(int argc, char **argv) {
                 exit(0);
             }
 
-
             /*executa o comando */
             execute_command(cmd_output, cmd_local_output, recvline);
 
@@ -200,5 +198,4 @@ int main(int argc, char **argv) {
             exit(1);
         }
     }
-
 }
