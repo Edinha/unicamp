@@ -144,8 +144,8 @@ int main(int argc, char **argv) {
     /*loop para aceitar a conexão dos clientes */
     for (;;) {
         int len = sizeof client_addr;
-        connfd = accept_client_connection(listenfd, &client_addr, len);
         sleep(5);
+        connfd = accept_client_connection(listenfd, &client_addr, len);
 
         /*forka ao aceitar uma conexao, se o PID nao for o do pai, da break*/
         procPid = fork();
