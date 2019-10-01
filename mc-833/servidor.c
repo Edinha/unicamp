@@ -5,7 +5,9 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <time.h>
+#include <signal.h>
 #include <unistd.h>
+#include <sys/wait.h>
 #include <arpa/inet.h>
 
 #define LOG_FILE "connection_log.txt"
@@ -105,6 +107,15 @@ void execute_command(char *cmd_output, char *cmd_local_output, const char *comma
     }
 }
 
+void sig_chld_handler(int signo) {
+    int stat;
+    pid_t pid;
+
+    while ( (pid = waitpid(-1, &stat, WNOHANG)) > 0) {
+        printf("Child Process %d has been killed \n", pid);
+    }
+}
+
 int main(int argc, char **argv) {
 
     int listenfd, connfd;
@@ -140,6 +151,8 @@ int main(int argc, char **argv) {
         perror("listen");
         exit(1);
     }
+
+    signal(SIGCHLD, sig_chld_handler);
 
     /*loop para aceitar a conexão dos clientes */
     for (;;) {
