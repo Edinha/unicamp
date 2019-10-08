@@ -5,9 +5,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <time.h>
-#include <signal.h>
 #include <unistd.h>
-#include <sys/wait.h>
 #include <arpa/inet.h>
 
 #define LOG_FILE "connection_log.txt"
@@ -37,6 +35,7 @@ void print_new_log(struct sockaddr_storage addr, char *type, char *command, time
     char ipstr[MAXLINE + 1], time_buffer[MAXLINE + 1];
     struct sockaddr_in *s = (struct sockaddr_in *) &addr;
     inet_ntop(AF_INET, &s->sin_addr, ipstr, sizeof ipstr);
+
 
     snprintf(time_buffer, sizeof(time_buffer), "%.24s", ctime(&ticks));
 
@@ -80,8 +79,8 @@ void bind_connection(int listenfd, struct sockaddr_in *serveraddr) {
     }
 }
 
-int socket_isnt_listening(int listenfd, int backlog) {
-    return listen(listenfd, backlog) == -1;
+int socket_isnt_listening(int listenfd) {
+    return listen(listenfd, LISTENQ) == -1;
 }
 
 int accept_client_connection(int listenfd, struct sockaddr_storage *client_addr, int len) {
@@ -107,15 +106,6 @@ void execute_command(char *cmd_output, char *cmd_local_output, const char *comma
     }
 }
 
-void sig_chld_handler(int signo) {
-    int stat;
-    pid_t pid;
-
-    while ( (pid = waitpid(-1, &stat, WNOHANG)) > 0) {
-        printf("Child Process %d has been killed \n", pid);
-    }
-}
-
 int main(int argc, char **argv) {
 
     int listenfd, connfd;
@@ -129,10 +119,10 @@ int main(int argc, char **argv) {
     struct sockaddr_storage client_addr;
 
     // Se porta do server não fornecida
-    if (argc != 3) {
+    if (argc != 2) {
         strcpy(error, "uso: ");
         strcat(error, argv[0]);
-        strcat(error, " <port> <backlog>");
+        strcat(error, " <port>");
         perror(error);
         exit(1); //encerre
     }
@@ -147,19 +137,15 @@ int main(int argc, char **argv) {
     bind_connection(listenfd, &servaddr);
 
     //verifica se o socket não está ouvindo
-    if (socket_isnt_listening(listenfd, atoi(argv[2]))) {
+    if (socket_isnt_listening(listenfd)) {
         perror("listen");
         exit(1);
     }
 
-    signal(SIGCHLD, sig_chld_handler);
-
     /*loop para aceitar a conexão dos clientes */
     for (;;) {
         int len = sizeof client_addr;
-        sleep(5);
         connfd = accept_client_connection(listenfd, &client_addr, len);
-
         /*forka ao aceitar uma conexao, se o PID nao for o do pai, da break*/
         procPid = fork();
         if (procPid == CHILD_PROCESS)
@@ -178,6 +164,8 @@ int main(int argc, char **argv) {
 
     // processos filhos
     for (;;) {
+
+
         //printa as informações que chegaram do filho
         int n;
         if ((n = read_client_msg(connfd, recvline, MAXLINE)) > 0) {
@@ -198,6 +186,7 @@ int main(int argc, char **argv) {
                 exit(0);
             }
 
+
             /*executa o comando */
             execute_command(cmd_output, cmd_local_output, recvline);
 
@@ -211,4 +200,5 @@ int main(int argc, char **argv) {
             exit(1);
         }
     }
+
 }
