@@ -50,13 +50,13 @@ int main(int argc, char **argv) {
       exit(1);
    }
 
-   bzero(input_line, sizeof(inputline));
+   bzero(input_line, sizeof(input_line));
    while(1){
      int args_read = scanf("%[^\n]",input_line);
      if(args_read == EOF){
        break;
      }
-     write(sockfd, input_line, strlen(inputline));
+     write(sockfd, input_line, strlen(input_line));
      for(;;){
 
      }
