@@ -8,7 +8,7 @@
 #define MAXLINE 4096
 #define LISTENQ 10
 #define MAXDATASIZE 100
-#define CLOSE_CON "closecon"
+#define CLOSE_CON "closecon\0"
 
 int main(int argc, char **argv) {
     int listenfd, connfd;
@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
     //Receber a conexão de clientes rodandno em qualquer porta
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
     //seta a porta associada ao processo do servidor
-    servaddr.sin_port = htons(22123);
+    servaddr.sin_port = htons(22125);
 
 
     //associa a conexão às respectivas portas e IPs descritos na estrutura
@@ -55,11 +55,12 @@ int main(int argc, char **argv) {
         //printa as informações de data e hora
 //      ticks = time(NULL);
 //      snprintf(buf, sizeof(buf), "%.24s\r\n", ctime(&ticks));
-
+        bzero(recvline, strlen(recvline));
         while (read(connfd, recvline, MAXLINE) > 0) {
             bzero(buf, strlen(buf));
             strcpy(buf, recvline);
             write(connfd, buf, strlen(buf));
+            bzero(buf, strlen(recvline));
             if (strcmp(CLOSE_CON, recvline) == 0) {
                 break;
             }

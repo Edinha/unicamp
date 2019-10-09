@@ -8,7 +8,7 @@
 #include <sys/time.h>
 
 #define MAXLINE 4096
-#define CLOSE_CON "closecon"
+#define CLOSE_CON "closecon\0"
 
 int max(int a, int b) {
     if (a > b) {
@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
     //inicializa com 0 a struct que representa o socket servidor.
     bzero(&servaddr, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
-    servaddr.sin_port = htons(22123);
+    servaddr.sin_port = htons(22125);
     //associa o IP do servidor à conexão
     if (inet_pton(AF_INET, argv[1], &servaddr.sin_addr) <= 0) {
         perror("inet_pton error");
@@ -90,13 +90,15 @@ int main(int argc, char **argv) {
         }
 
         if (FD_ISSET(fileno(stdin), &readfds) && !end_read) {
+            bzero(input_line, strlen(input_line));
             int args_read = scanf("%[^\n]", input_line);
             if (args_read == 0) {
                 end_read = true;
+                bzero(input_line, strlen(input_line));
                 strcpy(input_line, CLOSE_CON);
             }
+
             write(sockfd, input_line, strlen(input_line));
-            bzero(input_line, strlen(input_line));
         }
     }
 
