@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
     //Receber a conexão de clientes rodandno em qualquer porta
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
     //seta a porta associada ao processo do servidor
-    servaddr.sin_port = htons(22122);
+    servaddr.sin_port = htons(22123);
 
 
     //associa a conexão às respectivas portas e IPs descritos na estrutura
@@ -57,6 +57,7 @@ int main(int argc, char **argv) {
 //      snprintf(buf, sizeof(buf), "%.24s\r\n", ctime(&ticks));
 
         while (read(connfd, recvline, MAXLINE) > 0) {
+            bzero(buf, strlen(buf));
             strcpy(buf, recvline);
             write(connfd, buf, strlen(buf));
             if (strcmp(CLOSE_CON, recvline) == 0) {
