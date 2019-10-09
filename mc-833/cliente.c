@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
     //inicializa com 0 a struct que representa o socket servidor.
     bzero(&servaddr, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
-    servaddr.sin_port = htons(22122);
+    servaddr.sin_port = htons(22123);
     //associa o IP do servidor à conexão
     if (inet_pton(AF_INET, argv[1], &servaddr.sin_addr) <= 0) {
         perror("inet_pton error");
@@ -82,16 +82,21 @@ int main(int argc, char **argv) {
                 }
             } else {
                 fputs(recvline, stdout);
+                fputs("\n", stdout);
+
             }
+
+            bzero(recvline, strlen(recvline));
         }
 
-        if (FD_ISSET(fileno(stdin), &readfds)) {
+        if (FD_ISSET(fileno(stdin), &readfds) && !end_read) {
             int args_read = scanf("%[^\n]", input_line);
-            if (args_read == EOF) {
+            if (args_read == 0) {
                 end_read = true;
                 strcpy(input_line, CLOSE_CON);
             }
             write(sockfd, input_line, strlen(input_line));
+            bzero(input_line, strlen(input_line));
         }
     }
 
