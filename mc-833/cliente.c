@@ -66,7 +66,7 @@ int main(int argc, char **argv) {
     bool end_read = false;
     FD_ZERO(&readfds);
 
-    while (true) {
+    while (1) {
         FD_SET(fileno(stdin), &readfds);
         FD_SET(sockfd, &readfds);
         maxsd = max(fileno(stdin), sockfd) + 1;
@@ -83,16 +83,14 @@ int main(int argc, char **argv) {
             } else {
                 fputs(recvline, stdout);
                 fputs("\n", stdout);
-
             }
 
             bzero(recvline, strlen(recvline));
         }
-
+        
         if (FD_ISSET(fileno(stdin), &readfds) && !end_read) {
             bzero(input_line, strlen(input_line));
-            int args_read = scanf("%[^\n]", input_line);
-            if (args_read == 0) {
+            if (fgets(input_line, MAXLINE, stdin) == NULL) {
                 end_read = true;
                 bzero(input_line, strlen(input_line));
                 strcpy(input_line, CLOSE_CON);
