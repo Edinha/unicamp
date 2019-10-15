@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
         /*erro ao obter os dados e retirar da fila a conexão concluída*/
         if ((connfd = accept(listenfd, (struct sockaddr *) NULL, NULL)) == -1) {
             perror("accept");
-            close(connfd);
+            // close(connfd);
             close(listenfd);
             exit(1);
         }
@@ -54,11 +54,11 @@ int main(int argc, char **argv) {
         // Leitura das mensagens do cliente
         while (1) {
             bzero(recvline, strlen(recvline));
-            read(connfd, recvline, MAXLINE);
-            write(connfd, recvline, strlen(recvline));
-            if (strcmp(CLOSE_CON, recvline) == 0) {
+            int n = read(connfd, recvline, MAXLINE);
+            if (n == 0) {
                 break;
             }
+            write(connfd, recvline, strlen(recvline));
         }
 
         // Fecha a conexão com cliente

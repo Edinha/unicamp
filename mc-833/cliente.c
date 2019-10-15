@@ -64,22 +64,30 @@ int main(int argc, char **argv) {
     bool end_read = false;
     FD_ZERO(&readfds);
 
-    while (!end_read) {
-        FD_SET(fileno(stdin), &readfds);
+    while (1) {
         FD_SET(sockfd, &readfds);
+        if (!end_read) {
+            FD_SET(fileno(stdin), &readfds);
+        }
+        
         maxsd = max(fileno(stdin), sockfd) + 1;
         select(maxsd, &readfds, NULL, NULL, NULL);
-
+        
         if (FD_ISSET(sockfd, &readfds)) {
             bzero(recvline, strlen(recvline));
-            read(sockfd, recvline, MAXLINE);
+            if (read(sockfd, recvline, MAXLINE) == 0) {
+                break;
+            }
+
             fputs(recvline, stdout);
         }
         
         if (FD_ISSET(fileno(stdin), &readfds)) {
             bzero(input_line, strlen(input_line));
-            if (fgets(input_line, MAXLINE, stdin) == NULL) {
+            if (read(fileno(stdin), input_line, MAXLINE) == 0) {
                 end_read = true;
+                shutdown(sockfd, SHUT_WR);
+                FD_CLR(fileno(stdin), &readfds);
                 continue;
             }
 
@@ -87,16 +95,5 @@ int main(int argc, char **argv) {
         }
     }
 
-    // Espera por read retardatalho
-    // sleep(1);
-    // read(sockfd, recvline, MAXLINE);
-    // fputs(recvline, stdout);
-
-    bzero(input_line, strlen(input_line));
-    strcpy(input_line, CLOSE_CON);          // Escreve comando de fechar conexão
-    write(sockfd, input_line, strlen(input_line));
-    read(sockfd, recvline, MAXLINE);        // Espera a resposta para fechar a conexão
-
-    close(sockfd);
     exit(0);
 }
