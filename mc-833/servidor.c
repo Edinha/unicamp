@@ -5,7 +5,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#define MAXLINE 4096
+#define MAXLINE 65535
 #define LISTENQ 10
 #define MAXDATASIZE 100
 #define CLOSE_CON "closecon\0"
@@ -13,10 +13,9 @@
 int main(int argc, char **argv) {
     int listenfd, connfd;
     struct sockaddr_in servaddr;
-    char buf[MAXDATASIZE];
-
-
+    // char buf[MAXLINE + 1];
     char recvline[MAXLINE + 1];
+
     //cria o socket TCP associado ao servidor
     if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
         perror("socket");
@@ -30,7 +29,7 @@ int main(int argc, char **argv) {
     //Receber a conexão de clientes rodandno em qualquer porta
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
     //seta a porta associada ao processo do servidor
-    servaddr.sin_port = htons(22125);
+    servaddr.sin_port = htons(22122);
 
 
     //associa a conexão às respectivas portas e IPs descritos na estrutura
@@ -55,12 +54,13 @@ int main(int argc, char **argv) {
         //printa as informações de data e hora
 //      ticks = time(NULL);
 //      snprintf(buf, sizeof(buf), "%.24s\r\n", ctime(&ticks));
-        bzero(recvline, strlen(recvline));
-        while (read(connfd, recvline, MAXLINE) > 0) {
-            bzero(buf, strlen(buf));
-            strcpy(buf, recvline);
-            write(connfd, buf, strlen(buf));
-            bzero(buf, strlen(recvline));
+        // bzero(recvline, strlen(recvline));
+        while (1) {
+            bzero(recvline, strlen(recvline));
+            read(connfd, recvline, MAXLINE);
+            // strcpy(buf, recvline);
+            write(connfd, recvline, strlen(recvline));
+            // bzero(buf, strlen(recvline));
             if (strcmp(CLOSE_CON, recvline) == 0) {
                 break;
             }
@@ -84,6 +84,6 @@ int main(int argc, char **argv) {
         close(connfd);
         break;
     }
-    
+
     return (0);
 }

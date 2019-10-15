@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <sys/time.h>
 
-#define MAXLINE 4096
+#define MAXLINE 65535
 #define CLOSE_CON "closecon\0"
 
 int max(int a, int b) {
@@ -24,11 +24,10 @@ int main(int argc, char **argv) {
     } bool;
 
     int sockfd, maxsd;
-    char recvline[MAXLINE + 1];
     char error[MAXLINE + 1];
+    char recvline[MAXLINE + 1];
     char input_line[MAXLINE + 1];
     struct sockaddr_in servaddr;
-
 
     fd_set readfds;
 
@@ -50,7 +49,7 @@ int main(int argc, char **argv) {
     //inicializa com 0 a struct que representa o socket servidor.
     bzero(&servaddr, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
-    servaddr.sin_port = htons(22125);
+    servaddr.sin_port = htons(22122);
     //associa o IP do servidor à conexão
     if (inet_pton(AF_INET, argv[1], &servaddr.sin_addr) <= 0) {
         perror("inet_pton error");
@@ -66,39 +65,57 @@ int main(int argc, char **argv) {
     bool end_read = false;
     FD_ZERO(&readfds);
 
-    while (1) {
+    while (!end_read) {
         FD_SET(fileno(stdin), &readfds);
         FD_SET(sockfd, &readfds);
         maxsd = max(fileno(stdin), sockfd) + 1;
         select(maxsd, &readfds, NULL, NULL, NULL);
 
         if (FD_ISSET(sockfd, &readfds)) {
-            read(sockfd, recvline, MAXLINE);
-            if (strcmp(recvline, CLOSE_CON) == 0) {
-                if (!end_read) {
-                    perror("server terminated suddenly");
-                } else {
-                    break;
-                }
-            } else {
-                fputs(recvline, stdout);
-                fputs("\n", stdout);
-            }
-
             bzero(recvline, strlen(recvline));
+            read(sockfd, recvline, MAXLINE);
+            fputs(recvline, stdout);
+            // fputs("\n", stdout);
+            // if (strcmp(recvline, CLOSE_CON) == 0) {
+            //     if (!end_read) {
+            //         perror("server terminated suddenly");
+            //     } else {
+            //         break;
+            //     }
+            // } else {
+            //     fputs(recvline, stdout);
+            //     fputs("\n", stdout);
+            // }
+
+            // bzero(recvline, strlen(recvline));
         }
         
         if (FD_ISSET(fileno(stdin), &readfds) && !end_read) {
             bzero(input_line, strlen(input_line));
             if (fgets(input_line, MAXLINE, stdin) == NULL) {
                 end_read = true;
-                bzero(input_line, strlen(input_line));
-                strcpy(input_line, CLOSE_CON);
+                break;
+                // bzero(input_line, strlen(input_line));
+                // strcpy(input_line, CLOSE_CON);
             }
 
             write(sockfd, input_line, strlen(input_line));
         }
     }
+
+    printf("PARA TER CERTEZA QUE SAIU\n");
+
+    while (read(sockfd, recvline, MAXLINE) > 0) { // Wait for fallback reads
+        fputs(recvline, stdout);
+        // fputs("\n", stdout);
+    }
+
+    printf("ACABOU TUDO DAS LEITURAS\n");
+
+    bzero(input_line, strlen(input_line));
+    strcpy(input_line, CLOSE_CON);          // Write close connection
+    write(sockfd, input_line, strlen(input_line));
+    read(sockfd, recvline, MAXLINE);        // Wait for close connection
 
     close(sockfd);
     exit(0);
