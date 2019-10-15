@@ -8,7 +8,7 @@
 #include <sys/time.h>
 
 #define MAXLINE 65535
-#define CLOSE_CON "closecon\0"
+
 
 int max(int a, int b) {
     if (a > b) {

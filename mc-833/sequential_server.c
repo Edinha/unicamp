@@ -7,7 +7,8 @@
 
 #define MAXLINE 65535
 #define LISTENQ 10
-
+#define MAXDATASIZE 100
+#define CLOSE_CON "closecon"
 
 int main(int argc, char **argv) {
     int listenfd, connfd;
@@ -27,7 +28,7 @@ int main(int argc, char **argv) {
     //Receber a conexão de clientes rodandno em qualquer porta
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
     //seta a porta associada ao processo do servidor
-    servaddr.sin_port = htons(22125);
+    servaddr.sin_port = htons(22126);
 
     //associa a conexão às respectivas portas e IPs descritos na estrutura
     if (bind(listenfd, (struct sockaddr *) &servaddr, sizeof(servaddr)) == -1) {
@@ -58,7 +59,12 @@ int main(int argc, char **argv) {
             if (n == 0) {
                 break;
             }
+
             write(connfd, recvline, strlen(recvline));
+
+            if (strstr(CLOSE_CON, recvline) != NULL) {
+                break;
+            }
         }
 
         // Fecha a conexão com cliente
