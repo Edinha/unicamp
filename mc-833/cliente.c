@@ -45,11 +45,10 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-
     //inicializa com 0 a struct que representa o socket servidor.
     bzero(&servaddr, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
-    servaddr.sin_port = htons(22122);
+    servaddr.sin_port = htons(22125);
     //associa o IP do servidor à conexão
     if (inet_pton(AF_INET, argv[1], &servaddr.sin_addr) <= 0) {
         perror("inet_pton error");
@@ -75,47 +74,28 @@ int main(int argc, char **argv) {
             bzero(recvline, strlen(recvline));
             read(sockfd, recvline, MAXLINE);
             fputs(recvline, stdout);
-            // fputs("\n", stdout);
-            // if (strcmp(recvline, CLOSE_CON) == 0) {
-            //     if (!end_read) {
-            //         perror("server terminated suddenly");
-            //     } else {
-            //         break;
-            //     }
-            // } else {
-            //     fputs(recvline, stdout);
-            //     fputs("\n", stdout);
-            // }
-
-            // bzero(recvline, strlen(recvline));
         }
         
-        if (FD_ISSET(fileno(stdin), &readfds) && !end_read) {
+        if (FD_ISSET(fileno(stdin), &readfds)) {
             bzero(input_line, strlen(input_line));
             if (fgets(input_line, MAXLINE, stdin) == NULL) {
                 end_read = true;
-                break;
-                // bzero(input_line, strlen(input_line));
-                // strcpy(input_line, CLOSE_CON);
+                continue;
             }
 
             write(sockfd, input_line, strlen(input_line));
         }
     }
 
-    printf("PARA TER CERTEZA QUE SAIU\n");
-
-    while (read(sockfd, recvline, MAXLINE) > 0) { // Wait for fallback reads
-        fputs(recvline, stdout);
-        // fputs("\n", stdout);
-    }
-
-    printf("ACABOU TUDO DAS LEITURAS\n");
+    // Espera por read retardatalho
+    // sleep(1);
+    // read(sockfd, recvline, MAXLINE);
+    // fputs(recvline, stdout);
 
     bzero(input_line, strlen(input_line));
-    strcpy(input_line, CLOSE_CON);          // Write close connection
+    strcpy(input_line, CLOSE_CON);          // Escreve comando de fechar conexão
     write(sockfd, input_line, strlen(input_line));
-    read(sockfd, recvline, MAXLINE);        // Wait for close connection
+    read(sockfd, recvline, MAXLINE);        // Espera a resposta para fechar a conexão
 
     close(sockfd);
     exit(0);

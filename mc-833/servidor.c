@@ -13,7 +13,6 @@
 int main(int argc, char **argv) {
     int listenfd, connfd;
     struct sockaddr_in servaddr;
-    // char buf[MAXLINE + 1];
     char recvline[MAXLINE + 1];
 
     //cria o socket TCP associado ao servidor
@@ -29,8 +28,7 @@ int main(int argc, char **argv) {
     //Receber a conexão de clientes rodandno em qualquer porta
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
     //seta a porta associada ao processo do servidor
-    servaddr.sin_port = htons(22122);
-
+    servaddr.sin_port = htons(22125);
 
     //associa a conexão às respectivas portas e IPs descritos na estrutura
     if (bind(listenfd, (struct sockaddr *) &servaddr, sizeof(servaddr)) == -1) {
@@ -48,42 +46,26 @@ int main(int argc, char **argv) {
         /*erro ao obter os dados e retirar da fila a conexão concluída*/
         if ((connfd = accept(listenfd, (struct sockaddr *) NULL, NULL)) == -1) {
             perror("accept");
+            close(connfd);
+            close(listenfd);
             exit(1);
         }
 
-        //printa as informações de data e hora
-//      ticks = time(NULL);
-//      snprintf(buf, sizeof(buf), "%.24s\r\n", ctime(&ticks));
-        // bzero(recvline, strlen(recvline));
+        // Leitura das mensagens do cliente
         while (1) {
             bzero(recvline, strlen(recvline));
             read(connfd, recvline, MAXLINE);
-            // strcpy(buf, recvline);
             write(connfd, recvline, strlen(recvline));
-            // bzero(buf, strlen(recvline));
             if (strcmp(CLOSE_CON, recvline) == 0) {
                 break;
             }
         }
 
-
-        //inicializa a estrutura que será usada para obter informações da conexão
-//      bzero(&socket_info, sizeof(socket_info));
-//      int len = sizeof(socket_info);
-//      //recupera as informações do socket do cliente na conexão
-//      if (getpeername(connfd, (struct sockaddr *) &socket_info, (socklen_t *) &len) < 0) {
-//         perror("getsockname error");
-//         exit(1);
-//      }
-
-        //imprime as informações do socket do cliente
-//      printf("\nClient Socket Family %u", socket_info.sin_family);
-//      printf("\nClient Socket Port %u", socket_info.sin_port);
-//      printf("\nClient Socket Address %s\n", inet_ntoa(socket_info.sin_addr));
-
+        // Fecha a conexão com cliente
         close(connfd);
         break;
     }
 
+    close(listenfd);
     return (0);
 }
