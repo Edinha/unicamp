@@ -7,13 +7,17 @@ type Cartridge struct {
 
 func New(data []byte) (*Cartridge) {
 	header := data[:0x10]
-	vrom_banks := header[5]
+	rom_banks := header[4]
+	//vrom_banks := header[5]
 
 	rom := data[0x10:]
+	rom_end := 0x4000 * int(rom_banks)
 
 	var cartridge Cartridge
-	cartridge.prgRom = rom[:0x4000]
-	cartridge.chrRom = rom[0x4000:(0x4000 + int(vrom_banks) * 0x2000)]
+	cartridge.prgRom = rom[:rom_end]
+	//print("DATA: ", vrom_banks, "  ", rom_banks, " len ", len(rom))
+	//print("\nCOMPARE: ", len(rom), "  ", rom_end + int(vrom_banks) * 0x2000)
+	// cartridge.chrRom = rom[rom_end:(rom_end + int(vrom_banks) * 0x2000)]
 
 	return &cartridge
 }

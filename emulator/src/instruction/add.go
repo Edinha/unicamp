@@ -6,6 +6,12 @@ import (
 	"memory"
 )
 
+func AddInstructions() ([]Instruction) {
+	return []Instruction {
+		AddInstructionImmediateAddr(),
+	}
+}
+
 func AddInstructionImmediateAddr() (Instruction) {
 	execute := func(params []byte, cpu *cpu.CPU, memory *memory.Memory) {
 		address := Immediate().Resolve(params, cpu, memory)

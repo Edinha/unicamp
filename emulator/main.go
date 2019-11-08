@@ -9,7 +9,7 @@ import (
 	"instruction"
 )
 
-func read_rom() ([]byte) {
+func readRom() ([]byte) {
 	fptr := flag.String("fpath", "test.txt", "file path to read from")
 	flag.Parse()
 
@@ -23,7 +23,7 @@ func read_rom() ([]byte) {
 }
 
 func main() {
-	bytes := read_rom()
+	bytes := readRom()
 	fmt.Println("BYTES: ", len(bytes))
 
 	c := cartridge.New(bytes)

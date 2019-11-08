@@ -6,6 +6,12 @@ import (
 	"memory"
 )
 
+var instructions [256]Instruction
+
+func init() {
+	instructions = AllInstructions()
+}
+
 func Run(mem *memory.Memory) {
 	cpu := cpu.CPU{}
 	cpu.PC = getResetPos(mem)
@@ -14,7 +20,7 @@ func Run(mem *memory.Memory) {
 		log(&cpu)
 
 		opcode := mem.Read(cpu.PC)
-		inst := getOperation(opcode)
+		inst := getInstruction(opcode)
 		_, cycles, count := inst.Info()
 
 		var params []byte
@@ -40,12 +46,21 @@ func log(cpu *cpu.CPU) {
 	fmt.Printf("PC:%X A:%X X:%X Y:%X P:%X SP:%X CYC:%d\n", cpu.PC, cpu.A, cpu.X, cpu.Y, cpu.Status.Value(), cpu.SP, cpu.Cycles)
 }
 
-func getOperation(opcode byte) (Instruction) {
-	// TODO ARRAY WITH ALL
+func AllInstructions() ([256]Instruction) {
+	all := []Instruction {}
+	all = append(all, AddInstructions()...)
+	all = append(all, BrkInstructions()...)
 
-	return AddInstructionImmediateAddr()
+	result := [256] Instruction {}
+	for i := 0; i < len(all); i++ {
+		inst := all[i]
+		_, opcode, _ := inst.Info()
+		result[opcode] = inst
+	}
 
-	// return func(params []byte, *cpu.CPU, *memory.Memory) {
-	// 	return
-	// }
+	return result
+}
+
+func getInstruction(opcode byte) (Instruction) {
+	return instructions[opcode]
 }
