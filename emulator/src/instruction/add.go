@@ -1,16 +1,18 @@
 package instruction
 
 import (
+	"fmt"
 	"cpu"
 	"memory"
 )
 
-func AddInstructionMemory(cpu *cpu.CPU, mem *memory.Memory) {
+func AddInstructionImmediateAddr() (Instruction) {
+	execute := func(params []byte, cpu *cpu.CPU, memory *memory.Memory) {
+		address := Immediate().Resolve(params, cpu, memory)
+		fmt.Println("ADDRESS: ", address)
+	}
 
-}
-
-func AddInstructionImmediateAddr(cpu *cpu.CPU, mem *memory.Memory) {
-
+	return Instruction { 0x69, 2, 1, execute }
 }
 
 func AddInstructionZeroPageAddr(cpu *cpu.CPU, mem *memory.Memory) {
