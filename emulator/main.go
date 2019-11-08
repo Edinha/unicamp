@@ -6,6 +6,7 @@ import (
 	"memory"
 	"io/ioutil"
 	"cartridge"
+	"instruction"
 )
 
 func read_rom() ([]byte) {
@@ -30,4 +31,6 @@ func main() {
 
 	mem := memory.New(c)
 	fmt.Println("MEMORY INFO: ", mem.Read(0x8000), mem.Read(0xC000))
+
+	instruction.Run(mem)
 }
