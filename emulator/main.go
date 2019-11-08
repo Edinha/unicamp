@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"flag"
+	"memory"
 	"io/ioutil"
 	"cartridge"
 )
@@ -20,11 +21,13 @@ func read_rom() ([]byte) {
 	return data
 }
 
-
 func main() {
 	bytes := read_rom()
 	fmt.Println("BYTES: ", len(bytes))
 
 	c := cartridge.New(bytes)
-	fmt.Println("ROM BYTES: ", len(c.PRG_ROM()), len(c.CHR_ROM()))
+	fmt.Println("ROM BYTES: ", len(c.PRGROM()), len(c.CHRROM()))
+
+	mem := memory.New(c)
+	fmt.Println("MEMORY INFO: ", mem.Read(0x8000), mem.Read(0xC000))
 }
