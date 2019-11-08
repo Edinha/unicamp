@@ -26,6 +26,5 @@ func main() {
 	fmt.Println("BYTES: ", len(bytes))
 
 	c := cartridge.New(bytes)
-	fmt.Println("ROM BYTES: ", len(c.get_prg_rom()), len(c.get_chr_rom()))
-
+	fmt.Println("ROM BYTES: ", len(c.PRG_ROM()), len(c.CHR_ROM()))
 }
