@@ -27,10 +27,10 @@ func main() {
 	fmt.Println("BYTES: ", len(bytes))
 
 	c := cartridge.New(bytes)
-	fmt.Println("ROM BYTES: ", len(c.PRGROM()), len(c.CHRROM()))
+	fmt.Printf("ROM BYTES: 0x%X 0x%X \n", len(c.PRGROM()), len(c.CHRROM()))
 
 	mem := memory.New(c)
-	fmt.Println("MEMORY INFO: ", mem.Read(0x8000), mem.Read(0xC000))
+	fmt.Printf("MEMORY INFO: %X %X \n", mem.Read(0x8000), mem.Read(0xC000))
 
 	instruction.Run(mem)
 }

@@ -13,13 +13,13 @@ func New(data []byte) (*Cartridge) {
 	rom := data[0x10:]
 	rom_end := 0x4000 * int(rom_banks)
 
-	var cartridge Cartridge
-	cartridge.prgRom = rom[:rom_end]
+	// var cartridge Cartridge
+	// cartridge.prgRom = rom[:rom_end]
 	//print("DATA: ", vrom_banks, "  ", rom_banks, " len ", len(rom))
 	//print("\nCOMPARE: ", len(rom), "  ", rom_end + int(vrom_banks) * 0x2000)
 	// cartridge.chrRom = rom[rom_end:(rom_end + int(vrom_banks) * 0x2000)]
 
-	return &cartridge
+	return &Cartridge{ rom, rom[:rom_end] }
 }
 
 func (c *Cartridge) PRGROM() ([] byte) {

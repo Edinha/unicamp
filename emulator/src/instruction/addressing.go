@@ -9,6 +9,10 @@ type AddressingMode struct {
 	Resolve func(params []byte, cpu *cpu.CPU, mem *memory.Memory) (uint16, byte)
 }
 
+func fullAddress(params []byte) (uint16) {
+	return uint16((params[1] << 8) + params[0])
+}
+
 func Immediate() (AddressingMode) {
 	f := func (params []byte, cpu *cpu.CPU, mem *memory.Memory) (uint16, byte) {
 		return uint16(params[0]), params[0]
@@ -19,8 +23,8 @@ func Immediate() (AddressingMode) {
 
 func ZeroPage() (AddressingMode) {
 	f := func (params []byte, cpu *cpu.CPU, mem *memory.Memory) (uint16, byte) {
-		value := mem.Read(uint16(params[0]))
-		return uint16(params[0]), value
+		address := uint16(params[0])
+		return address, mem.Read(address)
 	}
 
 	return AddressingMode {	f }
@@ -28,7 +32,8 @@ func ZeroPage() (AddressingMode) {
 
 func AbsoluteAddr() (AddressingMode) {
 	f := func (params []byte, cpu *cpu.CPU, mem *memory.Memory) (uint16, byte) {
-		return uint16(params[0]), params[0]
+		address := fullAddress(params)
+		return address, mem.Read(address)
 	}
 
 	return AddressingMode {	f }

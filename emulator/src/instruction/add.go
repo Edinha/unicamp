@@ -8,6 +8,7 @@ import (
 func AddInstructions() ([]Instruction) {
 	return []Instruction {
 		AddInstructionImmediateAddr(),
+		AddInstructionZeroPageAddr(),
 	}
 }
 

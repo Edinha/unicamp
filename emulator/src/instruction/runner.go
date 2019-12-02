@@ -50,11 +50,13 @@ func AllInstructions() ([256]Instruction) {
 	all := []Instruction {}
 	all = append(all, AddInstructions()...)
 	all = append(all, BrkInstructions()...)
+	all = append(all, LoadInstructions()...)
+	all = append(all, TransferInstructions()...)
 
 	result := [256] Instruction {}
 	for i := 0; i < len(all); i++ {
 		inst := all[i]
-		_, opcode, _ := inst.Info()
+		opcode, _, _ := inst.Info()
 		result[opcode] = inst
 	}
 

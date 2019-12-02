@@ -29,7 +29,7 @@ func (memory *Memory) Read(address uint16) (byte) {
 
 func (memory *Memory) Write(address uint16, value byte) {
 	addr := memory.mirroring(address)
-	if addr >= ROM_ADDR{
+	if addr >= ROM_ADDR {
 		return
 	}
 
