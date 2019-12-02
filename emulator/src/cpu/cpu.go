@@ -1,14 +1,14 @@
 package cpu
 
 type Flag struct {
-	negative bool
-	overflow bool
-	unused bool
-	brk bool
-	decimal bool
-	interrupt bool
-	zero bool
-	carry bool
+	Negative bool
+	Overflow bool
+	Unused bool
+	Brk bool
+	Decimal bool
+	Interrupt bool
+	Zero bool
+	Carry bool
 }
 
 type CPU struct {
@@ -25,6 +25,23 @@ func (status Flag) Init(value uint16) {
 
 }
 
-func (status Flag) Value() (byte) {
+func (status Flag) CarryAdd() (byte) {
+	if status.Carry {
+		return 1
+	}
+
 	return 0
+}
+
+func (status Flag) Value() (byte) {
+	flags := []bool {status.Carry, status.Zero, status.Interrupt, status.Decimal, status.Brk, status.Unused, status.Overflow, status.Negative}
+
+	value := 0
+	for i := 0; i < len(flags); i++ {
+		if flags[i] {
+			value += 1 << i
+		}
+	}
+
+	return byte(value)
 }
