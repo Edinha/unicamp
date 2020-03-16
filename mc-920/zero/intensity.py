@@ -8,9 +8,15 @@ class Intensity(Image):
     def even_reverse(self):
         img = self.get().T
         img[::2] = img[::2][::-1]
+
         self.set(img.T)
 
-        #self.filter_apply(self.even_filter, self.apply_reverse)
+    def horizontal_mirror(self):
+        img = self.get()
+        half = len(img) // 2
+        img[half::] = img[:half:][::-1]
+
+        self.set(img)
 
     @staticmethod
     def apply_negative(pixel):

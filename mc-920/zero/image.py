@@ -11,13 +11,16 @@ class Image():
         return numpy.copy(self.img)
 
     def set(self, img):
-        self.img = img
+        self.img = numpy.copy(img)
 
     def apply_to_all_pixels(self, f):
         self.img = f(self.img)
 
     def filter_apply(self, filter, transform):
         self.img = numpy.where(filter, transform, self.img)
+
+    def astype(self, t):
+        self.img = self.img.astype(t)
 
     def save_to_file(self, path):
         if not path:
@@ -28,5 +31,14 @@ class Image():
 if __name__ == "__main__":
     import sys
     i = Image(sys.argv[1])
-    print ("TASDADSDASD", i.get())
+    img = i.get()
+    img[:100] = numpy.zeros((100, 512))
+    i.set(img)
+    print ("TYPE: ", type(img[0][0]))
+    print ("LINES: ", len(img))
+    print ("COLUMNS: ", len(img[0]))
+    print ("SHAPE:   ", img.shape)
+    print ("")
+    print (i.get())
+
     i.save_to_file("output.png")
