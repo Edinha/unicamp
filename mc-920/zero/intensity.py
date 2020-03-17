@@ -1,4 +1,5 @@
 from image import Image
+import numpy
 
 class Intensity(Image):
 
@@ -18,20 +19,20 @@ class Intensity(Image):
 
         self.set(img)
 
+    def greyscale(self):
+        self.apply_to_all_pixels(self.apply_greyscale)
+        self.astype(numpy.uint8)
+
     @staticmethod
     def apply_negative(pixel):
         return 255 - pixel
 
     @staticmethod
-    def even_filter(img):
-        return img[::2]
-
-    @staticmethod
-    def apply_reverse(row):
-        pass
+    def apply_greyscale(pixel):
+        return (100 + (100/255) * pixel)
 
 if __name__ == "__main__":
     import sys
     i = Intensity(sys.argv[1])
-    i.even_reverse()
+    getattr(i, sys.argv[2])()
     i.save_to_file("output.png")

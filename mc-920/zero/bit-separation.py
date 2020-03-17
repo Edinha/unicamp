@@ -13,7 +13,7 @@ class BitSeparation(Image):
 
 if __name__ == "__main__":
     import sys
-    for a in range(7):
+    for a in range(8):
         n = 1 << (a)
         i = BitSeparation(sys.argv[1])
         i.layer(n)

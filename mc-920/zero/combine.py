@@ -32,10 +32,9 @@ class Combine:
 
 if __name__ == "__main__":
     import sys
-    combinations = [(0.2, 0.8), (0.5, 0.5), (0.7, 0.3)]
 
-    for i, c in enumerate(combinations):
-        first, second = c
-        test = Combine(sys.argv[1], sys.argv[2])
-        test.combine(first, second)
-        test.result().save_to_file("output-{}.png".format(i))
+    first = float(sys.argv[3])
+    second = 1 - first
+    test = Combine(sys.argv[1], sys.argv[2])
+    test.combine(first, second)
+    test.result().save_to_file("output.png")
