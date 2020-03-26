@@ -52,5 +52,5 @@ class Greyscale(Image):
 if __name__ == "__main__":
     import sys
     i = Greyscale(sys.argv[1])
-    getattr(i, sys.argv[2])(int(sys.argv[3]), int(sys.argv[4]))
+    getattr(i, sys.argv[2])(int(sys.argv[3]), float(sys.argv[4]))
     i.save_to_file("output.png")
