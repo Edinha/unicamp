@@ -16,8 +16,8 @@ class Image():
     def apply_to_all_pixels(self, f):
         self.img = f(self.img)
 
-    def filter_apply(self, filter, transform):
-        self.img = numpy.where(filter, transform, self.img)
+    def filter_apply(self, f, transform):
+        self.img = numpy.where(f, self.img, transform)
 
     def astype(self, t):
         self.img = self.img.astype(t)
