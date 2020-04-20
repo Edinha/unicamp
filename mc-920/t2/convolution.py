@@ -1,6 +1,5 @@
 from image import Image
 import numpy
-from scipy.ndimage import convolve
 
 class FilterConstants():
     h1 = [[0, 0, -1, 0, 0], [0, -1, -2, -1, 0], [-1, -2, 16, -2, -1], [0, -1, -2, -1, 0], [0, 0, -1, 0, 0]]
@@ -19,23 +18,15 @@ class FilterConstants():
 
 class Convolution(Image):
 
-    def apply(self, filter_name):
-        kernel = FilterConstants.get_filter_matrix(filter_name)
-
-        img = self.get()
-        print("FILTER CHOSEN: ", kernel)
-        print("IMAGE STAND: ", img)
-
-        img = convolve(img, kernel, mode='nearest')
-
-        print("NEW IMAGE: ", img)
-
-        self.set(img)
+    def get_filter(self, filter_name):
+        return FilterConstants.get_filter_matrix(filter_name)
 
     def apply_def(self, filter_name):
-        img = self.get()
-        kernel = FilterConstants.get_filter_matrix(filter_name)
+        kernel = self.get_filter(filter_name)
+        self.apply(kernel)
 
+    def apply(self, kernel):
+        img = self.get()
         sub_shape = (len(kernel), len(kernel))
         view_shape = tuple(numpy.subtract(img.shape, sub_shape) + 1) + sub_shape
         strides = img.strides + img.strides
@@ -51,18 +42,6 @@ class Convolution(Image):
             return pixel * kernel
 
         return f
-
-    def sum_result(self):
-        def f(pixel):
-            return numpy.sum(pixel)
-
-        return f
-
-    def change_interval(self, pixel):
-        return pixel / 255
-
-    def return_interval(self, pixel):
-        return pixel * 255
 
     def normalize(self, img):
         img[img < 0] = 0
