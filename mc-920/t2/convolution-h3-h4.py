@@ -8,19 +8,26 @@ class ConvolutionSquare(Convolution):
         h3 = h3_result.get()
         h4 = h4_result.get()
 
+        h3 = self.i(h3)
+        h4 = self.i(h4)
+
         h3_square = h3 * h3
         h4_square = h4 * h4
+
         summed = numpy.add(h3_square, h4_square)
 
         img = numpy.sqrt(summed)
+        img = self.f(summed)
+
         self.set(img)
         self.set(self.normalize(self.get()))
 
-    def adjust(self, max_value):
-        def f(pixel):
-            return 255 * (pixel / max_value)
+    def i(self, img):
+        return img / 255
 
-        return f
+    def f(self, img):
+        return img * 255
+
 
 if __name__ == "__main__":
     import sys
