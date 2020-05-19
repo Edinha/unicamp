@@ -2,3 +2,4 @@ env/
 images/
 **/__pycache__/
 **/output.png
+**/inverse.png

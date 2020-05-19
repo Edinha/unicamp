@@ -8,10 +8,7 @@ class FFT(Image):
         result_img = numpy.zeros_like(img)
         result_img[...] = self.fft(img)
 
-        print("RESULT IMG: ", result_img)
         result_img *= 255 // result_img.max()
-        print("RESULT IMG: ", result_img)
-
         self.set(result_img)
 
     def fft(self, channel):
