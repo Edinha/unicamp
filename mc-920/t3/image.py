@@ -5,7 +5,8 @@ class Image():
 
     def __init__(self, path):
         self.path = path
-        self.img = numpy.asarray(IMG.open(self.path).convert('L'))
+        self.img_input = IMG.open(self.path)
+        self.img = numpy.asarray(self.img_input.convert('L'))
 
     def get(self):
         return numpy.copy(self.img)
@@ -21,6 +22,9 @@ class Image():
 
     def astype(self, t):
         self.img = self.img.astype(t)
+
+    def get_channel(self, index):
+        return self.img_input.split()[index]
 
     def save_to_file(self, path):
         if not path:
