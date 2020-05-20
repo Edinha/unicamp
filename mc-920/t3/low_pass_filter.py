@@ -1,6 +1,6 @@
+from fft import FFT
 from image import Image
 from filter import FilterFFT
-from fft import FFT
 import numpy
 import math
 
@@ -21,7 +21,6 @@ if __name__ == "__main__":
 
     i = FFT(sys.argv[1])
     i.apply_inverse(applied_filter)
-    #i.display_normalize()
     i.save_to_file("output.png")
 
     l.apply_spectrum_filter()
