@@ -5,11 +5,14 @@ class InverseFFT(Image):
 
     def apply(self):
         img = self.get()
+        (w, h) = img.shape
+        center = (w // 2, h // 2)
+
+        img *= center
         result_img = numpy.zeros_like(img)
         result_img[...] = self.inverse_fft(img)
 
-        result_img *= 255 // result_img.max()
-        print("RESUKLT IMG: ", result_img)
+        # result_img *= 255 // result_img.max()
         self.set(result_img)
 
     def inverse_fft(self, channel):

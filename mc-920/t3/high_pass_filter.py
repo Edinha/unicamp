@@ -3,7 +3,7 @@ from filter import FilterFFT
 import numpy
 import math
 
-class LowPassFilter(FilterFFT):
+class HighPassFilter(FilterFFT):
 
     def apply_low_filter(self):
         self.minimum_distance = 50
@@ -14,6 +14,6 @@ class LowPassFilter(FilterFFT):
 
 if __name__ == "__main__":
     import sys
-    i = LowPassFilter(sys.argv[1])
+    i = HighPassFilter(sys.argv[1])
     i.apply_low_filter()
     i.save_to_file("output.png")
