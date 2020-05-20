@@ -10,7 +10,7 @@ class LowPassFilter(FilterFFT):
         self.apply_filter()
 
     def is_valid_point(self, center, point):
-        return self.distance(center, point) > self.minimum_distance
+        return self.distance(center, point) < self.minimum_distance
 
 if __name__ == "__main__":
     import sys
