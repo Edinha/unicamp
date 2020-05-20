@@ -1,19 +1,24 @@
 from fft import FFT
 from image import Image
 from filter import FilterFFT
+from low_pass_filter import LowPassFilter
+from high_pass_filter import HighPassFilter
 import numpy
 import math
 
-class LowPassFilter(FilterFFT):
-
-    def is_valid_point(self, center, point, cut_distance):
-        return self.distance(center, point) < cut_distance
+#class IntervalPassFilter(FilterFFT):
+#    pass
 
 if __name__ == "__main__":
     import sys
 
     l = LowPassFilter(sys.argv[1])
-    applied_filter = l.get_filter(50)
+    low_filter = l.get_filter(100)
+
+    m = HighPassFilter(sys.argv[1])
+    high_filter = m.get_filter(50)
+
+    applied_filter = low_filter * high_filter
 
     i = FFT(sys.argv[1])
     i.apply_inverse(applied_filter)

@@ -6,18 +6,14 @@ import math
 
 class HighPassFilter(FilterFFT):
 
-    def get_high_filter(self):
-        self.minimum_distance = 50
-        return self.get_filter()
-
-    def is_valid_point(self, center, point):
-        return self.distance(center, point) > self.minimum_distance
+    def is_valid_point(self, center, point, cut_distance):
+        return self.distance(center, point) > cut_distance
 
 if __name__ == "__main__":
     import sys
 
     m = HighPassFilter(sys.argv[1])
-    applied_filter = m.get_high_filter()
+    applied_filter = m.get_filter(50)
 
     i = FFT(sys.argv[1])
     i.apply_inverse(applied_filter)

@@ -9,7 +9,7 @@ class FilterFFT(FFT):
         self.apply()
         self.set(self.get_filter() * self.get())
 
-    def get_filter(self):
+    def get_filter(self, cut_distance):
         img = self.get()
         (w, h) = img.shape
         center = (w // 2, h // 2)
@@ -17,7 +17,7 @@ class FilterFFT(FFT):
         img = numpy.zeros_like(img)
         for x in range(w):
             for y in range(h):
-                if self.is_valid_point(center, (y, x)):
+                if self.is_valid_point(center, (y, x), cut_distance):
                     img[y,x] = 1
 
         return img
