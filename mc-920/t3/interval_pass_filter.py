@@ -12,11 +12,14 @@ import math
 if __name__ == "__main__":
     import sys
 
+    low_cut_distance = 100
+    high_cut_distance = 30
+
     l = LowPassFilter(sys.argv[1])
-    low_filter = l.get_filter(100)
+    low_filter = l.get_filter(low_cut_distance)
 
     m = HighPassFilter(sys.argv[1])
-    high_filter = m.get_filter(50)
+    high_filter = m.get_filter(high_cut_distance)
 
     applied_filter = low_filter * high_filter
 
@@ -24,6 +27,7 @@ if __name__ == "__main__":
     i.apply_inverse(applied_filter)
     i.save_to_file("output.png")
 
-    l.apply_spectrum_filter()
+    l.apply()
+    l.set(applied_filter * l.get())
     l.display_normalize()
     l.save_to_file("spectrum.png")

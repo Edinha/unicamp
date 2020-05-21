@@ -5,9 +5,9 @@ import math
 
 class FilterFFT(FFT):
 
-    def apply_spectrum_filter(self):
+    def apply_spectrum_filter(self, cut_distance):
         self.apply()
-        self.set(self.get_filter() * self.get())
+        self.set(self.get_filter(cut_distance) * self.get())
 
     def get_filter(self, cut_distance):
         img = self.get()

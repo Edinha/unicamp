@@ -12,13 +12,15 @@ class HighPassFilter(FilterFFT):
 if __name__ == "__main__":
     import sys
 
+    cut_distance = 50
+
     m = HighPassFilter(sys.argv[1])
-    applied_filter = m.get_filter(50)
+    applied_filter = m.get_filter(cut_distance)
 
     i = FFT(sys.argv[1])
     i.apply_inverse(applied_filter)
     i.save_to_file("output.png")
 
-    m.apply_spectrum_filter()
+    m.apply_spectrum_filter(cut_distance)
     m.display_normalize()
     m.save_to_file("spectrum.png")
