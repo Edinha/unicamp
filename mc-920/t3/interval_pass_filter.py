@@ -12,8 +12,8 @@ import math
 if __name__ == "__main__":
     import sys
 
-    low_cut_distance = 100
-    high_cut_distance = 30
+    low_cut_distance = int(sys.argv[2])
+    high_cut_distance = int(sys.argv[3])
 
     l = LowPassFilter(sys.argv[1])
     low_filter = l.get_filter(low_cut_distance)

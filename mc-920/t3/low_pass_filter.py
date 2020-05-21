@@ -12,7 +12,7 @@ class LowPassFilter(FilterFFT):
 if __name__ == "__main__":
     import sys
 
-    cut_distance = 50
+    cut_distance = int(sys.argv[2])
 
     l = LowPassFilter(sys.argv[1])
     applied_filter = l.get_filter(cut_distance)
