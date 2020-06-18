@@ -26,6 +26,10 @@ class Image():
     def get_channel(self, index):
         return self.img_input.split()[index]
 
+    def binary_set(self):
+        self.img = self.img // 255
+        self.img = (self.img + 1) % 2
+
     def save_to_file(self, path):
         if not path:
             path = self.path
@@ -35,9 +39,8 @@ class Image():
 if __name__ == "__main__":
     import sys
     i = Image(sys.argv[1])
+    i.binary_set()
     img = i.get()
-    img[:100] = numpy.zeros((100, 512))
-    i.set(img)
     print ("TYPE: ", type(img[0][0]))
     print ("LINES: ", len(img))
     print ("COLUMNS: ", len(img[0]))
