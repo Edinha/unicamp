@@ -1,6 +1,5 @@
 from image import Image
 import numpy
-from skimage import measure, filters
 from scipy import ndimage
 import matplotlib.pyplot as plt
 
@@ -20,7 +19,12 @@ class ConnectedComponents(Image):
         # plt.imshow(labeled)
         # plt.show()
 
-        self.set(labeled)
+        rows, cols = numpy.where(labeled == 48)
+        # print("ITEM INDEX IS {} {}".format(rows, cols))
+        # print("ITEM INDEX TES IS {}".format(labeled[rows[0], cols[0]]))
+        # print("ITEM INDEX TES IS {} {}".format(rows, cols))
+
+        return labeled
 
     def display_normalize(self):
         img = self.get()
@@ -33,7 +37,8 @@ if __name__ == "__main__":
     i = ConnectedComponents(sys.argv[1])
     i.binary_set()
     i.set(i.get() * 255)
-    i.find_connected()
+    img = i.find_connected()
+    i.set(img)
     i.display_normalize()
 
     print("IMG: ", i.get().max(), i.get())
