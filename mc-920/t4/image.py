@@ -54,4 +54,5 @@ if __name__ == "__main__":
     print ("")
     print (i.get())
 
+    i.binary_normalize()
     i.save_to_file("output.png")
