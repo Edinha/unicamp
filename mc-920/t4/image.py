@@ -30,6 +30,12 @@ class Image():
         self.img = self.img // 255
         self.img = (self.img + 1) % 2
 
+    def binary_normalize(self):
+        img = self.get()
+        img = (img + 1) % 2
+        img *= 255
+        self.set(img)
+
     def save_to_file(self, path):
         if not path:
             path = self.path

@@ -10,18 +10,12 @@ class Dilation(Image):
         self.set(result)
         self.astype(img.dtype)
 
-    def normalize(self):
-        img = self.get()
-        img = (img + 1) % 2
-        img *= 255
-        self.set(img)
-
 if __name__ == "__main__":
     import sys
     i = Dilation(sys.argv[1])
     i.binary_set()
     structure = numpy.ones((int(sys.argv[2]), int(sys.argv[3])))
     i.dilate(structure)
-    i.normalize()
+    i.binary_normalize()
     print("IMG: ", i.get().max(), i.get())
     i.save_to_file("dilation.pbm")
