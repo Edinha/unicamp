@@ -28,27 +28,53 @@ class Rectangulate(ConnectedComponents):
             (rows[rl], cols[cl]),
         )
 
-class MarkRectangles(Image):
+class FilterTextLimits(Image):
+    def filter_text(self, limits):
+        img = self.get()
+
+        new_limits = []
+        for l in limits:
+            tl, tr, bl, br = l
+
+            s = img[tl[0]:bl[0],tl[1]:tr[1]]
+            w, h = s.shape
+            black_pixels = numpy.count_nonzero(s == 0)
+
+            if w * h > 0:
+                q0 = black_pixels / (w * h)
+
+            if self.is_text(q0, 0):
+                new_limits.append(l)
+
+        return new_limits
+
+    def is_text(self, black_pixel_ratio, _):
+        return black_pixel_ratio > 0.19 and black_pixel_ratio < 0.4
+
+
+class MarkLinesRectangles(FilterTextLimits):
 
     def apply(self, limits):
         img = self.get()
+        limits = self.filter_text(limits)
 
         for l in limits:
             tl, tr, bl, br = l
 
             for i in range(tl[1], tr[1]):
+                img[tl[0] - 1, i] = 1
                 img[tl[0], i] = 1
 
             for i in range(tl[0], bl[0]):
+                img[i, tl[1] - 1] = 1
                 img[i, tl[1]] = 1
 
             for i in range(bl[1], br[1]):
-                img[bl[0], i] = 1
-
-            for i in range(br[1], bl[1]):
+                img[bl[0] - 1, i] = 1
                 img[bl[0], i] = 1
 
             for i in range(tr[0], br[0]):
+                img[i, tr[1] - 1] = 1
                 img[i, tr[1]] = 1
 
         self.set(img)
@@ -60,6 +86,6 @@ if __name__ == "__main__":
     i.set(i.get() * 255)
     all_l = i.apply()
 
-    i = MarkRectangles(sys.argv[2])
+    i = MarkLinesRectangles(sys.argv[2])
     i.apply(all_l)
     i.save_to_file("output.pbm")
