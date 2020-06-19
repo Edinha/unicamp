@@ -1,12 +1,12 @@
 from image import Image
 import numpy
-from scipy.ndimage.morphology import binary_erosion
+from scipy.ndimage.morphology import binary_dilation
 
-class Erosion(Image):
+class Dilation(Image):
 
-    def erode(self, structure):
+    def dilate(self, structure):
         img = self.get()
-        result = binary_erosion(img, structure=structure)
+        result = binary_dilation(img, structure=structure)
         self.set(result)
         self.astype(img.dtype)
 
@@ -18,10 +18,10 @@ class Erosion(Image):
 
 if __name__ == "__main__":
     import sys
-    i = Erosion(sys.argv[1])
+    i = Dilation(sys.argv[1])
     i.binary_set()
     structure = numpy.ones((int(sys.argv[2]), int(sys.argv[3])))
-    i.erode(structure)
+    i.dilate(structure)
     i.normalize()
     print("IMG: ", i.get().max(), i.get())
-    i.save_to_file("erosion.pbm")
+    i.save_to_file("dilation.pbm")
