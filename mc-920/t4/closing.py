@@ -2,7 +2,6 @@ from image import Image
 import numpy
 from erosion import Erosion
 from dilation import Dilation
-from scipy.ndimage.morphology import binary_erosion
 
 class Closing(Erosion, Dilation):
 

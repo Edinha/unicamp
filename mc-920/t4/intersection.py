@@ -1,6 +1,5 @@
 from image import Image
 import numpy
-from scipy.ndimage.morphology import binary_erosion
 
 class Intersection(Image):
 
