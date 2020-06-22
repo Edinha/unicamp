@@ -4,9 +4,7 @@ import numpy
 class Intersection(Image):
 
     def intersect(self, another):
-        img = self.get()
-        img *= another.get()
-        self.set(img)
+        self.set(self.get() & another.get())
 
 if __name__ == "__main__":
     import sys

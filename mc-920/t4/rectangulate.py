@@ -2,9 +2,9 @@ from image import Image
 import numpy
 from connected import ConnectedComponents
 
-class Rectangulate(ConnectedComponents):
+class ComponentLimiter(ConnectedComponents):
 
-    def apply(self):
+    def get_limits(self):
         labeled = self.find_connected()
 
         all_limits = []
@@ -13,12 +13,13 @@ class Rectangulate(ConnectedComponents):
             rows = numpy.sort(rows)
             cols = numpy.sort(cols)
 
-            limits = self.get_limits(rows, cols)
-            all_limits.append(limits)
+            if not (len(rows) == 0 or len(cols) == 0):
+                limits = self.get_limit_tuples(rows, cols)
+                all_limits.append(limits)
 
         return all_limits
 
-    def get_limits(self, rows, cols):
+    def get_limit_tuples(self, rows, cols):
         rl = len(rows) - 1
         cl = len(cols) - 1
         return (
@@ -51,13 +52,9 @@ class FilterTextLimits(Image):
     def is_text(self, black_pixel_ratio, _):
         return black_pixel_ratio > 0.19 and black_pixel_ratio < 0.4
 
-
-class MarkLinesRectangles(FilterTextLimits):
-
-    def apply(self, limits):
+class MarkRectangles(Image):
+    def mark(self, limits):
         img = self.get()
-        limits = self.filter_text(limits)
-
         for l in limits:
             tl, tr, bl, br = l
 
@@ -79,13 +76,18 @@ class MarkLinesRectangles(FilterTextLimits):
 
         self.set(img)
 
+class MarkLinesRectangles(FilterTextLimits, MarkRectangles):
+    def mark_lines(self, limits):
+        limits = self.filter_text(limits)
+        self.mark(limits)
+
 if __name__ == "__main__":
     import sys
-    i = Rectangulate(sys.argv[1])
+    i = ComponentLimiter(sys.argv[1])
     i.binary_set()
     i.set(i.get() * 255)
-    all_l = i.apply()
+    all_l = i.get_limits()
 
     i = MarkLinesRectangles(sys.argv[2])
-    i.apply(all_l)
-    i.save_to_file("output.pbm")
+    i.mark_lines(all_l)
+    i.save_to_file("rectangules.pbm")
