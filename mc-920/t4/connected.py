@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 class ConnectedComponents(Image):
 
     def find_connected(self):
-        threshold = 50
-        blur_radius = 1.0
+        threshold = 30
+        blur_radius = 0.5
 
         img = self.get()
         imgf = ndimage.gaussian_filter(img, blur_radius)
@@ -31,6 +31,36 @@ class ConnectedComponents(Image):
         img *= 255 // img.max()
         self.set(img)
         self.astype(numpy.uint8)
+
+
+class ComponentLimiter(ConnectedComponents):
+
+    def get_limits(self):
+        labeled = self.find_connected()
+        all_limits = []
+
+        if len(labeled) == 0:
+            return all_limits
+
+        for i in range(0, labeled.max()):
+            rows, cols = numpy.where(labeled == i)
+            rows = numpy.sort(rows)
+            cols = numpy.sort(cols)
+
+            limits = self.get_limit_tuples(rows, cols)
+            all_limits.append(limits)
+
+        return all_limits
+
+    def get_limit_tuples(self, rows, cols):
+        rl = len(rows) - 1
+        cl = len(cols) - 1
+        return (
+            (rows[0],  cols[0]),
+            (rows[0],  cols[cl]),
+            (rows[rl], cols[0]),
+            (rows[rl], cols[cl]),
+        )
 
 if __name__ == "__main__":
     import sys

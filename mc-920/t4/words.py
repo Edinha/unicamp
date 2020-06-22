@@ -1,11 +1,13 @@
 from image import Image
 import numpy
 from closing import Closing
-from rectangulate import FilterTextLimits, MarkRectangles, ComponentLimiter
+from connected import ComponentLimiter
+from rectangulate import FilterTextLimits, FilterWordsLimits, MarkRectangles
 
-class WordLimiter(Closing, ComponentLimiter):
+class WordLimiter(Closing, ComponentLimiter, FilterWordsLimits):
     def separate_lines_to_words(self, limits):
         img = self.get()
+        i = 0
 
         for l in limits:
             tl, tr, bl, br = l
@@ -13,14 +15,15 @@ class WordLimiter(Closing, ComponentLimiter):
 
             self.set(text_line)
             self.binary_set()
-            self.close(numpy.ones((1, 15)))
+            self.close(numpy.ones((1, 13)))
 
             self.set(self.get() * 255)
-            line_word_limits = self.get_limits()
+            line_word_limits = self.filter_words(self.get_limits())
 
             self.set(text_line)
             self.mark(line_word_limits)
 
+            i += len(line_word_limits)
             img[tl[0]:bl[0],tl[1]:tr[1]] = self.get()
 
         self.set(img)
