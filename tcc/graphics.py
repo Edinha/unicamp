@@ -48,10 +48,10 @@ def get_average_throughput(entry, filter):
     tts = [ get_throughput(c) for c in connections ]
     return sum(tts) / len(tts) if len(tts) > 0 else 0
 
-def get_retransmits_sum(entry):
+def get_retransmits_sum(entry, filter):
     ### Get retransmits of connections
 
-    connections = get_connections(entry)
+    connections = get_connections(entry, filter)
     tts = [ get_retransmits(c) for c in connections ]
     return sum(tts)
 
@@ -59,12 +59,16 @@ def standard_dev(l):
     avrg = np.average(l)
     return math.sqrt(sum([ math.pow((i - avrg), 2.0) for i in l]) / len(l))
 
-def plot(xvalues, yvalues, algorithm, color, ecolor):
+def plot(xvalues, yvalues, algorithm, color, ecolor=''):
     ### Plots one graphic line using matplotlib
 
     ecolor = color if not ecolor else ecolor
     yvalues_list = np.transpose(np.array(yvalues))
     yvalues = [ np.average(l) for l in yvalues_list ]
+    yvalues = [ l for l in yvalues if l != 0 ]
+
+    if not yvalues:
+        return
 
     size = len(yvalues)
     yvalues_error = [ 1.96 * standard_dev(i) / math.sqrt(size) for i in yvalues_list ]
@@ -126,7 +130,7 @@ def main():
     }
 
     for p in get_files_paths(base_path):
-        print("FILE: ", p)
+        # print("FILE: ", p)
         scenario, data = get_json(p)
 
         yvalues = []
@@ -147,19 +151,20 @@ def main():
 
     xvalues = list(dict.fromkeys(xvalues))
     if sys.argv[1] == 'utilization':
-        plot(xvalues, yvalues_list, '', 'blue')
+        plot(xvalues, yvalues_list, 'Utilização (Mbps)', 'blue')
     else:
-        udp_percent = int(100 * scenario["UDP_BANDWIDTH"] / float(scenario["LINK_OPTS"]["bw"]))
-        plot(xvalues, by_percentage['bbr'][udp_percent], 'BBR ({}% UDP)'.format(udp_percent), 'blue', 'lightgrey')
-        plot(xvalues, by_percentage['cubic'][udp_percent], 'CUBIC ({}% UDP)'.format(udp_percent), 'orange', 'lightgrey')
+        ### For simple comparison in UDP percentage
+        # udp_percent = int(100 * scenario["UDP_BANDWIDTH"] / float(scenario["LINK_OPTS"]["bw"]))
+        # plot(xvalues, by_percentage['bbr'][udp_percent], 'BBR ({}% UDP)'.format(udp_percent), 'blue', 'lightgrey')
+        # plot(xvalues, by_percentage['cubic'][udp_percent], 'CUBIC ({}% UDP)'.format(udp_percent), 'orange', 'lightgrey')
 
         ### For all of percentage in the same chart
-        # plot(xvalues, by_percentage['bbr'][10], 'BBR (10% UDP)', 'midnightblue')
-        # plot(xvalues, by_percentage['bbr'][20], 'BBR (20% UDP)', 'yellow')
-        # plot(xvalues, by_percentage['bbr'][30], 'BBR (30% UDP)', 'darkgrey')
-        # plot(xvalues, by_percentage['cubic'][10], 'CUBIC (10% UDP)', 'deeppink')
-        # plot(xvalues, by_percentage['cubic'][20], 'CUBIC (20% UDP)', 'orange')
-        # plot(xvalues, by_percentage['cubic'][30], 'CUBIC (30% UDP)', 'crimson')
+        plot(xvalues, by_percentage['bbr'][10], 'BBR (10% UDP)', 'midnightblue')
+        plot(xvalues, by_percentage['bbr'][20], 'BBR (20% UDP)', 'yellow')
+        plot(xvalues, by_percentage['bbr'][30], 'BBR (30% UDP)', 'darkgrey')
+        plot(xvalues, by_percentage['cubic'][10], 'CUBIC (10% UDP)', 'deeppink')
+        plot(xvalues, by_percentage['cubic'][20], 'CUBIC (20% UDP)', 'orange')
+        plot(xvalues, by_percentage['cubic'][30], 'CUBIC (30% UDP)', 'crimson')
 
     save_and_show(base_path, sys.argv[1], graphic_type, scenario)
     del by_percentage
